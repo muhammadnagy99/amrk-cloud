@@ -1,2 +1,22 @@
 @import "tailwindcss";
 
+.border-widget{
+    border: 1px solid rgba(0, 0, 0, 0.2); 
+}
+
+::-webkit-scrollbar {
+    display: none;
+  }
+  
+  html, body {
+    -ms-overflow-style: none; 
+    scrollbar-width: none;
+  }
+  
+  .text-primaryColor{
+    color: #b0438a;
+  }
+
+  .border-primaryColor{
+    border-color: #b0438a;
+  }

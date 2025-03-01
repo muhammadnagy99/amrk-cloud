@@ -5,7 +5,7 @@ import BranchInfo from "./assets/branch-info";
 
 export default function BranchDetails() {
   return (
-    <div className="w-full max-h-90 flex flex-row gap-3 p-3 bg-white rounded-lg">
+    <div className="w-full max-h-90 flex flex-row gap-3 p-3 bg-white rounded-lg border-widget">
       <Image
         className="rounded-lg w-[20%]"
         src={Profile}

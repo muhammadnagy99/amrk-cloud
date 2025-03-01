@@ -14,7 +14,7 @@ export default function ScreenWrapper({ children }: WrapperProps) {
         priority={true}
         quality={100}
       />
-      <main className="flex flex-col w-[88%] relative py-4">
+      <main className="flex flex-col w-[88%] relative py-8">
         {children}
       </main>
     </>
