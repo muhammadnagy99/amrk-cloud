@@ -1,5 +1,13 @@
 @import "tailwindcss";
 
+:root {
+  --font-rubik: 'Rubik', sans-serif;
+}
+
+body {
+  font-family: var(--font-rubik);
+}
+
 .border-widget{
     border: 1px solid rgba(0, 0, 0, 0.2); 
 }

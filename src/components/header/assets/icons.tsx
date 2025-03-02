@@ -90,7 +90,6 @@ export default function ActiveIcon() {
 export function GiftPointsIcon() {
   return (
     <svg
-      className="h-full"
       width="12"
       height="12"
       viewBox="0 0 12 12"
