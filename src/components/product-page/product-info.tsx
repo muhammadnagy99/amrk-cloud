@@ -13,6 +13,8 @@ export default function ProductInfo() {
           width={390}
           height={240}
           alt="Product-Image"
+          priority={true}
+          quality={80}
         />
         <Link href="/pick-up" className="absolute top-4 right-4 ">
           <BackArrow />
