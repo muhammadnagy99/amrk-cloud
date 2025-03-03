@@ -1,8 +1,8 @@
-import ProductInfo from "@/src/components/product-page/product-info";
+import ProductInfo from "@/src/components/pickup/product-page/product-info";
 import MobileWrapper from "../../mobile-wrapper";
-import RequiredChoices from "@/src/components/product-page/required-choices";
-import OptionalChoices from "@/src/components/product-page/optional-choices";
-import AddCart from "@/src/components/product-page/add-cart";
+import RequiredChoices from "@/src/components/pickup/product-page/required-choices";
+import OptionalChoices from "@/src/components/pickup/product-page/optional-choices";
+import AddCart from "@/src/components/pickup/product-page/add-cart";
 
 export default function ProductPage() {
   return (

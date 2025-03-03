@@ -1,6 +1,6 @@
-import ActionBar from "@/src/components/action-bar.tsx/action-bar";
-import Header from "@/src/components/header/header";
-import ViewGrid from "@/src/components/view-grid/view-grid";
+import ActionBar from "@/src/components/pickup/action-bar/action-bar";
+import Header from "@/src/components/pickup/header/header";
+import ViewGrid from "@/src/components/pickup/view-grid/view-grid";
 import MobileWrapper from "../mobile-wrapper";
 import ScreenWrapper from "../screen-wrapper";
 
