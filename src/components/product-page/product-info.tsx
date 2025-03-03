@@ -6,7 +6,7 @@ import { BackArrow } from "./icons";
 export default function ProductInfo() {
   return (
     <div className="flex flex-col gap-4 w-full items-center">
-      <figure className="relative">
+      <figure className="relative w-full">
         <Image
           className="w-full"
           src={PImage}
@@ -15,6 +15,7 @@ export default function ProductInfo() {
           alt="Product-Image"
           priority={true}
           quality={80}
+          placeholder="blur"
         />
         <Link href="/pick-up" className="absolute top-4 right-4 ">
           <BackArrow />
@@ -24,11 +25,9 @@ export default function ProductInfo() {
         </figcaption>
       </figure>
       <article className="flex flex-col gap-3 w-[88%]">
-        <h2 className="text-black text-xl font-medium">
-        قهوة لاتيه
-        </h2>
+        <h2 className="text-black text-xl font-medium">قهوة لاتيه</h2>
         <p className="text-black text-sm font-light">
-        إسبريسو ممزوج بحليب بخاري ورغوة خفيفة. - 50kcal
+          إسبريسو ممزوج بحليب بخاري ورغوة خفيفة. - 50kcal
         </p>
       </article>
     </div>
