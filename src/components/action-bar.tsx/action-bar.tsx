@@ -2,7 +2,7 @@ import { ListViewIcon, SearchIcon } from "./assets/icons";
 
 export default function ActionBar() {
   return (
-    <div className="flex flex-row justify-center items-center gap-2 sticky h-15 top-0 z-50 bg-white max-w-[434px]">
+    <div className="flex flex-row justify-center items-center gap-2 sticky h-15 top-0 z-50 bg-white max-w-[434px] w-full">
       <button className="p-2.5 flex justify-center items-center border-widget rounded-lg w-[10%]">
         <ListViewIcon />
       </button>

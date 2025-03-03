@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import { Rubik } from "next/font/google";
 import "./globals.css";
-import MobileWrapper from "./mobile-wrapper";
-import ScreenWrapper from "./screen-wrapper";
 
 const rubik = Rubik({
   subsets: ["latin"],
@@ -27,9 +25,7 @@ export default function RootLayout({
       <body
         className={`flex flex-col justify-center ${rubik.variable} antialiased bg-white`}
       >
-        <MobileWrapper>
-          <ScreenWrapper>{children}</ScreenWrapper>
-        </MobileWrapper>
+        {children}
       </body>
     </html>
   );
