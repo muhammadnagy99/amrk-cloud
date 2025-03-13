@@ -5,7 +5,7 @@ import SaveCard from "@/src/components/pickup/add-cart/save-card";
 import Terms from "@/src/components/pickup/add-cart/term";
 import CardInputForm from "@/src/components/pickup/add-cart/credit-form";
 
-export default function BasketPage() {
+export default function CardPage() {
   return (
     <MobileWrapper>
       <div className="flex flex-col gap-8 w-[88%] h-screen overflow-y-auto pb-28 pt-10 relative">

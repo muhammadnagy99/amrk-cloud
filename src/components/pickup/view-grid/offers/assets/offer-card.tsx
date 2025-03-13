@@ -3,7 +3,7 @@ import O1 from "@/public/product/offer.png";
 
 export default function OfferCard() {
   return (
-    <figure className="flex flex-col gap-2 snap-start min-w-[106px]">
+    <figure className="flex flex-col gap-2 snap-start">
       <Image
         className="rounded-lg"
         src={O1}

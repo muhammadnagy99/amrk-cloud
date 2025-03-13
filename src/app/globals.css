@@ -86,3 +86,27 @@ input[type="checkbox"]:checked::before {
   left: 50%;
   transform: translate(-50%, -50%);
 }
+
+.react-international-phone-input-container .react-international-phone-input{
+  width: 80%;
+  height: 100%;
+}
+
+.react-international-phone-input-container .react-international-phone-country-selector-button {
+  width: 100%;
+  height: 100%;
+}
+
+.react-international-phone-country-selector{
+  width: 20%;
+}
+
+.react-international-phone-input-container {
+  width: 100%;
+  flex-direction: row-reverse;
+  height: 48px;
+}
+
+.react-international-phone-input-container .react-international-phone-input {
+  height: 100% !important;
+}
