@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Rubik } from "next/font/google";
 import "./globals.css";
+import { Locale } from "@/src/i18n-config";
 
 const rubik = Rubik({
   subsets: ["latin"],
@@ -15,13 +16,24 @@ export const metadata: Metadata = {
     "Transform your restaurant's operations with Amrk RMS, an innovative management solution built to enhance productivity and customer satisfaction.",
 };
 
-export default function RootLayout({
-  children,
+export default async function RootLayout({
+  children, params
 }: Readonly<{
   children: React.ReactNode;
+  params: { lang: Locale };
 }>) {
+
+  const param = await params;
+
+  const lang = param.lang;
+  let dir = 'rtl';
+
+  if (lang === 'en') {
+    dir = 'ltr';
+
+  }
   return (
-    <html lang="en" dir="rtl">
+    <html lang={lang} dir={dir}>
       <body
         className={`flex flex-col justify-center ${rubik.variable} antialiased bg-white`}
       >

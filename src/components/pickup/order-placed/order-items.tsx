@@ -1,10 +1,11 @@
 'use client'
 
 import { FC, useState } from "react";
-import { ChevronDownIcon, ChevronUpIcon } from "./icons";
+import { ChevronDownIcon, ChevronUpIcon } from "../order-placed/icons";
+import { Addon } from "@/src/interfaces/interfaces";
 
 interface OrderItemsDropdownProps {
-    items: { name: string; price: number }[];
+    items: { name: string; price: number; }[];
 }
 
 const OrderItemsDropdown: FC<OrderItemsDropdownProps> = ({ items }) => {
@@ -12,7 +13,6 @@ const OrderItemsDropdown: FC<OrderItemsDropdownProps> = ({ items }) => {
 
     return (
         <div className="bg-gray-100 rounded-lg p-3">
-            {/* Toggle Button */}
             <div
                 className="flex justify-between items-center text-[13px] font-light cursor-pointer"
                 onClick={() => setIsOpen(!isOpen)}
@@ -25,17 +25,18 @@ const OrderItemsDropdown: FC<OrderItemsDropdownProps> = ({ items }) => {
                         <ChevronDownIcon />
                     )}
                 </p>
-                <p className="flex flex-row gap-1">
-                    <strong className="font-medium">157.00</strong> رس
+                <p className="flex flex-row gap-1 font-medium text-[13px]">
+                    <strong className="">157.00</strong> رس
                 </p>
             </div>
 
-            {/* Order Items List */}
             {isOpen && (
-                <ul className="rounded-lg px-1 py-1">
+                <ul className="rounded-lg px-1 py-1 text-[#00000080] font-normal">
                     {items.map((item, index) => (
-                        <li key={index} className="flex justify-between text-[12px] py-1">
-                            <span>{item.name}</span>
+                        <li key={index} className="flex justify-between flex-row text-[12px]">
+                            <span>
+                                {item.name}
+                            </span>
                             <p className="flex flex-row gap-1">
                                 <strong className="font-medium">{item.price.toFixed(2)}</strong> رس
                             </p>

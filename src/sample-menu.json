@@ -1,0 +1,190 @@
+{
+    "branch_name": "Wide Cafe Olaya Self Service",
+    "branch_name_ar": "Wide Cafe Olaya Self Service",
+    "menu_items": [
+        {
+            "catgory_name": "Drinks",
+            "catg_id": "Flg2Bqg1n4HpzrYZka4C",
+            "items": [
+                {
+                    "product_id": "91i7h5RnPQ0SR0T8xRS5",
+                    "item_name": "Pepperoni Pizza Slice",
+                    "item_name_ar": "شريحة بيتزا بيبروني",
+                    "item_desc": "A cheesy slice of pepperoni pizza with a crispy crust.",
+                    "item_desc_ar": "شريحة بيتزا بيبروني شهية مع قشرة مقرمشة.",
+                    "item_img": "",
+                    "item_price": 22,
+                    "category_name": "Drinks"
+                },
+                {
+                    "product_id": "AVoHrUfxX1S6zeCRZTVp",
+                    "item_name": "Almond Saffron Shake",
+                    "item_name_ar": "ميلك شيك اللوز والزعفران",
+                    "item_desc": "A rich shake made with almonds, saffron, and cold milk.",
+                    "item_desc_ar": "ميلك شيك غني مصنوع من اللوز والزعفران والحليب البارد.",
+                    "item_img": "",
+                    "item_price": 25,
+                    "category_name": "Drinks"
+                },
+                {
+                    "product_id": "HrQwreDp4jAnYszpbnEA",
+                    "item_name": "Strawberry Lassi",
+                    "item_name_ar": "لاسي الفراولة",
+                    "item_desc": "A delicious yogurt-based drink with fresh strawberries and honey.",
+                    "item_desc_ar": "مشروب لذيذ قائم على الزبادي مع الفراولة الطازجة والعسل.",
+                    "item_img": "",
+                    "item_price": 17,
+                    "category_name": "Drinks"
+                },
+                {
+                    "product_id": "KRfDPTHMupeAZ83Dbtm7",
+                    "item_name": "Chia Lemon Detox Drink",
+                    "item_name_ar": "مشروب الشيا والليمون الصحي",
+                    "item_desc": "A revitalizing mix of lemon, honey, chia seeds, and water.",
+                    "item_desc_ar": "مزيج منعش من الليمون والعسل وبذور الشيا والماء.",
+                    "item_img": "",
+                    "item_price": 15,
+                    "category_name": "Drinks"
+                },
+                {
+                    "product_id": "U7weU2pxuKcLULo6yuss",
+                    "item_name": "Pomegranate Cooler",
+                    "item_name_ar": "مشروب الرمان البارد",
+                    "item_desc": "A refreshing blend of pomegranate juice, lemon, and mint.",
+                    "item_desc_ar": "مزيج منعش من عصير الرمان والليمون والنعناع.",
+                    "item_img": "https://firebasestorage.googleapis.com/v0/b/amrk-development.appspot.com/o/Menus%2F1742370398983?alt=media&token=5a52acda-5f5a-4736-a922-2da4caacdae7",
+                    "item_price": 16,
+                    "category_name": "Drinks"
+                },
+                {
+                    "product_id": "UZzREmwJEHDpPWBPV0wE",
+                    "item_name": "Hot Dog",
+                    "item_name_ar": "هوت دوغ",
+                    "item_desc": "Classic hot dog served in a soft bun with mustard and ketchup.",
+                    "item_desc_ar": "هوت دوغ كلاسيكي يقدم في خبز طري مع مستردة وكاتشب.",
+                    "item_img": "",
+                    "item_price": 20,
+                    "category_name": "Drinks"
+                },
+                {
+                    "product_id": "Vm2nkzJNsCYW4Qz3se6h",
+                    "item_name": "Crispy Chicken Sandwich",
+                    "item_name_ar": "ساندويتش دجاج مقرمش",
+                    "item_desc": "Crispy fried chicken fillet with lettuce and mayo in a soft bun.",
+                    "item_desc_ar": "فيليه دجاج مقرمش مع خس ومايونيز في خبز طري.",
+                    "item_img": "",
+                    "item_price": 22,
+                    "category_name": "Drinks"
+                },
+                {
+                    "product_id": "bEpbVvy7eAuqnRKqWmS1",
+                    "item_name": "Turmeric Latte",
+                    "item_name_ar": "حليب الكركم",
+                    "item_desc": "A warm and healthy latte made with turmeric, cinnamon, and honey.",
+                    "item_desc_ar": "لاتيه دافئ وصحي مصنوع من الكركم والقرفة والعسل.",
+                    "item_img": "",
+                    "item_price": 18,
+                    "category_name": "Drinks"
+                },
+                {
+                    "product_id": "eVudgQ4xpcKSH9NASsex",
+                    "item_name": "Chicken Nuggets",
+                    "item_name_ar": "ناجتس دجاج",
+                    "item_desc": "Crispy chicken nuggets served with dipping sauce.",
+                    "item_desc_ar": "ناجتس دجاج مقرمش يقدم مع صلصة غمس.",
+                    "item_img": "",
+                    "item_price": 18,
+                    "category_name": "Drinks"
+                },
+                {
+                    "product_id": "grF88xzmKKQlV5qLrfIH",
+                    "item_name": "Honey Ginger Tea",
+                    "item_name_ar": "شاي العسل والزنجبيل",
+                    "item_desc": "A soothing blend of ginger, honey, and lemon in hot tea.",
+                    "item_desc_ar": "مزيج مهدئ من الزنجبيل والعسل والليمون مع الشاي الساخن.",
+                    "item_img": "",
+                    "item_price": 12,
+                    "category_name": "Drinks"
+                },
+                {
+                    "product_id": "o2uC61O0RPnW44PE0KsG",
+                    "item_name": "Peach Iced Tea",
+                    "item_name_ar": "شاي الخوخ المثلج",
+                    "item_desc": "Refreshing black tea infused with peach syrup and ice.",
+                    "item_desc_ar": "شاي أسود منعش ممزوج بشراب الخوخ والثلج.",
+                    "item_img": "",
+                    "item_price": 14,
+                    "category_name": "Drinks"
+                },
+                {
+                    "product_id": "rTr97iZVfUiNKxQcmT0d",
+                    "item_name": "Avocado Smoothie",
+                    "item_name_ar": "سموذي الأفوكادو",
+                    "item_desc": "A creamy smoothie made with fresh avocado, milk, and honey.",
+                    "item_desc_ar": "سموذي كريمي مصنوع من الأفوكادو الطازج والحليب والعسل.",
+                    "item_img": "",
+                    "item_price": 22,
+                    "category_name": "Drinks"
+                },
+                {
+                    "product_id": "sED8UyZiyQB0ESxwa0VC",
+                    "item_name": "Mint Mojito Mocktail",
+                    "item_name_ar": "موهيتو النعناع",
+                    "item_desc": "A non-alcoholic mojito made with lime, mint, and soda.",
+                    "item_desc_ar": "موهيتو بدون كحول مصنوع من الليمون والنعناع والصودا.",
+                    "item_img": "",
+                    "item_price": 18,
+                    "category_name": "Drinks"
+                },
+                {
+                    "product_id": "wHgt7ynmD5G1f1uyIruR",
+                    "item_name": "Falooda",
+                    "item_name_ar": "فالودة",
+                    "item_desc": "A traditional layered dessert drink with rose syrup, milk, basil seeds, and ice cream.",
+                    "item_desc_ar": "مشروب حلو تقليدي مكون من شراب الورد والحليب وبذور الريحان والآيس كريم.",
+                    "item_img": "",
+                    "item_price": 20,
+                    "category_name": "Drinks"
+                }
+            ]
+        },
+        {
+            "catgory_name": "fast food",
+            "catg_id": "MHwKVE9xErt71UqO9WFX",
+            "items": [
+                {
+                    "product_id": "N7LTZn1lfPdC2BGFEkIQ",
+                    "item_name": "Shawarma Wrap",
+                    "item_name_ar": "شاورما لحم",
+                    "item_desc": "Tender beef shawarma wrapped in fresh pita with garlic sauce.",
+                    "item_desc_ar": "شاورما لحم طرية ملفوفة في خبز بيتا مع صلصة الثوم.",
+                    "item_img": "",
+                    "item_price": 7.49,
+                    "category_name": "fast food"
+                },
+                {
+                    "product_id": "TOmb826p0HI8bq21aJUD",
+                    "item_name": "gRapes Pie",
+                    "item_name_ar": "gRapes Pie",
+                    "item_desc": "",
+                    "item_desc_ar": "",
+                    "item_img": "",
+                    "item_price": 1,
+                    "category_name": "fast food"
+                },
+                {
+                    "product_id": "rWXLhQYKhEd6f43hCBpk",
+                    "item_name": "TOPO!",
+                    "item_name_ar": "TOPO!",
+                    "item_desc": "",
+                    "item_desc_ar": "",
+                    "item_img": "",
+                    "item_price": 11,
+                    "category_name": "fast food"
+                    
+                }
+            ]
+        }
+    ],
+    "categories_list": []
+}

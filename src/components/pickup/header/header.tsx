@@ -7,7 +7,7 @@ export default function Header() {
     <header className="flex flex-col gap-2">
       <UserCTA />
       <BranchDetails />
-      <Offers />
+      {/* <Offers /> */}
     </header>
   );
 }

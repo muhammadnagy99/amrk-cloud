@@ -1,43 +1,31 @@
+'use client'
+
+import { OptionalChoicesProps } from "@/src/interfaces/interfaces";
 import { OptionalLabel } from "./icons";
 
-export default function OptionalChoices() {
+export default function OptionalChoices({ title, name, options, onToggle }: OptionalChoicesProps) {
   return (
     <div className="flex flex-col gap-4 w-full items-center">
       <fieldset className="w-[88%] flex flex-col justify-start">
         <legend className="w-full flex flex-row justify-between">
-          <p className="text-black font-medium text-base">اضافات</p>
+          <p className="text-black font-medium text-base">{title}</p>
           <OptionalLabel />
         </legend>
 
-        <div className="py-3 border-b border-gray-300">
-          <label className="flex flex-row justify-between">
-            <p className="text-black text-[13px] font-normal">كراميل</p>
-            <p className="flex flex-row gap-4">
-              <span className="text-xs font-normal">+ 2.00 رس</span>
-              <input type="checkbox" name="addons" value="caramel" />
-            </p>
-          </label>
-        </div>
-
-        <div className="py-3 border-b border-gray-300">
-          <label className="flex flex-row justify-between">
-            <p className="text-black text-[13px] font-normal">شوكولاتة</p>
-            <p className="flex flex-row gap-4">
-              <span className="text-xs font-normal">+ 3.00 رس</span>
-              <input type="checkbox" name="addons" value="chocolate" />
-            </p>
-          </label>
-        </div>
-
-        <div className="py-3 border-b border-gray-300">
-          <label className="flex flex-row justify-between">
-            <p className="text-black text-[13px] font-normal">فانيليا</p>
-            <p className="flex flex-row gap-4">
-              <span className="text-xs font-normal">+ 1.50 رس</span>
-              <input type="checkbox" name="addons" value="vanilla" />
-            </p>
-          </label>
-        </div>
+        {options.map((option, index) => (
+          <div key={index} className="py-3 border-b border-gray-300">
+            <label className="flex flex-row justify-between items-center">
+              <p className="text-black text-[13px] font-normal">{option.label}</p>
+              <div className="flex flex-row gap-4 items-center">
+                {option.extraPrice && (
+                  <span className="text-xs font-normal">+ {option.extraPrice} رس</span>
+                )}
+                <input type="checkbox" name={name} value={option.value} onChange={() => onToggle(name, option.value)}
+                />
+              </div>
+            </label>
+          </div>
+        ))}
       </fieldset>
     </div>
   );
