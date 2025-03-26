@@ -4,7 +4,8 @@ import ProductPageClient from "./ProductPageClient";
 export default async function ProductPage({
   params,
 }: {
-  params: { slug: string; lang: Locale };
+  params: Promise<{ slug: string; lang: Locale; }>;
+
 }) {
   const { slug, lang } = await params;
 

@@ -13,6 +13,8 @@ export default function OrderAgain({ lang, products }: OrderAgainRowProps) {
       <div className="flex gap-3 overflow-x-auto whitespace-nowrap scroll-smooth snap-x snap-mandatory w-full flex-nowrap">
         {products.map((product, index) => (
           <ProductCard
+            lang={lang}
+            id={product.id}
             key={index}
             imageUrl={product.imageUrl}
             name={product.name}
