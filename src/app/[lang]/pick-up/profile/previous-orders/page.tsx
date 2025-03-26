@@ -1,7 +1,7 @@
-import MobileWrapper from "@/src/app/mobile-wrapper";
 import NavBar from "@/src/components/pickup/navigation-bar/navigation-bar";
 import OrderItemsDropdown from "@/src/components/pickup/previous-orders/order-items";
 import { OrderItemsDropdownProps } from "@/src/interfaces/interfaces";
+import MobileWrapper from "../../../mobile-wrapper";
 
 const orderItems = [
     {

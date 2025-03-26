@@ -1,5 +1,5 @@
-import MobileWrapper from "@/src/app/mobile-wrapper";
 import NavBar from "@/src/components/pickup/navigation-bar/navigation-bar";
+import MobileWrapper from "../../../mobile-wrapper";
 
 const toggleItems = [
     "اسماك",

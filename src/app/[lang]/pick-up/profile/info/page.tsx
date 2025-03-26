@@ -1,9 +1,10 @@
-import MobileWrapper from "@/src/app/mobile-wrapper";
 import NavBar from "@/src/components/pickup/navigation-bar/navigation-bar";
-import { DeleteIcon, EditIcon, EmailIcon, PhoneIcon, User } from "../../../../components/pickup/profile/icons";
 import { InputFieldProps } from "@/src/interfaces/interfaces";
 import InputField from "@/src/components/pickup/profile/input-field";
 import { GIcon } from "@/src/components/pickup/user-overlay/icons";
+import { PhoneIcon } from "@/src/components/pickup/order-placed/icons";
+import { User, EmailIcon, DeleteIcon } from "@/src/components/pickup/profile/icons";
+import MobileWrapper from "../../../mobile-wrapper";
 
 const inputFields: InputFieldProps[] = [
     { label: "الاسم", icon: User, value: "اسم المستخدم" },
