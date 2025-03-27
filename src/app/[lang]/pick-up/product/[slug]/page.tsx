@@ -23,7 +23,7 @@ export default async function ProductPage({
 
   const data = await res.json();
   console.log(data)
-  const product = data.menu_details;
+  const product = data;
 
   const name = lang === "ar" ? product.item_name_ar : product.item_name;
   const description = lang === "ar" ? product.item_desc_ar : product.item_desc;
