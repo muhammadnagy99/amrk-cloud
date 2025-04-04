@@ -1,8 +1,14 @@
 import { ReactNode } from "react";
 
-export interface WrapperProps {
-  children: ReactNode;
+export interface OverlayWrapperProps {
+  children: React.ReactNode;
+  onClose: () => void;
 }
+
+export interface WrapperProps {
+  children: React.ReactNode;
+}
+
 
 export interface INavBar {
   text: string

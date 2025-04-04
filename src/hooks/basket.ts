@@ -22,7 +22,7 @@ export default function useBasket() {
   }, []);
 
   const addToBasket = (item: BasketItem) => {
-    const updated = [...basket, item];
+    const updated = [...basket.filter((b) => b.id !== item.id), item];
     localStorage.setItem(BASKET_KEY, JSON.stringify(updated));
     setBasket(updated);
   };

@@ -1,4 +1,4 @@
-import { Product, CategoryRowProps, OrderAgainRowProps, OffersRowProps } from "./interfaces/interfaces";
+import { Product, CategoryRowProps, OrderAgainRowProps, OffersRowProps } from "../interfaces/interfaces";
 
 interface MenuItem {
   product_id: string;
@@ -9,10 +9,12 @@ interface MenuItem {
   item_img: string;
   item_price: number;
   category_name: string;
+  category_name_ar: string
 }
 
 interface Category {
   catgory_name: string;
+  category_name_ar: string
   catg_id: string;
   items: MenuItem[];
 }
@@ -28,7 +30,7 @@ export function transformData(data: ApiResponse, lang: string = 'en') {
   // Transform categories for ActionBar
   const actionBarCategories = data.menu_items.map(category => ({
     id: category.catg_id || '', 
-    name: lang === 'ar' ? category.catgory_name : category.catgory_name, // Just using catgory_name for now since there's no AR version in sample
+    name: lang === 'ar' ? category.catgory_name : category.category_name_ar, 
   }));
 
   // Transform menu items into product format
@@ -54,6 +56,5 @@ export function transformData(data: ApiResponse, lang: string = 'en') {
   return {
     actionBarCategories,
     categoriesData,
-
   };
 }

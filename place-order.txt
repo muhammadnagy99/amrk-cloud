@@ -1,0 +1,60 @@
+{
+  "branchId": "tYFeHGxyCWJ3fpXYYD1h", => done
+  "userIsAnnoyms": false, => static, (user mode ... to be considered)
+  "userId": "uED0ZAbAPtUQMY5Vfw7nBKkNEgB3", => done
+  "tableId": "", => pickup: empty, dine-in: needed, else: empty....
+  "vat": 16, =>'in postman'
+  "userName": "+962****9999", => done, (country code + encrypted + last 4 digits)
+  "unitPrice": "SAR", => done. in postman
+  "orderNote": "", =>(empty for now)
+  "packOrderTogo": true, => (depend on the postman)
+  "subTotal": 86.20689655172414, (according to the => .... total / (1 + (vat / 100)))
+  "totalPrice": 100, (according to the => .... total / (1 + (vat / 100)))
+  "lang": 2, 1 => arabic, 2 => english
+  "restId": "jZEARMr9MnvCidxdC9Ay", postman branch info
+  "orderType": 2, 1 => dine-in, 2 => pickup, 3 => delivery, 4 => table reservations
+  "tipValue": 5, => depend on user, needed to add to the pick-up
+  "tipType": 1, 1 => percentage, 2 => other
+  "payType": 2,
+  "locationId": "", => for delievery only. (user location id)
+  "deliveryDT": "", => for delievry only. 
+  "deliveryCost": 0, => for delievry only. 
+  "delivIsASAP": true, => for delievry only.  
+  "delivCompany": "test",
+  "pickupDT": "",
+  "pickIsASAP": true,
+  "curbSideId": "", => if found yes, no make user add then add the id.
+  "curbSidePickup": false, => toggle option
+  "itemsMenu": [
+    {
+      "price_non_inclusive": 100,
+      "has_inclusive_taxes": false,
+      "taxes_breakdown": [],
+      "menuId": "bIbztOGr7IYg6I4hk0n0",
+      "offerId": "",
+      "cookTime": 0,
+      "menuData": {
+        "menuName": "PRE TEST ITEM",
+        "catgId": "StTnuAcWOkdLCeEBEIic",
+        "menu_name_ar": "ar PRE TEST ITEM",
+        "price": 100,
+        "catgName": ""
+      },
+      "cusz": [
+        {
+          "cuszName": "title test",
+          "cuszNameAr": "tiltle test ar",
+          "plu": "",
+          "items": []
+        }
+      ],
+      "menuNote": "", => add notes to the products and the order.
+      "loyalty_id": "",
+      "redeemable_loyalty_id": "",
+      "subtotal": 100,
+      "packOrderTogo": true,
+      "orderType": 2,
+      "quantitys": 1
+    }
+  ]
+}

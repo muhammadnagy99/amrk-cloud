@@ -1,50 +1,69 @@
 import NavBar from "@/src/components/pickup/navigation-bar/navigation-bar";
 import MobileWrapper from "../../../mobile-wrapper";
+import { Locale } from "@/src/i18n-config";
 
-const toggleItems = [
-    "اسماك",
-    "لاكتوز",
-    "جيلاتين",
-    "المحار",
-    "ذرة",
-    "ألبان",
-    "مكسرات",
-    "فول سوداني",
-    "صويا",
-    "قمح",
-    "بيض",
-    "بذور",
-];
 
-function Save() {
-    return (
-        <div className="fixed bottom-0 left-1/2 transform -translate-x-1/2 w-full bg-white shadow-[0_0_10px_0_rgba(0,0,0,0.2)] p-4 flex flex-col justify-between items-center z-50 rounded-lg gap-4">
-                <p className="flex flex-row gap-2">
-                    <NoteIcon />
-                    <span className="text-[8px] font-normal text-[#00000066]">
-                        على الرغم من حرصنا الشديد، لا يمكننا ضمان خلو المكونات من مسببات الحساسية. ومع ذلك، نوضح في وصف المنتج أي مكونات قد تشكل خطرًا على المصابين بالحساسية.
-                    </span>
-                </p>
-            <button className="flex items-center justify-start px-4 bg-[#b0438a] text-white w-full rounded-lg flex-1">
-                <p className="flex flex-row items-center justify-center w-full h-12">
-                    <span className="text-sm font-medium">حفظ الخيارات</span>
-                </p>
-            </button>
-        </div>
-    )
-}
+type PageProps = {
+  params: {
+    lang: Locale;
+  };
+};
+
+const TEXTS: Record<Locale, any> = {
+  ar: {
+    title: "إعدادات حساسية الأطعمة",
+    save: "حفظ الخيارات",
+    disclaimer:
+      "على الرغم من حرصنا الشديد، لا يمكننا ضمان خلو المكونات من مسببات الحساسية. ومع ذلك، نوضح في وصف المنتج أي مكونات قد تشكل خطرًا على المصابين بالحساسية.",
+    toggles: [
+      "اسماك",
+      "لاكتوز",
+      "جيلاتين",
+      "المحار",
+      "ذرة",
+      "ألبان",
+      "مكسرات",
+      "فول سوداني",
+      "صويا",
+      "قمح",
+      "بيض",
+      "بذور"
+    ]
+  },
+  en: {
+    title: "Food Allergy Settings",
+    save: "Save Preferences",
+    disclaimer:
+      "Although we are very careful, we cannot guarantee that the ingredients are completely allergen-free. However, we indicate any ingredients that may pose a risk in the product description.",
+    toggles: [
+      "Fish",
+      "Lactose",
+      "Gelatin",
+      "Shellfish",
+      "Corn",
+      "Dairy",
+      "Nuts",
+      "Peanuts",
+      "Soy",
+      "Wheat",
+      "Eggs",
+      "Seeds"
+    ]
+  }
+};
+
 function Toggle() {
-    return (
-        <label className="inline-flex items-center cursor-pointer ">
-            <input
-                type="checkbox"
-                value=""
-                className="sr-only peer !hidden"
-                disabled={false}
-            />
-            <div className="relative w-11 h-6 bg-[#cecece] peer-focus:outline-none peer-focus:none peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-[#b0438a]"></div>
-        </label>
-    )
+  return (
+    <label className="inline-flex items-center cursor-pointer">
+      <input
+        type="checkbox"
+        value=""
+        className="sr-only peer !hidden"
+        disabled={false}
+      />
+      <div className="relative w-11 h-6 bg-[#cecece] peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#b0438a]" />
+    </label>
+  );
 }
 
 function NoteIcon() {
@@ -56,21 +75,44 @@ function NoteIcon() {
     )
 }
 
-export default function InfoPAge() {
-    return (
-        <MobileWrapper>
-            <div className="flex flex-col gap-8 w-[88%] h-screen overflow-y-auto pb-28 pt-10">
-                <NavBar text="إعدادات حساسية الأطعمة" />
-                <div className="w-full flex flex-col justify-between h-full pb-12">
-                    {toggleItems.map((item, index) => (
-                        <div key={index} className="py-3 border-b border-gray-300 bg-white flex flex-row justify-between">
-                            <span className="font-normal text-sm">{item}</span>
-                            <Toggle />
-                        </div>
-                    ))}
-                </div>
-                <Save />
+function Save({ disclaimer, saveText }: { disclaimer: string; saveText: string }) {
+  return (
+    <div className="fixed bottom-0 left-1/2 transform -translate-x-1/2 w-full bg-white shadow-[0_0_10px_0_rgba(0,0,0,0.2)] p-4 flex flex-col justify-between items-center z-50 rounded-lg gap-4">
+      <p className="flex flex-row gap-2">
+        <NoteIcon />
+        <span className="text-[8px] font-normal text-[#00000066]">{disclaimer}</span>
+      </p>
+      <button className="flex items-center justify-start px-4 bg-[#b0438a] text-white w-full rounded-lg flex-1">
+        <p className="flex flex-row items-center justify-center w-full h-12">
+          <span className="text-sm font-medium">{saveText}</span>
+        </p>
+      </button>
+    </div>
+  );
+}
+
+export default async function Allergies(props: {
+    params: Promise<{ lang: Locale }>;
+    
+  }) {
+  const params = await props.params;
+  const lang = params.lang || "ar";
+  const t = TEXTS[lang];
+
+  return (
+    <MobileWrapper>
+      <div className="flex flex-col gap-8 w-[88%] h-screen overflow-y-auto pb-28 pt-10">
+        <NavBar text={t.title} />
+        <div className="w-full flex flex-col justify-between h-full pb-12">
+          {t.toggles.map((item: string, index: number) => (
+            <div key={index} className="py-3 border-b border-gray-300 bg-white flex flex-row justify-between">
+              <span className="font-normal text-sm">{item}</span>
+              <Toggle />
             </div>
-        </MobileWrapper>
-    );
+          ))}
+        </div>
+        <Save disclaimer={t.disclaimer} saveText={t.save} />
+      </div>
+    </MobileWrapper>
+  );
 }

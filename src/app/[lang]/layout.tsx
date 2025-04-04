@@ -35,7 +35,7 @@ export default async function RootLayout({
   return (
     <html lang={lang} dir={dir}>
       <body
-        className={`flex flex-col justify-center ${rubik.variable} antialiased bg-white`}
+        className={`flex flex-col justify-center antialiased bg-white`}
       >
         {children}
       </body>
