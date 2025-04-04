@@ -9,7 +9,7 @@ export default function Category({ lang, categoryId, categoryName, products }: C
       <h2 className="text-black font-medium text-base">{categoryName}</h2>
       <div className="grid grid-cols-3 gap-2 w-full">
         {products.map((product, index) => (
-          <Link href={`pick-up/product/${product.id}`} key={index}>
+          <a href={`pick-up/product/${product.id}`} key={index}>
             <CategoryCard
               id={product.id}
               lang={lang}
@@ -18,7 +18,7 @@ export default function Category({ lang, categoryId, categoryName, products }: C
               price={product.price}
               description={product.description}
             />
-          </Link>
+          </a>
         ))}
       </div>
     </section>

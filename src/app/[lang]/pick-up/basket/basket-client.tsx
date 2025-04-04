@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
 import MobileWrapper from "../../mobile-wrapper";
 import BasketCTA from "@/src/components/pickup/basket-page/basket-CTA";
 import UserDiscount from "@/src/components/pickup/basket-page/discount";
@@ -68,12 +67,12 @@ export default function BasketPageClient({ props }: { props: string }) {
                 {basket.length === 0 ? (
                     <div className="flex flex-col items-center justify-center text-center gap-4 mt-20">
                         <p className="text-gray-500 text-sm">{t.emptyMessage}</p>
-                        <Link
+                        <a
                             href="/pick-up"
                             className="text-[#B0438A] underline text-sm font-medium"
                         >
                             {t.goBack}
-                        </Link>
+                        </a>
                     </div>
                 ) : (
                     <>
