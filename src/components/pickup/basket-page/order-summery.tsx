@@ -19,6 +19,7 @@ const TEXTS: Record<string, any> = {
     discount: "استبدال نقاط الولاء",
     total: "المبلغ الإجمالي",
     currency: "ر.س",
+    loading: "جاري تحميل الملخص...",
   },
   en: {
     subtotal: "Subtotal",
@@ -26,6 +27,7 @@ const TEXTS: Record<string, any> = {
     discount: "Points Redeemed",
     total: "Total",
     currency: "SAR",
+    loading: "Loading summary...",
   },
 };
 
@@ -63,7 +65,7 @@ export default function OrderSummary({
       });
   }, [items, redeemPoints, pointsValue]);
 
-  if (loading || !summary) return <p>Loading summary...</p>;
+  if (loading || !summary) return <p>{t.loading}</p>;
 
   return (
     <div className="py-3 border-b border-gray-300 bg-white flex flex-col gap-4">
