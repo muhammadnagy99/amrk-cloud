@@ -46,6 +46,7 @@ export interface CategoryRowProps {
   categoryId: string;
   categoryName: string;
   products: Product[];
+  view?: 'grid' | 'list';
 }
 
 export interface OrderAgainRowProps {
@@ -57,6 +58,7 @@ export interface OffersRowProps {
   lang: string;
   products: Product[];
   loading?: boolean;
+  view: 'grid' | 'list';
 }
 
 export interface ViewGridProps {

@@ -6,7 +6,12 @@ import { useEffect, useState } from "react";
 import DEFAULT from '@/public/default.png';
 import SkeletonCard from "../../../assets/skeleton-card";
 
-export default function OfferCard({ lang, imageUrl, name, price, description, id }: Product) {
+interface CategoryCardProps extends Product {
+  view: 'grid' | 'list';
+}
+
+
+export default function OfferCard({ lang, imageUrl, name, price, description, id, view }: CategoryCardProps) {
   const [imgSrc, setImgSrc] = useState<string | StaticImageData>(DEFAULT);
   const [isLoaded, setIsLoaded] = useState(false);
   const currnecy = lang === 'en' ? 'SAR' : 'ر.س' ;
@@ -28,7 +33,7 @@ export default function OfferCard({ lang, imageUrl, name, price, description, id
   if (!isLoaded) {
     return (
       <div className="w-[106px] h-[136px]">
-        <SkeletonCard />
+        <SkeletonCard view={view} />
       </div>
     );
   }

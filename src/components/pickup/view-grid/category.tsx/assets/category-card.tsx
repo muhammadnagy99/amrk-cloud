@@ -6,10 +6,14 @@ import DEFAULT from '@/public/default.png'
 import { useEffect, useState } from "react";
 import SkeletonCard from "../../../assets/skeleton-card";
 
-export default function CategoryCard({ id, lang, imageUrl, name, price, description }: Product) {
+interface CategoryCardProps extends Product {
+  view?: 'grid' | 'list';
+}
+
+export default function CategoryCard({ id, lang, imageUrl, name, price, description, view = 'grid' }: CategoryCardProps) {
   const [imgSrc, setImgSrc] = useState<string | StaticImageData>(DEFAULT);
   const [isLoaded, setIsLoaded] = useState(false);
-  const currnecy = lang === 'en' ? 'SAR' : 'ر.س' ;
+  const currnecy = lang === 'en' ? 'SAR' : 'ر.س';
 
   useEffect(() => {
     const img = new window.Image();
@@ -26,35 +30,39 @@ export default function CategoryCard({ id, lang, imageUrl, name, price, descript
     };
   }, [imageUrl]);
 
-  if (!isLoaded) return <SkeletonCard />;
+  if (!isLoaded) return <SkeletonCard view={view}/>;
   return (
-    <figure className="flex flex-col gap-2 snap-start">
+    <figure className={`${view === 'list' ? "flex flex-row-reverse gap-3 justify-between items-center w-full" : "flex flex-col gap-2 snap-start"}`}>
+
       <Image
-        className="rounded-lg"
+        className={`rounded-lg ${view === 'list' ? 'w-[106px]' : ''}`}
         src={imgSrc}
-        width={106}
-        height={80}
+        width={view === 'list' ? 80 : 106}
+        height={view === 'list' ? 80 : 80}
         alt={name}
-        priority={false}
         quality={80}
-        onError={() => setImgSrc(DEFAULT)}
       />
-      <figcaption className="flex flex-col gap-1 w-full">
-        <h3 className="text-black font-medium text-[13px] break-words whitespace-normal text-start">
-          {name}
-        </h3>
-        {description && (
-          <p
-            className="text-[#00000080] font-light text-[11px] break-words whitespace-normal text-start 
+
+      <div className="flex flex-col">
+        <figcaption className="flex flex-col gap-1 w-full">
+          <h3 className="text-black font-medium text-[13px] break-words whitespace-normal text-start">
+            {name}
+          </h3>
+          {description && (
+            <p
+              className="text-[#00000080] font-light text-[11px] break-words whitespace-normal text-start 
             line-clamp-2 overflow-hidden text-ellipsis max-w-[106px]"
-          >
-            {description}
-          </p>
-        )}
-      </figcaption>
-      <figcaption className="text-primaryColor text-[13px] font-medium ">
-        {price} {currnecy}
-      </figcaption>
+            >
+              {description}
+            </p>
+          )}
+        </figcaption>
+        <figcaption className="text-primaryColor text-[13px] font-medium ">
+          {price} {currnecy}
+        </figcaption>
+      </div>
     </figure>
   );
 }
+
+

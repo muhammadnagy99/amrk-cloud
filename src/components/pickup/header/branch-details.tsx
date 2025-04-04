@@ -1,17 +1,16 @@
 import Image from "next/image";
 import ProfileFallback from "@/public/profile.png";
-import { cookies } from "next/headers";
 import { Info } from "./assets/icons";
 import BranchInfo from "./assets/branch-info";
 import { transformBranchData } from "@/src/lib/branch-data-transform";
+import { getBranchIdFromCookies } from "@/src/lib/get-branch";
 
 type Props = {
   lang: string;
 };
 
 export default async function BranchDetails({ lang }: Props) {
-  const cookieStore = cookies();
-  const brnid = (await cookieStore).get("brnid")?.value;
+  const brnid = await getBranchIdFromCookies();
 
   if (!brnid) return null;
 

@@ -4,7 +4,7 @@ import SkeletonCard from "../../assets/skeleton-card";
 import { OffersRowProps } from "@/src/interfaces/interfaces";
 
 
-export default function Offers({ lang, products, loading = false }: OffersRowProps) {
+export default function Offers({ lang, products, loading = false, view }: OffersRowProps) {
   const TYPE = 'offers';
   const TEXTS = ContentProvider({ type: TYPE, lang });
 
@@ -13,7 +13,7 @@ export default function Offers({ lang, products, loading = false }: OffersRowPro
       <h2 className="text-black font-medium text-base">{TEXTS}</h2>
       <div className="grid grid-cols-3 gap-4 w-full">
         {loading
-          ? Array(5).fill(null).map((_, i) => <SkeletonCard key={i} />)
+          ? Array(5).fill(null).map((_, i) => <SkeletonCard view={view} key={i} />)
           : products.map((product, index) => (
             <OfferCard
               id={product.id}
@@ -23,6 +23,7 @@ export default function Offers({ lang, products, loading = false }: OffersRowPro
               name={product.name}
               price={product.price}
               description={product.description}
+              view={view}
             />
           ))}
       </div>

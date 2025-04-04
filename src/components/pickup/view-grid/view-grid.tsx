@@ -12,6 +12,7 @@ type EnhancedProps = {
   offersData?: any;
   categoriesData: NonNullable<ViewGridProps["categoriesData"]>;
   remainingCategories?: ViewGridProps["categoriesData"];
+  view: 'grid' | 'list';
 };
 
 
@@ -21,9 +22,10 @@ export default function ViewGrid({
   offersData,
   categoriesData,
   remainingCategories = [],
+  view
 }: EnhancedProps) {
   const [showRemaining, setShowRemaining] = useState(false);
-
+  
   useEffect(() => {
     const timeout = setTimeout(() => {
       setShowRemaining(true);
@@ -35,7 +37,7 @@ export default function ViewGrid({
   return (
     <div className="flex flex-col gap-5 w-full">
       {orderAgainData && <OrderAgain lang={lang} products={orderAgainData.products} />}
-      {offersData && <Offers lang={lang} products={offersData.products} />}
+      {offersData && <Offers lang={lang} products={offersData.products} view={view} />}
       
       {/* First (server-rendered) category */}
       {categoriesData.map((category, index) => (
@@ -45,6 +47,7 @@ export default function ViewGrid({
           categoryId={category.categoryId}
           categoryName={category.categoryName}
           products={category.products}
+          view={view}
         />
       ))}
 
@@ -57,6 +60,7 @@ export default function ViewGrid({
             categoryId={category.categoryId}
             categoryName={category.categoryName}
             products={category.products}
+            view={view}
           />
         ))}
     </div>
