@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image, { StaticImageData } from "next/image";
 import { BackArrow } from "./icons";
+import Navigation from "./navigation";
 
 interface ProductInfoProps {
   name: string;
@@ -27,9 +28,7 @@ export default function ProductInfo({
           priority={true}
           quality={100}
         />
-        <Link href="/pick-up" className="absolute top-4 right-4">
-          <BackArrow />
-        </Link>
+        <Navigation />
         <figcaption className="text-transparent absolute">
           {imageAlt}
         </figcaption>

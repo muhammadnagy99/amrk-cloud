@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import ActionBar from "@/src/components/pickup/action-bar/action-bar";
 import Header from "@/src/components/pickup/header/header";
 import ViewGrid from "@/src/components/pickup/view-grid/view-grid";
@@ -23,10 +25,13 @@ export default async function Home(props: {
       "Content-Type": "application/json",
       "x-amrk-app-id": "amrk-eu1"
     },
-    cache: "no-store" // disable caching if dynamic data
+    next: {
+      revalidate: 3600
+    }
   });
 
   let rawMenuData;
+
   try {
     rawMenuData = await response.json();
   } catch (err) {
@@ -40,7 +45,10 @@ export default async function Home(props: {
   }
 
   // Transform the API response for your components
-  const { actionBarCategories, categoriesData } = transformData(rawMenuData, lang);
+  const { actionBarCategories, categoriesData = [] } = transformData(rawMenuData, lang);
+  const firstCategory = categoriesData?.[0];
+  const remainingCategories = categoriesData?.slice(1);
+
   const orderAgainData = null;
   const offersData = null;
 
@@ -52,8 +60,10 @@ export default async function Home(props: {
           <ActionBar categories={actionBarCategories} />
           <ViewGrid
             lang={lang}
-            categoriesData={categoriesData}
+            categoriesData={firstCategory ? [firstCategory] : []}
+            remainingCategories={remainingCategories}
           />
+
         </div>
         <BasketCTAHome lang={lang} />
       </ScreenWrapper>
