@@ -21,7 +21,7 @@ interface Props {
 export default function BasketItemsList({ lang, items, onDeleteItem }: Props) {
   const [products, setProducts] = useState<Record<string, ProductInfo>>({});
   const [loading, setLoading] = useState(true);
-
+  
   useEffect(() => {
     const productIds = [...new Set(items.map((item) => item.id))];
 
@@ -39,7 +39,6 @@ export default function BasketItemsList({ lang, items, onDeleteItem }: Props) {
         setLoading(false);
       });
   }, [items]);
-
   return (
     <div className="flex flex-col gap-3">
       {loading
@@ -49,7 +48,6 @@ export default function BasketItemsList({ lang, items, onDeleteItem }: Props) {
         : items.map((item, index) => {
             const product = products[item.id];
             if (!product) return null;
-
             return (
               <CartItem
                 key={index}
@@ -58,19 +56,15 @@ export default function BasketItemsList({ lang, items, onDeleteItem }: Props) {
                 name={lang === "ar" ? product.item_name_ar : product.item_name}
                 basePrice={product.item_price}
                 options={[
-                  ...(item.required.name
-                    ? [
-                        {
-                          name: item.required.name,
-                          price: item.required.extraPrice || 0,
-                        },
-                      ]
-                    : []),
-                  ...item.optional.map((opt) => ({
-                    name: opt.name,
+                  ...item.required.map((opt) => ({
+                    name: opt.value,
                     price: opt.extraPrice || 0,
                   })),
-                ]}
+                  ...item.optional.map((opt) => ({
+                    name: opt.value,
+                    price: opt.extraPrice || 0,
+                  })),
+                ]}                
                 totalPrice={item.totalPrice}
                 onDelete={() => onDeleteItem(item.id)}
                 onEdit={() => {

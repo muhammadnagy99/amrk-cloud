@@ -25,7 +25,7 @@ const TEXTS: Record<Locale, any> = {
 export interface BasketItem {
     id: string;
     quantity: number;
-    required: { name: string; value: string; extraPrice?: number };
+    required: { name: string; value: string; extraPrice?: number }[];
     optional: { name: string; value: string; extraPrice?: number }[];
     totalPrice: number;
 }

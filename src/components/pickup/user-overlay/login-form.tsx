@@ -1,5 +1,4 @@
 'use client'
-
 import { FC, useState } from "react";
 import { PhoneInput } from 'react-international-phone';
 import 'react-international-phone/style.css';
@@ -38,13 +37,34 @@ const LoginForm: FC<LoginFormProps> = ({ lang, onLoginSuccess, onRequestOTP }) =
   const [phone, setPhone] = useState("");
   const t = TEXTS[lang] || TEXTS["en"]; // fallback to English if unsupported
 
-  const handleLoginClick = () => {
-    if (phone) {
-      onRequestOTP();
-    } else {
+  const handleLoginClick = async () => {
+    if (!phone) {
       alert(t.phoneAlert);
+      return;
+    }
+  
+    try {
+      const response = await fetch("https://api.dev.amrk.app/amrkCloudWeb/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ PhoneNumber: phone }),
+      });
+  
+      if (response.ok) {
+        const data = await response.json();
+  
+        document.cookie = `user_id=${data.user_id}; path=/; max-age=3600`;
+  
+        onRequestOTP(); // Show OTP screen
+      } else {
+        alert("Login failed. Please check your phone number.");
+      }
+    } catch (error) {
+      console.error("Login error:", error);
+      alert("An error occurred. Please try again.");
     }
   };
+  
 
   return (
     <div className="flex flex-col gap-4 rounded-t-2xl py-2 px-3 w-full">

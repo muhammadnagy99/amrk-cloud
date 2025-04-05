@@ -58,7 +58,6 @@ export default async function Home(props: {
             categoriesData={categoriesData}
             lang={lang}
           />
-
         </div>
         <BasketCTAHome lang={lang} />
       </ScreenWrapper>

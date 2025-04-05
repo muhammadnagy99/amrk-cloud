@@ -11,7 +11,7 @@ interface Props {
   productId: string;
   requiredOptions: { label: string; value: string; extraPrice?: string }[];
   optionalOptions: { label: string; value: string; extraPrice?: string }[];
-  selectedRequired: { name: string; value: string } | null;
+  selectedRequired: { name: string; value: string }[]; // now array
   selectedOptional: { name: string; value: string }[];
 }
 
@@ -45,52 +45,42 @@ export default function AddCart({
 
   const handleAddToCart = () => {
     setLoading(true);
-
     const hasRequired = requiredOptions.length > 0;
     const hasOptional = optionalOptions.length > 0;
     setHasStartedAddFlow(true);
-
-    if (hasRequired && !selectedRequired) {
-      alert("Please select a required option.");
+  
+    if (hasRequired && selectedRequired.length === 0) {
+      alert("Please select required options.");
       setLoading(false);
       return;
     }
-
-    const requiredValue = selectedRequired?.value || "";
-    const requiredName = selectedRequired?.name || "";
-    const requiredExtra = hasRequired && selectedRequired
-      ? getExtraPrice("size", requiredValue)
-      : 0;
-
-    const optionalWithPrices = hasOptional
-      ? selectedOptional.map((opt) => ({
-        ...opt,
-        extraPrice: getExtraPrice("addons", opt.value),
-      }))
-      : [];
-
+  
+    const requiredWithPrices = selectedRequired.map((opt) => ({
+      ...opt,
+      extraPrice: getExtraPrice("size", opt.value),
+    }));
+  
+    const optionalWithPrices = selectedOptional.map((opt) => ({
+      ...opt,
+      extraPrice: getExtraPrice("addons", opt.value),
+    }));
+  
     const totalExtras =
-      requiredExtra + optionalWithPrices.reduce((sum, o) => sum + (o.extraPrice || 0), 0);
+      [...requiredWithPrices, ...optionalWithPrices].reduce(
+        (sum, o) => sum + (o.extraPrice || 0),
+        0
+      );
+  
     const total = (price + totalExtras) * quantity;
-
+  
     const item: BasketItem = {
       id: productId,
       quantity,
-      required: hasRequired
-        ? {
-          name: requiredName,
-          value: requiredValue,
-          extraPrice: requiredExtra,
-        }
-        : {
-          name: "",
-          value: "",
-          extraPrice: 0,
-        },
+      required: requiredWithPrices, // now an array
       optional: optionalWithPrices,
       totalPrice: total,
     };
-
+  
     addToBasket(item);
     setTimeout(() => {
       setAdded(true);
@@ -100,14 +90,13 @@ export default function AddCart({
       setAdded(true);
       setShowAdded(true);
       setLoading(false);
-
       setTimeout(() => {
         setShowAdded(false);
         setShowGoToBasket(true);
       }, 1000);
     }, 500);
-
   };
+  
 
 
   return (

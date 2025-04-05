@@ -18,6 +18,8 @@ export interface InputFieldProps {
   label: string;
   icon: React.FC;
   value: string;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  disabled?: boolean;
 }
 
 
@@ -91,7 +93,15 @@ export interface OptionalChoicesProps {
 export interface BasketItem {
   id: string;
   quantity: number;
-  required: { name: string; value: string; extraPrice?: number };
-  optional: { name: string; value: string; extraPrice?: number }[];
+  required: {
+    name: string;
+    value: string;
+    extraPrice?: number;
+  }[];
+  optional: {
+    name: string;
+    value: string;
+    extraPrice?: number;
+  }[];
   totalPrice: number;
 }

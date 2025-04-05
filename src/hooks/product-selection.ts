@@ -1,12 +1,19 @@
-'use client'
+'use client';
 import { useState } from "react";
 
 export function useProductSelections() {
-  const [required, setRequired] = useState<{ name: string; value: string } | null>(null);
+  const [required, setRequired] = useState<{ name: string; value: string }[]>([]);
   const [optional, setOptional] = useState<{ name: string; value: string }[]>([]);
 
   const handleRequiredChange = (name: string, value: string) => {
-    setRequired({ name, value });
+    setRequired((prev) => {
+      const exists = prev.find((opt) => opt.value === value);
+      if (exists) {
+        return prev.filter((opt) => opt.value !== value);
+      } else {
+        return [...prev, { name, value }];
+      }
+    });
   };
 
   const handleOptionalToggle = (name: string, value: string) => {
@@ -20,5 +27,10 @@ export function useProductSelections() {
     });
   };
 
-  return { required, optional, handleRequiredChange, handleOptionalToggle };
+  return {
+    required,
+    optional,
+    handleRequiredChange,
+    handleOptionalToggle,
+  };
 }

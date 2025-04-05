@@ -17,14 +17,23 @@ interface ProductPageClientProps {
     requiredOptions?: {
         title: string;
         name: string;
-        options: { label: string; value: string; extraPrice?: string }[];
-    };
+        options: {
+            label: string;
+            value: string;
+            extraPrice?: string;
+        }[];
+    }[];
     optionalOptions?: {
         title: string;
         name: string;
-        options: { label: string; value: string; extraPrice?: string }[];
-    };
+        options: {
+            label: string;
+            value: string;
+            extraPrice?: string;
+        }[];
+    }[];
 }
+
 
 export default function ProductPageClient({
     productId,
@@ -43,34 +52,38 @@ export default function ProductPageClient({
             <div className="flex flex-col gap-8 w-full h-screen overflow-y-auto pb-28">
                 <ProductInfo name={name} description={description} imageSrc={imageSrc} />
 
-                {requiredOptions && (
+                {requiredOptions?.map((group, index) => (
                     <RequiredChoices
-                        title={requiredOptions.title}
-                        name={requiredOptions.name}
-                        options={requiredOptions.options}
+                        key={index}
+                        title={group.title}
+                        name={group.name}
+                        options={group.options}
                         onChange={handleRequiredChange}
                     />
-                )}
+                ))}
 
-                {optionalOptions && (
+                {optionalOptions?.map((group, index) => (
                     <OptionalChoices
-                        title={optionalOptions.title}
-                        name={optionalOptions.name}
-                        options={optionalOptions.options}
+                        key={index}
+                        title={group.title}
+                        name={group.name}
+                        options={group.options}
                         onToggle={handleOptionalToggle}
                     />
-                )}
+                ))}
+
             </div>
 
             <AddCart
                 productId={productId}
                 lang={lang}
                 price={price}
-                requiredOptions={requiredOptions?.options || []}
-                optionalOptions={optionalOptions?.options || []}
+                requiredOptions={requiredOptions?.flatMap((group) => group.options) || []}
+                optionalOptions={optionalOptions?.flatMap((group) => group.options) || []}
                 selectedRequired={required}
                 selectedOptional={optional}
             />
+
         </MobileWrapper>
     );
 }

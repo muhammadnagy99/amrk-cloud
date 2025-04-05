@@ -29,15 +29,30 @@ export default async function ProductPage({
   const imageSrc = product.item_img || "/default.png";
   const price = product.item_price || 0;
 
-  const requiredOptions =
-    product.required_options && product.required_options.options?.length
-      ? product.required_options
-      : undefined;
+  const requiredOptions = product.cusomisation_grouping_list
+    ?.filter((group: any) => group.min > 0)
+    .map((group: any) => ({
+      title: lang === "ar" ? group.cusomisation_grouping_name_ar : group.cusomisation_grouping_name,
+      name: group.cusomisation_grouping_name,
+      options: (group.items || []).map((item: any, index: number) => ({
+        label: lang === "ar" ? item.item_name_ar : item.item_name,
+        value: lang === "ar" ? item.item_name_ar : item.item_name,
+        extraPrice: item.price?.toString() ?? "0",
+      })),
+    }));
 
-  const optionalOptions =
-    product.optional_options && product.optional_options.options?.length
-      ? product.optional_options
-      : undefined;
+  const optionalOptions = product.cusomisation_grouping_list
+    ?.filter((group: any) => group.min === 0)
+    .map((group: any) => ({
+      title: lang === "ar" ? group.cusomisation_grouping_name_ar : group.cusomisation_grouping_name,
+      name: group.cusomisation_grouping_name,
+      options: (group.items || []).map((item: any, index: number) => ({
+        label: lang === "ar" ? item.item_name_ar : item.item_name,
+        value: lang === "ar" ? item.item_name_ar : item.item_name,
+        extraPrice: item.price?.toString() ?? "0",
+      })),
+    }));
+
 
   return (
     <ProductPageClient
