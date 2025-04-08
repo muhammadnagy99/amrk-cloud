@@ -36,14 +36,8 @@ export default function PaymentGateWayClient({ props }: { props: string }) {
   const [error, setError] = useState<boolean>(false);
 
   const setCookie = (name: string, value: string) => {
-    document.cookie = `${name}=${value}; path=/; max-age=86400`; // 1 day
+    document.cookie = `${name}=${value}; path=/; max-age=86400`;
   };
-
-  useEffect(() => {
-    document.cookie = "userToken=eyJhbGciOiJSUzI1NiIsImtpZCI6IjcxMTE1MjM1YTZjNjE0NTRlZmRlZGM0NWE3N2U0MzUxMzY3ZWViZTAiLCJ0eXAiOiJKV1QifQ.eyJuYW1lIjoiQmFkZXIgVU4iLCJwcmVtaXVtQWNjb3VudCI6dHJ1ZSwicGhvbmVOdW1iZXIiOiIrOTY2NTA1ODI5ODk2IiwiaXNzIjoiaHR0cHM6Ly9zZWN1cmV0b2tlbi5nb29nbGUuY29tL2FtcmstY292ZXJhZ2Vwb2ludHMiLCJhdWQiOiJhbXJrLWNvdmVyYWdlcG9pbnRzIiwiYXV0aF90aW1lIjoxNzQ0MTM4MjcxLCJ1c2VyX2lkIjoiSnBKYkRzeU1MZlBobm9XbGFFZWdoVUZ4NW1FMiIsInN1YiI6IkpwSmJEc3lNTGZQaG5vV2xhRWVnaFVGeDVtRTIiLCJpYXQiOjE3NDQxNDgxNzQsImV4cCI6MTc0NDE1MTc3NCwiZmlyZWJhc2UiOnsiaWRlbnRpdGllcyI6e30sInNpZ25faW5fcHJvdmlkZXIiOiJjdXN0b20ifX0.SWg0GIXUOj6QdStIkffDwryI3wMS-mRE6QKVvgcLhJgoAbGQyeqDQDzrShrdbjN0I8I8bax0Q9OS0FLh2eqcG6zR9ohXb-UDONUqA_afR9SvSH6o_vlx-mLPUE-mLJMhF1ZQi4pRYTMS7gITAu7MXSWwKkoW0arEJM_C6Jyop05LPpTwFaTxHkLIzw2mxj90xO_XyRLZrodzPJFpjOHZi-XufORsylvYPi4PQiX6Qi4XWjXHmB93aa9z3g2X9ku0vVwzPwHk-PqF4-y2LE_MqI7cZYvqGBKgI9INaLjLK5rerDkZpr4v_tn8740-I7xJcWEBfACLF6jWHFtHUoNILg; path=/";
-    document.cookie = "user_id=uED0ZAbAPtUQMY5Vfw7nBKkNEgB3; path=/";
-    document.cookie = "basket_id=oX3wSH0VIYOlsExxnGzg; path=/";
-  }, []);
 
   const fetchTelrUrl = async () => {
     try {
