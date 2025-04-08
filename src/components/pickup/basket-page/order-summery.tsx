@@ -2,6 +2,7 @@
 
 import { BasketItem } from "@/src/app/[lang]/pick-up/basket/basket-client";
 import { useEffect, useState } from "react";
+import { RiyalCurrency } from "./icons";
 
 interface Props {
   lang: string;
@@ -70,23 +71,23 @@ export default function OrderSummary({
   return (
     <div className="py-3 border-b border-gray-300 bg-white flex flex-col gap-4">
       <div className="grid grid-cols-2 text-black text-xs font-light gap-3">
-        <span className="rtl:text-right ltr:text-left">{t.subtotal}</span>
-        <span className="rtl:text-left ltr:text-right">
-          {t.currency} {summary.subtotal.toFixed(2)}
+        <span className="justify-self-start rtl:text-right ltr:text-left">{t.subtotal}</span>
+        <span className="justify-self-end flex flex-row gap-1">
+           {summary.subtotal.toFixed(2)} {lang === 'ar' ? <RiyalCurrency color="gray" /> : <p>{t.currency}</p>}
         </span>
 
-        <span className="rtl:text-right ltr:text-left">
+        <span className="justify-self-start rtl:text-right ltr:text-left">
           {t.vat} ({summary.vatPercent}%)
         </span>
-        <span className="rtl:text-left ltr:text-right">
-          {t.currency} {summary.vatAmount.toFixed(2)}
+        <span className="justify-self-end flex flex-row gap-1">
+         {summary.vatAmount.toFixed(2)} {lang === 'ar' ? <RiyalCurrency color="gray" /> : <p>{t.currency}</p>}
         </span>
 
         {summary.discount > 0 && (
           <>
-            <span className="rtl:text-right ltr:text-left text-primaryColor">{t.discount}</span>
-            <span className="rtl:text-left ltr:text-right text-primaryColor">
-              - {t.currency} {summary.discount.toFixed(2)}
+            <span className="justify-self-start rtl:text-right ltr:text-left text-primaryColor">{t.discount}</span>
+            <span className="justify-self-end flex flex-row gap-1 text-primaryColor">
+              - {summary.discount.toFixed(2)} {lang === 'ar' ? <RiyalCurrency color="#b0438a" /> : <p>{t.currency}</p>}
             </span>
           </>
         )}
@@ -94,8 +95,8 @@ export default function OrderSummary({
 
       <div className="flex justify-between items-center font-medium text-base">
         <span className="text-black">{t.total}</span>
-        <span className="text-black">
-          {t.currency} {summary.total.toFixed(2)}
+        <span className="text-black flex flex-row gap-1">
+         {summary.total.toFixed(2)}  {lang === 'ar' ? <RiyalCurrency color="black" /> : <p>{t.currency}</p>}
         </span>
       </div>
     </div>

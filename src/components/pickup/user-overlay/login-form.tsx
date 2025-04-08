@@ -42,19 +42,20 @@ const LoginForm: FC<LoginFormProps> = ({ lang, onLoginSuccess, onRequestOTP }) =
       alert(t.phoneAlert);
       return;
     }
-  
+
     try {
       const response = await fetch("https://api.dev.amrk.app/amrkCloudWeb/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ PhoneNumber: phone }),
       });
-  
+
       if (response.ok) {
         const data = await response.json();
-  
+
         document.cookie = `user_id=${data.user_id}; path=/; max-age=3600`;
-  
+        document.cookie = `user_phone=${phone}; path=/; max-age=3600`;
+
         onRequestOTP(); // Show OTP screen
       } else {
         alert("Login failed. Please check your phone number.");
@@ -64,7 +65,11 @@ const LoginForm: FC<LoginFormProps> = ({ lang, onLoginSuccess, onRequestOTP }) =
       alert("An error occurred. Please try again.");
     }
   };
-  
+
+  const handlePhoneChange = (phone: string) => {
+    setPhone(phone)
+    console.log(phone)
+  }
 
   return (
     <div className="flex flex-col gap-4 rounded-t-2xl py-2 px-3 w-full">
@@ -83,7 +88,7 @@ const LoginForm: FC<LoginFormProps> = ({ lang, onLoginSuccess, onRequestOTP }) =
               <PhoneInput
                 defaultCountry="sa"
                 value={phone}
-                onChange={(phone) => setPhone(phone)}
+                onChange={handlePhoneChange}
               />
             </div>
           </div>

@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { BasketIcon } from "../product-page/icons";
 import Link from "next/link";
+import { RiyalCurrency } from "../basket-page/icons";
 
 interface BasketCTAHomeProps {
   lang: string; // e.g. "en" or "ar"
@@ -57,8 +58,8 @@ export default function BasketCTAHome({ lang }: BasketCTAHomeProps) {
           <BasketIcon />
           <span className="text-sm font-medium">{buttonLabel}</span>
         </p>
-        <span className="text-sm font-light">
-          {totalPrice.toFixed(2)} {currencyLabel}
+        <span className="flex flex-row gap-1 text-sm font-light">
+          {totalPrice.toFixed(2)} {lang === 'ar' ? <RiyalCurrency color="white" /> : <p>{currencyLabel}</p>}
         </span>
       </Link>
     </div>

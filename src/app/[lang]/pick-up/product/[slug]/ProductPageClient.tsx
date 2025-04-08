@@ -54,6 +54,7 @@ export default function ProductPageClient({
 
                 {requiredOptions?.map((group, index) => (
                     <RequiredChoices
+                    lang={lang}
                         key={index}
                         title={group.title}
                         name={group.name}
@@ -64,6 +65,7 @@ export default function ProductPageClient({
 
                 {optionalOptions?.map((group, index) => (
                     <OptionalChoices
+                    lang={lang}
                         key={index}
                         title={group.title}
                         name={group.name}

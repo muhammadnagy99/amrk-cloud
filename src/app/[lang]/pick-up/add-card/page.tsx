@@ -36,7 +36,7 @@ export default async function CardPage(props: {
         <SaveCard lang={lang} />
         <Terms lang={lang} />
       </div>
-      <PaymentCTA lang={lang} />
+      <PaymentCTA lang={lang} total={0} />
     </MobileWrapper>
   );
 }

@@ -8,6 +8,7 @@ export async function POST(req: NextRequest) {
     const cookieStore = cookies();
     const branchId = (await cookieStore).get("brnid")?.value;
 
+    
     if (!branchId) {
       return NextResponse.json({ error: "Missing branch ID" }, { status: 400 });
     }

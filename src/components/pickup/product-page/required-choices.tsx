@@ -1,17 +1,18 @@
 'use client'
 
 import { RequiredChoicesProps } from "@/src/interfaces/interfaces";
-import { RequiredLabel } from "./icons";
+import { RequiredLabel, RequiredLabel_EN } from "./icons";
+import { RiyalCurrency } from "../basket-page/icons";
 
 
 
-export default function RequiredChoices({ title, name, options, onChange }: RequiredChoicesProps) {
+export default function RequiredChoices({ lang, title, name, options, onChange }: RequiredChoicesProps) {
   return (
     <div className="flex flex-col gap-4 w-full items-center">
       <fieldset className="w-[88%] flex flex-col justify-start">
         <legend className="w-full flex flex-row justify-between">
           <p className="text-black font-medium text-base">{title}</p>
-          <RequiredLabel />
+          {lang === 'ar' ? <RequiredLabel /> : <RequiredLabel_EN />}
         </legend>
 
         {options.map((option, index) => (
@@ -20,8 +21,8 @@ export default function RequiredChoices({ title, name, options, onChange }: Requ
               <p className="text-black text-[13px] font-normal">{option.label}</p>
               {option.extraPrice ? (
                 <div className="flex flex-row gap-4 items-center">
-                  <span className="text-xs font-normal">+ {option.extraPrice} رس</span>
-                  <input type="radio" name={name} value={option.value}  onChange={() => onChange(name, option.value)}/>
+                  <span className="flex flex-row gap-1 text-xs font-normal">+ {option.extraPrice} {lang === 'ar' ? <RiyalCurrency color="black" /> : <p>SAR</p>}</span>
+                  <input type="radio" name={name} value={option.value} onChange={() => onChange(name, option.value)} />
                 </div>
               ) : (
                 <input type="radio" name={name} value={option.value} onChange={() => onChange(name, option.value)} />

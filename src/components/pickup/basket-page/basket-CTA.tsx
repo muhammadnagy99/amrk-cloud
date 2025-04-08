@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { RiyalCurrency } from "./icons";
 
 interface BasketCTAProps {
   lang: string;
@@ -29,8 +30,8 @@ export default function BasketCTA({ lang, itemsCount, total }: BasketCTAProps) {
         <p className="flex flex-row items-center">
           <span className="text-sm font-medium">{t.checkout}</span>
         </p>
-        <span className="text-sm font-light">
-          {total.toFixed(2)} {t.currency}
+        <span className="text-sm font-light flex flex-row gap-1">
+          {total.toFixed(2)} {lang === 'ar' ? <RiyalCurrency color="white" /> : <p>{t.currency}</p>}
         </span>
       </Link>
     </div>

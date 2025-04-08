@@ -59,6 +59,12 @@ export default function BasketPageClient({ props }: { props: string }) {
         updateBasket(filtered);
     };
 
+    const handleToggle = (checked: boolean) => {
+        setRedeem(checked);
+        document.cookie = `use_point=${checked}; path=/`;
+    };
+    
+
     return (
         <MobileWrapper>
             <div className="flex flex-col gap-6 w-[88%] h-screen overflow-y-auto pb-28 pt-10">
@@ -85,7 +91,7 @@ export default function BasketPageClient({ props }: { props: string }) {
                         <UserDiscount
                             lang={lang}
                             points={points}
-                            onToggle={(checked) => setRedeem(checked)}
+                            onToggle={handleToggle}
                         />
 
                         <OrderSummary

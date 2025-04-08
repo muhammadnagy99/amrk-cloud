@@ -5,6 +5,7 @@ import Image, { StaticImageData } from "next/image";
 import DEFAULT from '@/public/default.png'
 import { useEffect, useState } from "react";
 import SkeletonCard from "../../../assets/skeleton-card";
+import { RiyalCurrency } from "../../../basket-page/icons";
 
 interface CategoryCardProps extends Product {
   view?: 'grid' | 'list';
@@ -57,8 +58,8 @@ export default function CategoryCard({ id, lang, imageUrl, name, price, descript
             </p>
           )}
         </figcaption>
-        <figcaption className="text-primaryColor text-[13px] font-medium ">
-          {price} {currnecy}
+        <figcaption className="flex flex-row gap-1 text-primaryColor text-[13px] font-medium ">
+          {price} {lang === 'ar' ? <RiyalCurrency color="#b0438a" /> : <p>SAR</p>}
         </figcaption>
       </div>
     </figure>

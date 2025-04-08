@@ -1,4 +1,4 @@
-import { EditIcon, TrashIcon } from "./icons";
+import { EditIcon, RiyalCurrency, TrashIcon } from "./icons";
 
 interface CartOption {
   name: string;
@@ -48,16 +48,16 @@ export default function CartItem({
           <span>x{quantity}</span>
           <span>{name}</span>
         </p>
-        <span className="text-[#00000080] text-sm">
-          {t.currency} {basePrice.toFixed(2)}
+        <span className="text-[#00000080] text-sm flex flex-row gap-1">
+         {basePrice.toFixed(2)} {lang === 'ar' ? <RiyalCurrency color="gray" /> : <p>{t.currency}</p>}
         </span>
       </div>
       <ul className="text-[#00000080] text-xs flex flex-col gap-2">
         {options.map((option, index) => (
           <li key={index} className="flex flex-row justify-between pr-4">
             <span>• {option.name}</span>
-            <span>
-              {t.currency} {option.price.toFixed(2)}
+            <span className="flex flex-row gap-1">
+             {option.price.toFixed(2)} {lang === 'ar' ? <RiyalCurrency color="gray" /> : <p>{t.currency}</p>}
             </span>
           </li>
         ))}
@@ -65,22 +65,22 @@ export default function CartItem({
       <div className="flex justify-between items-center">
         <div className="flex gap-6">
           <button
-            className="text-red-500 flex items-center gap-1 cursor-pointer"
-            onClick={onDelete}
-          >
-            <TrashIcon />
-            <span className="text-xs font-medium">{t.delete}</span>
-          </button>
-          <button
             className="text-blue-500 flex items-center gap-1 cursor-pointer"
             onClick={onEdit}
           >
             <EditIcon />
             <span className="text-xs font-medium">{t.edit}</span>
           </button>
+          <button
+            className="text-red-500 flex items-center gap-1 cursor-pointer"
+            onClick={onDelete}
+          >
+            <TrashIcon />
+            <span className="text-xs font-medium">{t.delete}</span>
+          </button>
         </div>
-        <span className="font-medium text-sm">
-          {t.currency} {totalPrice.toFixed(2)}
+        <span className="font-medium text-sm flex flex-row gap-1">
+          {totalPrice.toFixed(2)} {lang === 'ar' ? <RiyalCurrency color="black" /> : <p>{t.currency}</p>}
         </span>
       </div>
     </div>

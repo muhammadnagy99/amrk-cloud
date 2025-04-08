@@ -4,6 +4,7 @@ import ContentProvider from "@/src/content-provider";
 import { BasketIcon, MinusIcon, PlusIcon } from "./icons";
 import useBasket from "@/src/hooks/basket";
 import { BasketItem } from "@/src/interfaces/interfaces";
+import { RiyalCurrency } from "../basket-page/icons";
 
 interface Props {
   lang: string;
@@ -105,16 +106,18 @@ export default function AddCart({
         <div className="flex items-center bg-[#f9f9f9] px-4 py-2 rounded-lg gap-3">
           <button
             className="text-gray-600 text-lg"
-            onClick={() => setQuantity((q) => Math.max(1, q - 1))}
+            onClick={() => setQuantity((q) => Math.max(1, q + 1))}
           >
-            <MinusIcon />
+            <PlusIcon />
+
           </button>
           <span className="mx-4 text-lg font-medium">{quantity}</span>
           <button
             className="text-[#b0438a] text-lg"
-            onClick={() => setQuantity((q) => q + 1)}
+            onClick={() => setQuantity((q) => q - 1)}
           >
-            <PlusIcon />
+            <MinusIcon />
+
           </button>
         </div>
       )}
@@ -152,7 +155,7 @@ export default function AddCart({
               </span>
             )}
             {!hasStartedAddFlow && (
-              <span className="text-xs font-semibold">{price} {TEXTS.currency}</span>
+              <span className="flex flex-row gap-1 text-xs font-semibold">{price} {lang === 'ar' ? <RiyalCurrency color="white" /> : <p>{TEXTS.currency}</p>}</span>
             )}
 
           </div>

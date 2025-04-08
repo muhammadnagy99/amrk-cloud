@@ -77,6 +77,7 @@ export interface ChoiceOption {
 }
 
 export interface RequiredChoicesProps {
+  lang: string;
   title: string;
   name: string;
   options: ChoiceOption[];
@@ -84,6 +85,7 @@ export interface RequiredChoicesProps {
 }
 
 export interface OptionalChoicesProps {
+  lang: string
   title: string;
   name: string;
   options: ChoiceOption[];

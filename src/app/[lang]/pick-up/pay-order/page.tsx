@@ -1,9 +1,10 @@
 import { Locale } from "@/src/i18n-config";
 
 import { Suspense } from "react";
-import CheckoutPageCleint from "./checkout-client";
+import PaymentGateWayClient from "./payorder-client";
 
-export default async function CheckoutPage(props: {
+
+export default async function PaymentGateWay(props: {
   params: Promise<{ lang: Locale }>;
 
 }) {
@@ -11,7 +12,7 @@ export default async function CheckoutPage(props: {
   const lang = params.lang || "ar";
   return (
     <Suspense>
-     <CheckoutPageCleint props={lang} />
+     <PaymentGateWayClient props={lang} />
     </Suspense>
   );
 }
