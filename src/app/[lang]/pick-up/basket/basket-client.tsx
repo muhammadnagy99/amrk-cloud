@@ -8,6 +8,7 @@ import OrderSummary from "@/src/components/pickup/basket-page/order-summery";
 import NavBar from "@/src/components/pickup/navigation-bar/navigation-bar";
 import BasketItemsList from "@/src/components/pickup/basket-page/basket-items-list";
 import { Locale } from "@/src/i18n-config";
+import PaymentMethod from "@/src/components/pickup/checkout/payment-method";
 
 const TEXTS: Record<Locale, any> = {
     ar: {
@@ -86,6 +87,7 @@ export default function BasketPageClient({ props }: { props: string }) {
                             lang={lang}
                             items={basket}
                             onDeleteItem={handleDeleteItem}
+                            mode={`BA`}
                         />
 
                         <UserDiscount
@@ -103,6 +105,7 @@ export default function BasketPageClient({ props }: { props: string }) {
                         />
                     </>
                 )}
+              
             </div>
 
             {basket.length > 0 && (

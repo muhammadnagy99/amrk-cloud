@@ -14,6 +14,7 @@ interface CartItemProps {
   onDelete: () => void;
   onEdit: () => void;
   lang: string;
+  mode: string;
 }
 
 const TEXTS: Record<string, { delete: string; edit: string; currency: string }> = {
@@ -38,6 +39,7 @@ export default function CartItem({
   onDelete,
   onEdit,
   lang,
+  mode
 }: CartItemProps) {
   const t = TEXTS[lang];
 
@@ -62,8 +64,8 @@ export default function CartItem({
           </li>
         ))}
       </ul>
-      <div className="flex justify-between items-center">
-        <div className="flex gap-6">
+      <div className={`flex items-center ${mode === 'CH' ? 'justify-end' : 'justify-between'}`}>
+       <div className={`${mode === 'CH' ? 'hidden' : ''} flex gap-6`}>
           <button
             className="text-blue-500 flex items-center gap-1 cursor-pointer"
             onClick={onEdit}
@@ -79,7 +81,7 @@ export default function CartItem({
             <span className="text-xs font-medium">{t.delete}</span>
           </button>
         </div>
-        <span className="font-medium text-sm flex flex-row gap-1">
+        <span className={`font-medium text-sm flex flex-row gap-1`}>
           {totalPrice.toFixed(2)} {lang === 'ar' ? <RiyalCurrency color="black" /> : <p>{t.currency}</p>}
         </span>
       </div>

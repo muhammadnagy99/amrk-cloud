@@ -16,9 +16,10 @@ interface Props {
   lang: string;
   items: BasketItem[];
   onDeleteItem: (itemId: string) => void;
+  mode: string;
 }
 
-export default function BasketItemsList({ lang, items, onDeleteItem }: Props) {
+export default function BasketItemsList({ lang, items, onDeleteItem, mode }: Props) {
   const [products, setProducts] = useState<Record<string, ProductInfo>>({});
   const [loading, setLoading] = useState(true);
   
@@ -70,6 +71,7 @@ export default function BasketItemsList({ lang, items, onDeleteItem }: Props) {
                 onEdit={() => {
                   window.location.href = `/pick-up/product/${item.id}`;
                 }}
+                mode={mode}
               />
             );
           })}

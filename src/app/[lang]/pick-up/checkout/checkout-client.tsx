@@ -9,6 +9,8 @@ import { Locale } from "@/src/i18n-config";
 import OrderSummary from "@/src/components/pickup/basket-page/order-summery";
 import { useEffect, useState } from "react";
 import { BasketItem } from "../basket/basket-client";
+import BasketItemsList from "@/src/components/pickup/basket-page/basket-items-list";
+import UserDiscount from "@/src/components/pickup/basket-page/discount";
 
 const TEXTS: Record<Locale, any> = {
     ar: {
@@ -35,22 +37,63 @@ export default function CheckoutPageCleint({ props }: { props: string }) {
         if (stored) setBasket(JSON.parse(stored));
     }, []);
 
+    const updateBasket = (updated: BasketItem[]) => {
+        setBasket(updated);
+        localStorage.setItem(BASKET_KEY, JSON.stringify(updated));
+    };
+
+    const handleDeleteItem = (itemId: string) => {
+        const filtered = basket.filter((item) => item.id !== itemId);
+        updateBasket(filtered);
+    };
+
+    const handleToggle = (checked: boolean) => {
+        setRedeem(checked);
+        document.cookie = `use_point=${checked}; path=/`;
+    };
 
     return (
         <MobileWrapper>
             <div className="flex flex-col gap-8 w-[88%] h-screen overflow-y-auto pb-28 pt-10">
                 <NavBar text={t.title} />
-                <PaymentMethod lang={lang} />
-                <CarPickUp lang={lang} />
-                <OrderSummary
-                    lang={lang}
-                    redeemPoints={redeem}
-                    pointsValue={redeem ? pointsValue : 0}
-                    items={basket}
-                    onTotalChange={(val) => setSummaryTotal(val)}
-                />
+                {basket.length === 0 ? (
+                    <div className="flex flex-col items-center justify-center text-center gap-4 mt-20">
+                        <p className="text-gray-500 text-sm">{t.emptyMessage}</p>
+                        <a
+                            href="/pick-up"
+                            className="text-[#B0438A] underline text-sm font-medium"
+                        >
+                            {t.goBack}
+                        </a>
+                    </div>
+                ) : (
+                    <>
+                        <BasketItemsList
+                            lang={lang}
+                            items={basket}
+                            onDeleteItem={handleDeleteItem}
+                            mode={`CH`}
+                        />
+
+                        <UserDiscount
+                            lang={lang}
+                            points={points}
+                            onToggle={handleToggle}
+                        />
+                        <OrderSummary
+                            lang={lang}
+                            redeemPoints={redeem}
+                            pointsValue={redeem ? pointsValue : 0}
+                            items={basket}
+                            onTotalChange={(val) => setSummaryTotal(val)}
+                        />
+                        <CarPickUp lang={lang} />
+
+                        <PaymentMethod lang={lang} />
+                    </>
+                )}
             </div>
-            <PaymentCTA lang={lang} total={summaryTotal} />
+            <PaymentCTA lang={lang} />
         </MobileWrapper>
     );
 }
