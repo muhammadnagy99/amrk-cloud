@@ -1,5 +1,4 @@
 "use client";
-
 import { BasketItem } from "@/src/app/[lang]/pick-up/basket/basket-client";
 import { useEffect, useState } from "react";
 import { RiyalCurrency } from "./icons";
@@ -8,9 +7,8 @@ interface Props {
   lang: string;
   redeemPoints: boolean;
   pointsValue: number;
-  items: BasketItem[]; 
+  items: BasketItem[];
   onTotalChange?: (val: number) => void;
-
 }
 
 const TEXTS: Record<string, any> = {
@@ -48,23 +46,36 @@ export default function OrderSummary({
     discount: number;
     total: number;
   }>(null);
-  
+
   useEffect(() => {
     if (!items.length) return;
-
-    setLoading(true);
-    fetch("/api/checkout-summary", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ items, redeemPoints, pointsValue }),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        setSummary(data);
-        setLoading(false);
-        onTotalChange?.(data.total)
-      });
-  }, [items, redeemPoints, pointsValue]);
+    
+    // Calculate summary on client side
+    try {
+      const subtotal = items.reduce((sum, item) => sum + item.totalPrice, 0);
+      const vatPercent = 15;
+      const vatAmount = subtotal * (vatPercent / 100);
+      const discount = redeemPoints ? pointsValue : 0;
+      const total = subtotal + vatAmount - discount;
+      const calculatedSummary = {
+        subtotal,
+        vatAmount,
+        vatPercent,
+        discount,
+        total
+      };
+      
+      setSummary(calculatedSummary);
+      setLoading(false);
+      
+      if (onTotalChange) {
+        onTotalChange(total);
+      }
+    } catch (error) {
+      console.error("Error calculating order summary:", error);
+      setLoading(false);
+    }
+  }, [items, redeemPoints, pointsValue, onTotalChange]);
 
   if (loading || !summary) return <p>{t.loading}</p>;
 
@@ -73,30 +84,27 @@ export default function OrderSummary({
       <div className="grid grid-cols-2 text-black text-xs font-light gap-3">
         <span className="justify-self-start rtl:text-right ltr:text-left">{t.subtotal}</span>
         <span className="justify-self-end flex flex-row gap-1">
-           {summary.subtotal.toFixed(2)} {lang === 'ar' ? <RiyalCurrency color="gray" /> : <p>{t.currency}</p>}
+          {summary.subtotal.toFixed(2)} {<RiyalCurrency color="gray" />}
         </span>
-
         <span className="justify-self-start rtl:text-right ltr:text-left">
           {t.vat} ({summary.vatPercent}%)
         </span>
         <span className="justify-self-end flex flex-row gap-1">
-         {summary.vatAmount.toFixed(2)} {lang === 'ar' ? <RiyalCurrency color="gray" /> : <p>{t.currency}</p>}
+          {summary.vatAmount.toFixed(2)} {<RiyalCurrency color="gray" />}
         </span>
-
         {summary.discount > 0 && (
           <>
             <span className="justify-self-start rtl:text-right ltr:text-left text-primaryColor">{t.discount}</span>
             <span className="justify-self-end flex flex-row gap-1 text-primaryColor">
-              - {summary.discount.toFixed(2)} {lang === 'ar' ? <RiyalCurrency color="#b0438a" /> : <p>{t.currency}</p>}
+              - {summary.discount.toFixed(2)} {<RiyalCurrency color="#b0438a" />}
             </span>
           </>
         )}
       </div>
-
       <div className="flex justify-between items-center font-medium text-base">
         <span className="text-black">{t.total}</span>
-        <span className="text-black flex flex-row gap-1">
-         {summary.total.toFixed(2)}  {lang === 'ar' ? <RiyalCurrency color="black" /> : <p>{t.currency}</p>}
+        <span className="text-black flex flex-row gap-1 items-center">
+          {summary.total.toFixed(2)} {<RiyalCurrency color="black" />}
         </span>
       </div>
     </div>

@@ -54,7 +54,7 @@ export default function CheckoutPageCleint({ props }: { props: string }) {
 
     return (
         <MobileWrapper>
-            <div className="flex flex-col gap-8 w-[88%] h-screen overflow-y-auto pt-10">
+            <div className="flex flex-col gap-8 w-[88%] overflow-y-auto pt-10 mb-16">
                 <NavBar text={t.title} />
                 {basket.length === 0 ? (
                     <div className="flex flex-col items-center justify-center text-center gap-4 mt-20">

@@ -123,7 +123,7 @@ export default function PaymentMethod({ lang }: PaymentMethodProps) {
         {/* Apple Pay */}
         <div className="flex flex-col gap-2 items-center">
           <label
-            className={`w-[99%] border border-[#00000033] rounded-lg p-4 flex items-center cursor-pointer gap-4 h-14 ${selectedPayment === 'applePay' ? 'ring-2 ring-[#b0438a]' : ''}`}
+            className={`w-[99%] border border-[#00000033] rounded-lg p-4 flex items-center cursor-pointer gap-4 h-14`}
           >
             <input
               type="radio"
@@ -143,7 +143,7 @@ export default function PaymentMethod({ lang }: PaymentMethodProps) {
         {/* Card Payment */}
         <div className="flex flex-col gap-2 items-center">
           <label
-            className={`w-[99%] border border-[#00000033] rounded-lg p-4 flex items-center cursor-pointer text-sm font-normal gap-4 h-14 ${selectedPayment === 'cardPay' ? 'ring-2 ring-[#b0438a]' : ''}`}
+            className={`w-[99%] border border-[#00000033] rounded-lg p-4 flex items-center cursor-pointer text-sm font-normal gap-4 h-14`}
           >
             <input
               type="radio"

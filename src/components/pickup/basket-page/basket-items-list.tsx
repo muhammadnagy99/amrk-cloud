@@ -4,6 +4,7 @@ import CartItem from "@/src/components/pickup/basket-page/item-row";
 import CartItemSkeleton from "./item-skelton";
 import { useEffect, useState } from "react";
 import { BasketItem } from "@/src/app/[lang]/pick-up/basket/basket-client";
+import { cacheManager } from "@/src/cacheManager";
 
 interface ProductInfo {
   product_id: string;
@@ -19,27 +20,94 @@ interface Props {
   mode: string;
 }
 
+export type ProductData = {
+  product_id: string;
+  item_name: string;
+  item_name_ar: string;
+  item_desc: string;
+  item_desc_ar: string;
+  item_img?: string;
+  item_price: number;
+  cusomisation_grouping_list?: any[];
+};
+
+type ProductOption = {
+  label: string;
+  value: string;
+  extraPrice: string;
+};
+
+type ProductOptionGroup = {
+  title: string;
+  name: string;
+  options: ProductOption[];
+};
+
+interface ProcessedProductData {
+  productId: string;
+  name: string;
+  description: string;
+  imageSrc: string;
+  price: number;
+  requiredOptions?: ProductOptionGroup[];
+  optionalOptions?: ProductOptionGroup[];
+}
+
+const CACHE_TTL = 10 * 60 * 1000; 
+
+
+async function fetchProductData(slug: string): Promise<ProductData> {
+  const cachedData = cacheManager.get<ProductData>(`product-${slug}`, CACHE_TTL);
+  if (cachedData) {
+      console.log("Using cached product data for:", slug);
+      return cachedData;
+  }
+
+  try {
+      const res = await fetch(`/api/products/${slug}`);
+
+      if (!res.ok) {
+          throw new Error("Failed to fetch product info");
+      }
+
+      const data: ProductData = await res.json();
+      cacheManager.set(`product-${slug}`, data);
+      return data;
+  } catch (error) {
+      console.error(error);
+      throw error;
+  }
+}
+
 export default function BasketItemsList({ lang, items, onDeleteItem, mode }: Props) {
   const [products, setProducts] = useState<Record<string, ProductInfo>>({});
   const [loading, setLoading] = useState(true);
   
   useEffect(() => {
-    const productIds = [...new Set(items.map((item) => item.id))];
-
-    fetch("/api/fetch-basket-products", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ ids: productIds }),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        const map = Object.fromEntries(
-          data.products.map((p: ProductInfo) => [p.product_id, p])
+    const fetchBasketProducts = async () => {
+      try {
+        setLoading(true);
+        const productIds = [...new Set(items.map((item) => item.id))];
+        
+        const productPromises = productIds.map(id => fetchProductData(id));
+        const products = await Promise.all(productPromises);
+  
+        const productsMap = Object.fromEntries(
+          products.map(p => [p.product_id, p])
         );
-        setProducts(map);
+        
+        setProducts(productsMap);
+      } catch (error) {
+        console.error("Error fetching basket products:", error);
+      } finally {
         setLoading(false);
-      });
+      }
+    };
+  
+    fetchBasketProducts();
   }, [items]);
+
+
   return (
     <div className="flex flex-col gap-3">
       {loading

@@ -12,7 +12,7 @@ interface Props {
   productId: string;
   requiredOptions: { label: string; value: string; extraPrice?: string }[];
   optionalOptions: { label: string; value: string; extraPrice?: string }[];
-  selectedRequired: { name: string; value: string }[]; // now array
+  selectedRequired: { name: string; value: string }[];
   selectedOptional: { name: string; value: string }[];
 }
 
