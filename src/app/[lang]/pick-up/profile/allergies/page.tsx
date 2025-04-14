@@ -102,7 +102,7 @@ export default async function Allergies(props: {
   return (
     <MobileWrapper>
       <div className="flex flex-col gap-8 w-[88%] h-screen overflow-y-auto pb-28 pt-10">
-        <NavBar text={t.title} />
+        <NavBar text={t.title} lang={lang}/>
         <div className="w-full flex flex-col justify-between h-full pb-12">
           {t.toggles.map((item: string, index: number) => (
             <div key={index} className="py-3 border-b border-gray-300 bg-white flex flex-row justify-between">

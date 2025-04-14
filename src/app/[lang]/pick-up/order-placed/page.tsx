@@ -22,7 +22,7 @@ export default async function OrderPlacedPage(props: {
     return (
         <MobileWrapper>
             <div className="flex flex-col gap-7 w-[88%] h-screen overflow-y-auto pb-28 pt-10 relative">
-                <NavBar text="" />
+                <NavBar text="" lang={lang} />
                 <SuccessMessage lang={lang} />
                 <OrderDetails lang={lang} />
                 <CallWaiter lang={lang} />

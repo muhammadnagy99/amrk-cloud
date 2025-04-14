@@ -152,7 +152,7 @@ export default function InfoPageClient({ params }: Props) {
   return (
     <MobileWrapper>
       <div className="flex flex-col gap-8 w-[88%] h-screen overflow-y-auto pb-28 pt-10">
-        <NavBar text={t.title} />
+        <NavBar text={t.title} lang={lang} />
         <div className="w-full flex flex-col justify-between h-full">
           <div className="flex flex-col gap-12">
             <div className="flex flex-col gap-4">

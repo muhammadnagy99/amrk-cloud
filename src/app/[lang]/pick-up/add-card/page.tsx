@@ -31,7 +31,7 @@ export default async function CardPage(props: {
   return (
     <MobileWrapper>
       <div className="flex flex-col gap-8 w-[88%] h-screen overflow-y-auto pb-28 pt-10 relative">
-        <NavBar text={t.title} />
+        <NavBar text={t.title} lang={lang} />
         <CardInputForm lang={lang} />
         <SaveCard lang={lang} />
         <Terms lang={lang} />
