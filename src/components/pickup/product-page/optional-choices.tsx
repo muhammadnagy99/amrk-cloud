@@ -19,7 +19,7 @@ export default function OptionalChoices({ lang, title, name, options, onToggle }
               <p className="text-black text-[13px] font-normal">{option.label}</p>
               <div className="flex flex-row gap-4 items-center">
                 {option.extraPrice && (
-                  <span className="flex flex-row gap-1 text-xs font-normal">+ {option.extraPrice} {lang === 'ar' ? <RiyalCurrency color="black" /> : <p>SAR</p>}
+                  <span className="flex flex-row gap-1 text-xs font-normal">+ {option.extraPrice} {<RiyalCurrency color="black" /> }
 </span>
                 )}
                 <input type="checkbox" name={name} value={option.value} onChange={() => onToggle(name, option.value)}

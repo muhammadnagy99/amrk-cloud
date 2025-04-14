@@ -58,8 +58,8 @@ export default function CategoryCard({ id, lang, imageUrl, name, price, descript
             </p>
           )}
         </figcaption>
-        <figcaption className="flex flex-row gap-1 text-primaryColor text-[13px] font-medium ">
-          {price} {lang === 'ar' ? <RiyalCurrency color="#b0438a" /> : <p>SAR</p>}
+        <figcaption className="flex flex-row gap-1 text-primaryColor text-[13px] items-center">
+          {price} {<RiyalCurrency color="#b0438a" /> }
         </figcaption>
       </div>
     </figure>

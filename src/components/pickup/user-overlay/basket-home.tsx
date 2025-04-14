@@ -58,8 +58,8 @@ export default function BasketCTAHome({ lang }: BasketCTAHomeProps) {
           <BasketIcon />
           <span className="text-sm font-medium">{buttonLabel}</span>
         </p>
-        <span className="flex flex-row gap-1 text-sm font-light">
-          {totalPrice.toFixed(2)} {lang === 'ar' ? <RiyalCurrency color="white" /> : <p>{currencyLabel}</p>}
+        <span className="flex flex-row gap-1 text-sm font-light items-center">
+          {totalPrice.toFixed(2)} {<RiyalCurrency color="white" /> }
         </span>
       </Link>
     </div>

@@ -31,7 +31,7 @@ export default function BasketCTA({ lang, itemsCount, total }: BasketCTAProps) {
           <span className="text-sm font-medium">{t.checkout}</span>
         </p>
         <span className="text-sm font-light flex flex-row gap-1">
-          {total.toFixed(2)} {lang === 'ar' ? <RiyalCurrency color="white" /> : <p>{t.currency}</p>}
+          {total.toFixed(2)} { <RiyalCurrency color="white" />}
         </span>
       </Link>
     </div>

@@ -51,7 +51,7 @@ export default function CartItem({
           <span>{name}</span>
         </p>
         <span className="text-[#00000080] text-sm flex flex-row gap-1">
-         {basePrice.toFixed(2)} {lang === 'ar' ? <RiyalCurrency color="gray" /> : <p>{t.currency}</p>}
+         {basePrice.toFixed(2)} { <RiyalCurrency color="gray" /> }
         </span>
       </div>
       <ul className="text-[#00000080] text-xs flex flex-col gap-2">
@@ -59,7 +59,7 @@ export default function CartItem({
           <li key={index} className="flex flex-row justify-between pr-4">
             <span>• {option.name}</span>
             <span className="flex flex-row gap-1">
-             {option.price.toFixed(2)} {lang === 'ar' ? <RiyalCurrency color="gray" /> : <p>{t.currency}</p>}
+             {option.price.toFixed(2)} {<RiyalCurrency color="gray" />}
             </span>
           </li>
         ))}
@@ -81,8 +81,8 @@ export default function CartItem({
             <span className="text-xs font-medium">{t.delete}</span>
           </button>
         </div>
-        <span className={`font-medium text-sm flex flex-row gap-1`}>
-          {totalPrice.toFixed(2)} {lang === 'ar' ? <RiyalCurrency color="black" /> : <p>{t.currency}</p>}
+        <span className={`font-medium text-sm flex flex-row gap-1 items-center`}>
+          {totalPrice.toFixed(2)} {<RiyalCurrency color="black" />}
         </span>
       </div>
     </div>

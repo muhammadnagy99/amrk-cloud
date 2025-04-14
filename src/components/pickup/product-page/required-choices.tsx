@@ -21,7 +21,7 @@ export default function RequiredChoices({ lang, title, name, options, onChange }
               <p className="text-black text-[13px] font-normal">{option.label}</p>
               {option.extraPrice ? (
                 <div className="flex flex-row gap-4 items-center">
-                  <span className="flex flex-row gap-1 text-xs font-normal">+ {option.extraPrice} {lang === 'ar' ? <RiyalCurrency color="black" /> : <p>SAR</p>}</span>
+                  <span className="flex flex-row gap-1 text-xs font-normal">+ {option.extraPrice} {<RiyalCurrency color="black" />}</span>
                   <input type="radio" name={name} value={option.value} onChange={() => onChange(name, option.value)} />
                 </div>
               ) : (
