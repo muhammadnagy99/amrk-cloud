@@ -1,5 +1,5 @@
 'use client'
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { AppleIcon, AppleIconLight, ApplePayIcon, CreditCard } from "./icons";
 
 type PaymentMethodProps = {
@@ -34,11 +34,90 @@ const TEXTS: Record<string, any> = {
 };
 
 export default function PaymentMethod({ lang }: PaymentMethodProps) {
-  const [selectedPayment, setSelectedPayment] = useState<string | null>(null);
+  const [selectedPayment, setSelectedPayment] = useState<string>('applePay'); // Default to Apple Pay
+  const paymentFormRef = useRef<HTMLDivElement>(null);
   const t = TEXTS[lang] || TEXTS["en"];
+
+  // Render the content for the selected payment method
+  const renderSelectedPaymentContent = () => {
+    switch (selectedPayment) {
+      case 'applePay':
+        return (
+          <button className="bg-black text-white rounded-full py-3 px-6 font-medium flex items-center gap-2 w-full justify-center">
+            <AppleIconLight />
+            <span>{t.payWithApple}</span>
+          </button>
+        );
+      case 'cardPay':
+        return (
+          <div className="w-full">
+            <div className="flex flex-col gap-4">
+              <h4 className="font-medium text-sm">{t.cardDetails}</h4>
+
+              <div className="flex flex-col gap-3 w-full">
+                {/* Card Number */}
+                <div className="flex flex-col gap-1">
+                  <label className="text-sm text-gray-600">{t.cardNumber}</label>
+                  <input
+                    type="text"
+                    className="border border-[#00000033] rounded-lg p-3 h-12"
+                    placeholder="1234 5678 9012 3456"
+                  />
+                </div>
+
+                {/* Expiry Date and CVV on same row */}
+                <div className="flex gap-3 w-full">
+                  <div className="flex flex-col gap-1 flex-1 w-[65%]">
+                    <label className="text-sm text-gray-600">{t.expiryDate}</label>
+                    <input
+                      type="text"
+                      className="border border-[#00000033] rounded-lg p-3 h-12"
+                      placeholder="MM/YY"
+                    />
+                  </div>
+                  <div className="flex flex-col gap-1 w-[30%]">
+                    <label className="text-sm text-gray-600">{t.cvv}</label>
+                    <input
+                      type="text"
+                      className="border border-[#00000033] rounded-lg p-3 h-12"
+                      placeholder="123"
+                    />
+                  </div>
+                </div>
+
+                {/* Cardholder Name */}
+                <div className="flex flex-col gap-1 w-full">
+                  <label className="text-sm text-gray-600">{t.cardholderName}</label>
+                  <input
+                    type="text"
+                    className="border border-[#00000033] rounded-lg p-3 h-12"
+                    placeholder="John Doe"
+                  />
+                </div>
+
+                {/* Pay Button */}
+                <button className="bg-[#b0438a] text-white rounded-lg py-3 px-6 font-medium mt-2 h-12">
+                  {t.pay}
+                </button>
+              </div>
+            </div>
+          </div>
+        );
+      default:
+        return null;
+    }
+  };
+
+  useEffect(() => {
+    if ((selectedPayment === 'cardPay' || selectedPayment === 'applePay') && paymentFormRef.current) {
+      paymentFormRef.current.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+  }, [selectedPayment]);
   
+
   return (
-    <div className="bg-white flex flex-col gap-4">
+    <>
+    <div className={`bg-white flex flex-col gap-4`}>
       <h3 className="text-black font-medium text-base">{t.title}</h3>
       <div className="flex flex-col gap-3">
         {/* Apple Pay */}
@@ -59,16 +138,8 @@ export default function PaymentMethod({ lang }: PaymentMethodProps) {
               <span className="text-sm font-normal">{t.applePay}</span>
             </div>
           </label>
-          {selectedPayment === 'applePay' && (
-            <div className="rounded-lg p-4 mt-1 w-full flex justify-center">
-              <button className="bg-black text-white rounded-full py-3 px-6 font-medium flex items-center gap-2 w-full justify-center">
-                <AppleIconLight />
-                <span>{t.payWithApple}</span>
-              </button>
-            </div>
-          )}
         </div>
-        
+
         {/* Card Payment */}
         <div className="flex flex-col gap-2 items-center">
           <label
@@ -87,62 +158,16 @@ export default function PaymentMethod({ lang }: PaymentMethodProps) {
               <span>{t.cardPay}</span>
             </div>
           </label>
-          {selectedPayment === 'cardPay' && (
-            <div className="border border-gray-200 rounded-lg p-4 mt-1 w-full">
-              <div className="flex flex-col gap-4">
-                <h4 className="font-medium text-sm">{t.cardDetails}</h4>
-                
-                <div className="flex flex-col gap-3 w-full">
-                  {/* Card Number */}
-                  <div className="flex flex-col gap-1">
-                    <label className="text-sm text-gray-600">{t.cardNumber}</label>
-                    <input 
-                      type="text" 
-                      className="border border-[#00000033] rounded-lg p-3 h-12" 
-                      placeholder="1234 5678 9012 3456" 
-                    />
-                  </div>
-                  
-                  {/* Expiry Date and CVV on same row */}
-                  <div className="flex gap-3 w-full">
-                    <div className="flex flex-col gap-1 flex-1 w-[65%]">
-                      <label className="text-sm text-gray-600">{t.expiryDate}</label>
-                      <input 
-                        type="text" 
-                        className="border border-[#00000033] rounded-lg p-3 h-12" 
-                        placeholder="MM/YY" 
-                      />
-                    </div>
-                    <div className="flex flex-col gap-1 w-[30%]">
-                      <label className="text-sm text-gray-600">{t.cvv}</label>
-                      <input 
-                        type="text" 
-                        className="border border-[#00000033] rounded-lg p-3 h-12" 
-                        placeholder="123" 
-                      />
-                    </div>
-                  </div>
-                  
-                  {/* Cardholder Name */}
-                  <div className="flex flex-col gap-1 w-full">
-                    <label className="text-sm text-gray-600">{t.cardholderName}</label>
-                    <input 
-                      type="text" 
-                      className="border border-[#00000033] rounded-lg p-3 h-12" 
-                      placeholder="John Doe" 
-                    />
-                  </div>
-                  
-                  {/* Pay Button */}
-                  <button className="bg-[#b0438a] text-white rounded-lg py-3 px-6 font-medium mt-2 h-12">
-                    {t.pay}
-                  </button>
-                </div>
-              </div>
-            </div>
-          )}
         </div>
       </div>
+
+      <div
+        ref={paymentFormRef}
+        className="w-full bg-white p-4 flex flex-col rounded-lg gap-3"
+      >
+        {renderSelectedPaymentContent()}
+      </div>
     </div>
+    </>
   );
 }

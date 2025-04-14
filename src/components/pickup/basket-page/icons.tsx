@@ -34,7 +34,7 @@ export function EditIcon() {
 
 export function RiyalCurrency({color}: {color: string}) {
   return (
-    <svg className="w-4 h-4" id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1124.14 1256.39">
+    <svg className="w-3 h-3" id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1124.14 1256.39">
       <defs>
         <style>
         </style>

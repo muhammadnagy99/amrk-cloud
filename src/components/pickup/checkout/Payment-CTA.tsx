@@ -1,6 +1,3 @@
-'use client'
-import { useState } from "react";
-
 type PaymentCTAProps = {
   lang: string;
 };
