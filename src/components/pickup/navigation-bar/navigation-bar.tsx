@@ -12,7 +12,7 @@ const LoadingOverlay = () => (
 );
 
 
-export default function NavBar({ text }: INavBar) {
+export default function NavBar({ text, lang }: INavBar) {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
@@ -24,7 +24,7 @@ export default function NavBar({ text }: INavBar) {
     <>
       {loading && <LoadingOverlay />}
       <div className="flex flex-row justify-start gap-4 items-center">
-        <a href="/pick-up" onClick={handleBackClick}>
+        <a href="/pick-up" onClick={handleBackClick} className={`${lang === 'en' ? 'rotate-180' : ''}`}>
           <BackArrow />
         </a>
         <h2 className="font-medium text-sm text-black">{text}</h2>

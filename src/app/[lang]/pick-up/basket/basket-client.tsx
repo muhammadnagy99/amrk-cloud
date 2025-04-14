@@ -79,7 +79,7 @@ export default function BasketPageClient({ props }: { props: string }) {
     return (
         <MobileWrapper>
             <div className="flex flex-col gap-6 w-[88%] overflow-y-auto pt-10 mb-18">
-                <NavBar text={t.title} />
+                <NavBar text={t.title} lang={lang} />
 
                 {
                     isLoading ? (

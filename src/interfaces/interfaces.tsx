@@ -11,7 +11,8 @@ export interface WrapperProps {
 
 
 export interface INavBar {
-  text: string
+  text: string;
+  lang: string;
 }
 
 export interface InputFieldProps {

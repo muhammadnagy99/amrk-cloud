@@ -15,8 +15,9 @@ export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ slug: string }> }
 ) {
-  const { slug } = await params;
-  
+  const props = await params;
+  const slug = props.slug;
+  console.log(slug)
   if (!slug) {
     return NextResponse.json(
       { error: 'Menu ID is required' },
@@ -31,11 +32,12 @@ export async function GET(
         "Content-Type": "application/json",
         Authorization: `Bearer TOKEN`,
       },
-      body: JSON.stringify({ slug }),
+      body: JSON.stringify({ menuId: slug }),
       next: { revalidate: 60 },
     });
     
     if (!response.ok) {
+      console.log(response)
       throw new Error(`Failed to fetch product info: ${response.statusText}`);
     }
     
