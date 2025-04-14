@@ -5,6 +5,7 @@ import { BasketIcon, MinusIcon, PlusIcon } from "./icons";
 import useBasket from "@/src/hooks/basket";
 import { BasketItem } from "@/src/interfaces/interfaces";
 import { RiyalCurrency } from "../basket-page/icons";
+import Link from "next/link";
 
 interface Props {
   lang: string;
@@ -133,13 +134,13 @@ export default function AddCart({
             <span className="animate-pulse text-sm">{TEXTS.loading}</span>
           </div>
         ) : showGoToBasket ? (
-          <a
+          <Link
             href="/pick-up/basket/"
             className="flex items-center justify-center gap-2 text-white text-sm font-semibold w-full"
           >
             <BasketIcon />
             {TEXTS.goToBasket}
-          </a>
+          </Link>
         ) : (
           <div className="flex justify-between items-center w-full px-4">
             {showAdded ? (
