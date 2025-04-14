@@ -109,7 +109,7 @@ export default function PaymentMethod({ lang }: PaymentMethodProps) {
   };
 
   useEffect(() => {
-    if ((selectedPayment === 'cardPay' || selectedPayment === 'applePay') && paymentFormRef.current) {
+    if (selectedPayment === 'cardPay' && paymentFormRef.current) {
       paymentFormRef.current.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }
   }, [selectedPayment]);
