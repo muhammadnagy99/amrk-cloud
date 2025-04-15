@@ -13,7 +13,7 @@ export default async function Product({
   
   return (
     <Suspense>
-      <ProductPage params={props} />
+      {/* <ProductPage params={props} /> */}
     </Suspense>
   );
 }

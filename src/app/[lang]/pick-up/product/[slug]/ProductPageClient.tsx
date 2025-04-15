@@ -6,6 +6,7 @@ import RequiredChoices from "@/src/components/pickup/product-page/required-choic
 import OptionalChoices from "@/src/components/pickup/product-page/optional-choices";
 import MobileWrapper from "../../../mobile-wrapper";
 import { useProductSelections } from "@/src/hooks/product-selection";
+import { BackArrow } from "@/src/components/pickup/product-page/icons";
 
 interface ProductPageClientProps {
     productId: string;
@@ -32,6 +33,7 @@ interface ProductPageClientProps {
             extraPrice?: string;
         }[];
     }[];
+    onClose: () => void;
 }
 
 
@@ -44,17 +46,21 @@ export default function ProductPageClient({
     price,
     requiredOptions,
     optionalOptions,
+    onClose
 }: ProductPageClientProps) {
     const { required, optional, handleRequiredChange, handleOptionalToggle } = useProductSelections();
 
     return (
         <MobileWrapper>
             <div className="flex flex-col gap-8 w-full h-screen overflow-y-auto pb-28">
+                <button className="absolute top-4 right-4 z-[1000]" onClick={onClose}>
+                    <BackArrow />
+                </button>
                 <ProductInfo name={name} description={description} imageSrc={imageSrc} />
 
                 {requiredOptions?.map((group, index) => (
                     <RequiredChoices
-                    lang={lang}
+                        lang={lang}
                         key={index}
                         title={group.title}
                         name={group.name}
@@ -65,7 +71,7 @@ export default function ProductPageClient({
 
                 {optionalOptions?.map((group, index) => (
                     <OptionalChoices
-                    lang={lang}
+                        lang={lang}
                         key={index}
                         title={group.title}
                         name={group.name}

@@ -8,7 +8,7 @@ type CacheItem<T> = {
   class CacheManager {
     private defaultTTL: number;
   
-    constructor(defaultTTL = 10 * 60 * 1000) { // Default 5 minutes
+    constructor(defaultTTL = 60 * 60 * 1000) { 
       this.defaultTTL = defaultTTL;
     }
   

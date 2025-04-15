@@ -64,7 +64,7 @@ async function fetchProductData(slug: string): Promise<ProductData> {
     }
 }
 
-function processProductData(product: ProductData, lang: Locale) {
+function processProductData(product: ProductData, lang: string) {
     const name = lang === "ar" ? product.item_name_ar : product.item_name;
     const description = lang === "ar" ? product.item_desc_ar : product.item_desc;
     const imageSrc = product.item_img || "/default.png";
@@ -111,13 +111,20 @@ const LoadingOverlay = () => (
     </div>
 );
 
+interface ProductPageProps {
+    productId: string;
+    lang: string;
+    isOverlay: boolean;
+    onClose: () => void;
+}
 
 export default function ProductPage({
-    params,
-}: {
-    params: { slug: string; lang: Locale };
-}) {
-    const { slug, lang } = params;
+    productId,
+    lang,
+    isOverlay,
+    onClose
+}: ProductPageProps) {
+   
 
     const [processedData, setProcessedData] = useState<ProcessedProductData | null>(null);
     const [isLoading, setIsLoading] = useState(true);
@@ -127,7 +134,7 @@ export default function ProductPage({
         async function fetchData() {
             try {
                 setIsLoading(true);
-                const product = await fetchProductData(slug);
+                const product = await fetchProductData(productId);
                 const data = processProductData(product, lang);
                 setProcessedData(data);
             } catch (err) {
@@ -139,7 +146,7 @@ export default function ProductPage({
         }
 
         fetchData();
-    }, [slug, lang]);
+    }, [productId, lang]);
 
     if (isLoading) return <LoadingOverlay />;
     if (error) return <div>Error: {error}</div>;
@@ -155,6 +162,7 @@ export default function ProductPage({
             price={processedData.price}
             requiredOptions={processedData.requiredOptions}
             optionalOptions={processedData.optionalOptions}
+            onClose={onClose}
         />
     );
 }

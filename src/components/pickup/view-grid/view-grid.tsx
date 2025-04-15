@@ -2,9 +2,10 @@
 
 import { useEffect, useState } from "react";
 import { ViewGridProps } from "@/src/interfaces/interfaces";
-import Category from "./category.tsx/category";
 import Offers from "./offers/offers";
 import OrderAgain from "./order-again.tsx/order-again";
+import { CategoryWithOverlay } from "./category.tsx/category";
+import { ProductOverlayProvider } from "./category.tsx/product-overlay";
 
 type EnhancedProps = {
   lang: string;
@@ -14,7 +15,6 @@ type EnhancedProps = {
   remainingCategories?: ViewGridProps["categoriesData"];
   view: 'grid' | 'list';
 };
-
 
 export default function ViewGrid({
   lang,
@@ -30,32 +30,20 @@ export default function ViewGrid({
     const timeout = setTimeout(() => {
       setShowRemaining(true);
     }, 0); // render on next tick, or you can delay with 100ms+
-
+    
     return () => clearTimeout(timeout);
   }, []);
 
   return (
-    <div className="flex flex-col gap-5 w-full">
-      {orderAgainData && <OrderAgain lang={lang} products={orderAgainData.products} />}
-      {offersData && <Offers lang={lang} products={offersData.products} view={view} />}
-      
-      {/* First (server-rendered) category */}
-      {categoriesData.map((category, index) => (
-        <Category
-          key={`server-${index}`}
-          lang={lang}
-          categoryId={category.categoryId}
-          categoryName={category.categoryName}
-          products={category.products}
-          view={view}
-        />
-      ))}
-
-      {/* Remaining (client-rendered) categories */}
-      {showRemaining &&
-        remainingCategories.map((category, index) => (
-          <Category
-            key={`client-${index}`}
+    <ProductOverlayProvider lang={lang}>
+      <div className="flex flex-col gap-5 w-full">
+        {orderAgainData && <OrderAgain lang={lang} products={orderAgainData.products} />}
+        {offersData && <Offers lang={lang} products={offersData.products} view={view} />}
+        
+        {/* First (server-rendered) category */}
+        {categoriesData.map((category, index) => (
+          <CategoryWithOverlay
+            key={`server-${index}`}
             lang={lang}
             categoryId={category.categoryId}
             categoryName={category.categoryName}
@@ -63,6 +51,20 @@ export default function ViewGrid({
             view={view}
           />
         ))}
-    </div>
+
+        {/* Remaining (client-rendered) categories */}
+        {showRemaining &&
+          remainingCategories.map((category, index) => (
+            <CategoryWithOverlay
+              key={`client-${index}`}
+              lang={lang}
+              categoryId={category.categoryId}
+              categoryName={category.categoryName}
+              products={category.products}
+              view={view}
+            />
+          ))}
+      </div>
+    </ProductOverlayProvider>
   );
 }

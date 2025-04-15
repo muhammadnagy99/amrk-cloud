@@ -28,7 +28,6 @@ export default function ProductInfo({
           priority={true}
           quality={100}
         />
-        <Navigation />
         <figcaption className="text-transparent absolute">
           {imageAlt}
         </figcaption>

@@ -10,6 +10,7 @@ import BasketItemsList from "@/src/components/pickup/basket-page/basket-items-li
 import { Locale } from "@/src/i18n-config";
 import PaymentMethod from "@/src/components/pickup/checkout/payment-method";
 import CarPickUp from "@/src/components/pickup/checkout/car-pickup";
+import CleintNavBar from "@/src/components/pickup/navigation-bar/custom-navbar";
 
 const TEXTS: Record<Locale, any> = {
     ar: {
@@ -41,7 +42,7 @@ const LoadingOverlay = () => (
 );
 
 
-export default function BasketPageClient({ props }: { props: string }) {
+export default function BasketPageClient({ props, onToggle }: { props: string , onToggle: () => void}) {
     const [redeem, setRedeem] = useState(false);
     const [basket, setBasket] = useState<BasketItem[]>([]);
     const [isLoading, setIsLoading] = useState(true);
@@ -79,7 +80,7 @@ export default function BasketPageClient({ props }: { props: string }) {
     return (
         <MobileWrapper>
             <div className="flex flex-col gap-6 w-[88%] overflow-y-auto pt-10 mb-18">
-                <NavBar text={t.title} lang={lang} />
+               <CleintNavBar text={t.title} lang={lang} onClose={onToggle} />
 
                 {
                     isLoading ? (
@@ -87,12 +88,12 @@ export default function BasketPageClient({ props }: { props: string }) {
                     ) : basket.length === 0 ? (
                         <div className="flex flex-col items-center justify-center text-center gap-4 mt-20">
                             <p className="text-gray-500 text-sm">{t.emptyMessage}</p>
-                            <a
-                                href="/pick-up"
+                            <button
+                                onClick={onToggle}
                                 className="text-[#B0438A] underline text-sm font-medium"
                             >
                                 {t.goBack}
-                            </a>
+                            </button>
                         </div>
                     ) : (
                         <>

@@ -10,7 +10,7 @@ export default async function BasketPage(props: {
   const lang = params.lang || "ar";
   return (
     <Suspense>
-      <BasketPageClient props={lang} />
+      {/* <BasketPageClient props={lang} /> */}
     </Suspense>
   );
 }

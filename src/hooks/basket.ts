@@ -54,6 +54,7 @@ export default function useBasket() {
     }
 
     localStorage.setItem(BASKET_KEY, JSON.stringify(updated));
+    window.dispatchEvent(new Event('basketUpdated'));
     setBasket(updated);
   };
 
