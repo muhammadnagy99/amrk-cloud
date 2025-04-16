@@ -11,6 +11,7 @@ import { Locale } from "@/src/i18n-config";
 import PaymentMethod from "@/src/components/pickup/checkout/payment-method";
 import CarPickUp from "@/src/components/pickup/checkout/car-pickup";
 import CleintNavBar from "@/src/components/pickup/navigation-bar/custom-navbar";
+import { ProductOverlayProvider } from "@/src/components/pickup/view-grid/category.tsx/product-overlay";
 
 const TEXTS: Record<Locale, any> = {
     ar: {
@@ -42,7 +43,7 @@ const LoadingOverlay = () => (
 );
 
 
-export default function BasketPageClient({ props, onToggle }: { props: string , onToggle: () => void}) {
+export default function BasketPageClient({ props, onToggle }: { props: string, onToggle: () => void }) {
     const [redeem, setRedeem] = useState(false);
     const [basket, setBasket] = useState<BasketItem[]>([]);
     const [isLoading, setIsLoading] = useState(true);
@@ -80,11 +81,11 @@ export default function BasketPageClient({ props, onToggle }: { props: string , 
     return (
         <MobileWrapper>
             <div className="flex flex-col gap-6 w-[88%] overflow-y-auto pt-10 mb-18">
-               <CleintNavBar text={t.title} lang={lang} onClose={onToggle} />
+                <CleintNavBar text={t.title} lang={lang} onClose={onToggle} />
 
                 {
                     isLoading ? (
-                       <LoadingOverlay /> 
+                        <LoadingOverlay />
                     ) : basket.length === 0 ? (
                         <div className="flex flex-col items-center justify-center text-center gap-4 mt-20">
                             <p className="text-gray-500 text-sm">{t.emptyMessage}</p>
@@ -97,12 +98,14 @@ export default function BasketPageClient({ props, onToggle }: { props: string , 
                         </div>
                     ) : (
                         <>
-                            <BasketItemsList
-                                lang={lang}
-                                items={basket}
-                                onDeleteItem={handleDeleteItem}
-                                mode={`BA`}
-                            />
+                            <ProductOverlayProvider lang={lang}>
+                                <BasketItemsList
+                                    lang={lang}
+                                    items={basket}
+                                    onDeleteItem={handleDeleteItem}
+                                    mode={`BA`}
+                                />
+                            </ProductOverlayProvider >
                             <CarPickUp lang={lang} />
                             <UserDiscount
                                 lang={lang}

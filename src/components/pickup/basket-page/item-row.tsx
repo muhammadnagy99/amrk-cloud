@@ -12,7 +12,7 @@ interface CartItemProps {
   options: CartOption[];
   totalPrice: number;
   onDelete: () => void;
-  onEdit: () => void;
+  onClick: () => void;
   lang: string;
   mode: string;
 }
@@ -37,7 +37,7 @@ export default function CartItem({
   options,
   totalPrice,
   onDelete,
-  onEdit,
+  onClick,
   lang,
   mode
 }: CartItemProps) {
@@ -68,7 +68,7 @@ export default function CartItem({
        <div className={`${mode === 'CH' ? 'hidden' : ''} flex gap-6`}>
           <button
             className="text-blue-500 flex items-center gap-1 cursor-pointer"
-            onClick={onEdit}
+            onClick={onClick}
           >
             <EditIcon />
             <span className="text-xs font-medium">{t.edit}</span>

@@ -5,6 +5,8 @@ import CartItemSkeleton from "./item-skelton";
 import { useEffect, useState } from "react";
 import { BasketItem } from "@/src/app/[lang]/pick-up/basket/basket-client";
 import { cacheManager } from "@/src/cacheManager";
+import { useProductOverlay } from "../view-grid/category.tsx/product-overlay";
+
 
 interface ProductInfo {
   product_id: string;
@@ -82,6 +84,8 @@ async function fetchProductData(slug: string): Promise<ProductData> {
 export default function BasketItemsList({ lang, items, onDeleteItem, mode }: Props) {
   const [products, setProducts] = useState<Record<string, ProductInfo>>({});
   const [loading, setLoading] = useState(true);
+  const { openProductOverlay } = useProductOverlay();
+
   
   useEffect(() => {
     const fetchBasketProducts = async () => {
@@ -136,9 +140,7 @@ export default function BasketItemsList({ lang, items, onDeleteItem, mode }: Pro
                 ]}                
                 totalPrice={item.totalPrice}
                 onDelete={() => onDeleteItem(item.id)}
-                onEdit={() => {
-                  window.location.href = `/pick-up/product/${item.id}`;
-                }}
+                onClick={() => openProductOverlay(product.product_id)}
                 mode={mode}
               />
             );

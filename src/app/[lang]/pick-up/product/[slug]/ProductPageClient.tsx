@@ -7,6 +7,7 @@ import OptionalChoices from "@/src/components/pickup/product-page/optional-choic
 import MobileWrapper from "../../../mobile-wrapper";
 import { useProductSelections } from "@/src/hooks/product-selection";
 import { BackArrow } from "@/src/components/pickup/product-page/icons";
+import { ProductOverlayProvider } from "@/src/components/pickup/view-grid/category.tsx/product-overlay";
 
 interface ProductPageClientProps {
     productId: string;
@@ -81,16 +82,17 @@ export default function ProductPageClient({
                 ))}
 
             </div>
-
-            <AddCart
-                productId={productId}
-                lang={lang}
-                price={price}
-                requiredOptions={requiredOptions?.flatMap((group) => group.options) || []}
-                optionalOptions={optionalOptions?.flatMap((group) => group.options) || []}
-                selectedRequired={required}
-                selectedOptional={optional}
-            />
+            <ProductOverlayProvider lang={lang}>
+                <AddCart
+                    productId={productId}
+                    lang={lang}
+                    price={price}
+                    requiredOptions={requiredOptions?.flatMap((group) => group.options) || []}
+                    optionalOptions={optionalOptions?.flatMap((group) => group.options) || []}
+                    selectedRequired={required}
+                    selectedOptional={optional}
+                />
+            </ProductOverlayProvider>
 
         </MobileWrapper>
     );

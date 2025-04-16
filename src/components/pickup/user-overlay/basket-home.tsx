@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { BasketIcon } from "../product-page/icons";
 import { RiyalCurrency } from "../basket-page/icons";
 import BasketPageClient from "@/src/app/[lang]/pick-up/basket/basket-client";
+import { TOGGLE_BASKET_OVERLAY, CLOSE_BASKET_OVERLAY } from "@/src/lib/basket-event";
 
 interface BasketCTAHomeProps {
   lang: string; // e.g. "en" or "ar"
@@ -48,6 +49,16 @@ export default function BasketCTAHome({ lang }: BasketCTAHomeProps) {
     }
   };
 
+  // Function to handle toggle event from other components
+  const handleToggleEvent = () => {
+    setShowBasketOverlay(!showBasketOverlay);
+  };
+
+  // Function to handle close event from other components
+  const handleCloseEvent = () => {
+    closeBasketOverlay();
+  };
+
   useEffect(() => {
     // Initial load from localStorage
     updateFromLocalStorage();
@@ -57,11 +68,19 @@ export default function BasketCTAHome({ lang }: BasketCTAHomeProps) {
     
     // Listen for custom event (for same-window updates)
     window.addEventListener('basketUpdated', updateFromLocalStorage);
+    
+    // Listen for toggle basket overlay events
+    window.addEventListener(TOGGLE_BASKET_OVERLAY, handleToggleEvent);
+    
+    // Listen for close basket overlay events
+    window.addEventListener(CLOSE_BASKET_OVERLAY, handleCloseEvent);
 
     // Cleanup
     return () => {
       window.removeEventListener('storage', updateFromLocalStorage);
       window.removeEventListener('basketUpdated', updateFromLocalStorage);
+      window.removeEventListener(TOGGLE_BASKET_OVERLAY, handleToggleEvent);
+      window.removeEventListener(CLOSE_BASKET_OVERLAY, handleCloseEvent);
     };
   }, [showBasketOverlay]);
 
@@ -79,6 +98,8 @@ export default function BasketCTAHome({ lang }: BasketCTAHomeProps) {
       setShowClosingAnimation(true);
       setTimeout(() => {
         setShowBasketOverlay(false);
+        setClosingAnimation(false);
+        setShowClosingAnimation(false);
       }, 300); // Match this with animation duration
     }
   };

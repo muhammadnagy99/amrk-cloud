@@ -6,6 +6,8 @@ import useBasket from "@/src/hooks/basket";
 import { BasketItem } from "@/src/interfaces/interfaces";
 import { RiyalCurrency } from "../basket-page/icons";
 import Link from "next/link";
+import { useProductOverlay } from "../view-grid/category.tsx/product-overlay";
+import { basketEventService } from "@/src/lib/basket-event";
 
 interface Props {
   lang: string;
@@ -38,6 +40,8 @@ export default function AddCart({
   const [showGoToBasket, setShowGoToBasket] = useState(false);
   const [hasStartedAddFlow, setHasStartedAddFlow] = useState(false);
 
+  const { openProductOverlay } = useProductOverlay();
+
 
   const getExtraPrice = (type: string, value: string): number => {
     const source = type === "size" ? requiredOptions : optionalOptions;
@@ -50,31 +54,31 @@ export default function AddCart({
     const hasRequired = requiredOptions.length > 0;
     const hasOptional = optionalOptions.length > 0;
     setHasStartedAddFlow(true);
-  
+
     if (hasRequired && selectedRequired.length === 0) {
       alert("Please select required options.");
       setLoading(false);
       return;
     }
-  
+
     const requiredWithPrices = selectedRequired.map((opt) => ({
       ...opt,
       extraPrice: getExtraPrice("size", opt.value),
     }));
-  
+
     const optionalWithPrices = selectedOptional.map((opt) => ({
       ...opt,
       extraPrice: getExtraPrice("addons", opt.value),
     }));
-  
+
     const totalExtras =
       [...requiredWithPrices, ...optionalWithPrices].reduce(
         (sum, o) => sum + (o.extraPrice || 0),
         0
       );
-  
+
     const total = (price + totalExtras) * quantity;
-  
+
     const item: BasketItem = {
       id: productId,
       quantity,
@@ -82,7 +86,7 @@ export default function AddCart({
       optional: optionalWithPrices,
       totalPrice: total,
     };
-  
+
     addToBasket(item);
     setTimeout(() => {
       setAdded(true);
@@ -98,8 +102,10 @@ export default function AddCart({
       }, 1000);
     }, 500);
   };
-  
 
+  const showBasket = () => {
+    basketEventService.toggleBasketOverlay();
+  }
 
   return (
     <div className="fixed bottom-0 left-1/2 transform -translate-x-1/2 w-full bg-white shadow-[0_0_10px_0_rgba(0,0,0,0.2)] p-4 flex justify-between items-center z-50 rounded-lg gap-3 h-24">
@@ -126,21 +132,20 @@ export default function AddCart({
       <button
         className={`flex items-center justify-between bg-[#b0438a] text-white ${showGoToBasket ? "w-full" : "w-[217px]"
           } h-12 rounded-lg flex-1 transition-all duration-300`}
-        disabled={loading || added}
-        onClick={handleAddToCart}
+        disabled={loading}
+        onClick={showGoToBasket ? showBasket : handleAddToCart}
       >
         {loading ? (
           <div className="w-full text-center">
             <span className="animate-pulse text-sm">{TEXTS.loading}</span>
           </div>
         ) : showGoToBasket ? (
-          <Link
-            href="/pick-up/basket/"
+          <span
             className="flex items-center justify-center gap-2 text-white text-sm font-semibold w-full"
           >
             <BasketIcon />
             {TEXTS.goToBasket}
-          </Link>
+          </span>
         ) : (
           <div className="flex justify-between items-center w-full px-4">
             {showAdded ? (
