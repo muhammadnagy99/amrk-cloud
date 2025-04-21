@@ -233,11 +233,11 @@ export default function PaymentMethod({
     };
   }, [selectedPayment, isLoading, isApplePayAvailable, lang]);
 
-  // useEffect(() => {
-  //   if (selectedPayment === 'cardPay' && paymentFormRef.current) {
-  //     paymentFormRef.current.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-  //   }
-  // }, [selectedPayment]);
+  useEffect(() => {
+    if (selectedPayment === 'cardPay' && paymentFormRef.current) {
+      paymentFormRef.current.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+  }, [selectedPayment]);
 
 
   return (
