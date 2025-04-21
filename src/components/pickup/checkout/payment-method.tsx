@@ -66,7 +66,7 @@ export default function PaymentMethod({
   const [isApplePayAvailable, setIsApplePayAvailable] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const paymentFormRef = useRef<HTMLDivElement>(null);
-  const applePayButtonRef = useRef<HTMLElement | null>(null);
+  const applePayContainerRef = useRef<HTMLDivElement>(null);
   const t = TEXTS[lang] || TEXTS["en"];
 
   useEffect(() => {
@@ -135,15 +135,23 @@ export default function PaymentMethod({
     );
   };
 
-  const applePayRef = useRef<HTMLDivElement>(null);
-
   useEffect(() => {
-    if (applePayRef.current) {
-      applePayRef.current.innerHTML = '';
+    console.log("Effect running, selectedPayment:", selectedPayment);
+    
+    // Always clean up the container
+    if (applePayContainerRef.current) {
+      while (applePayContainerRef.current.firstChild) {
+        const child = applePayContainerRef.current.firstChild;
+        if (child instanceof HTMLElement) {
+          child.replaceWith(child.cloneNode(true));
+        }
+        applePayContainerRef.current.removeChild(child);
+      }
     }
     
-    if (selectedPayment === 'applePay' && isApplePayAvailable && applePayRef.current && !isLoading) {
-      const wrapper = applePayRef.current;
+    // Only create Apple Pay button if appropriate
+    if (selectedPayment === 'applePay' && isApplePayAvailable && applePayContainerRef.current && !isLoading) {
+      console.log("Creating Apple Pay button");
       
       const applePayButton = document.createElement('apple-pay-button');
       applePayButton.setAttribute('buttonstyle', 'black');
@@ -151,16 +159,24 @@ export default function PaymentMethod({
       applePayButton.setAttribute('locale', lang === 'ar' ? 'ar-SA' : 'en-US');
       applePayButton.className = 'w-full h-12';
       
+      // Add event listener
       applePayButton.addEventListener('click', handleApplePayButtonClick);
-      wrapper.appendChild(applePayButton);
       
+      // Append to container
+      applePayContainerRef.current.appendChild(applePayButton);
+      
+      // Clean up when effect reruns or component unmounts
       return () => {
-        if (applePayButton) {
-          applePayButton.removeEventListener('click', handleApplePayButtonClick);
+        console.log("Cleaning up Apple Pay button");
+        applePayButton.removeEventListener('click', handleApplePayButtonClick);
+        
+        // Safety check to prevent "removeChild" error
+        if (applePayContainerRef.current && applePayContainerRef.current.contains(applePayButton)) {
+          applePayContainerRef.current.removeChild(applePayButton);
         }
       };
     }
-  }, [selectedPayment, isApplePayAvailable, isLoading, lang]);
+  }, [selectedPayment, isApplePayAvailable, isLoading, lang, amount]);
 
   const renderSelectedPaymentContent = () => {
   
@@ -173,7 +189,7 @@ export default function PaymentMethod({
                 <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-[#b0438a]"></div>
               </div>
             ) : (
-              <div ref={applePayRef} className="w-full h-12"></div>
+              <div ref={applePayContainerRef} className="w-full h-12"></div>
             )}
           </div>
         );
