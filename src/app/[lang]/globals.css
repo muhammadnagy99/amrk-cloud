@@ -127,6 +127,9 @@ input[type="checkbox"]:checked {
   flex-direction: row-reverse;
   height: 48px;
 }
+.react-international-phone-input{
+  direction: ltr !important;
+}
 
 .react-international-phone-input-container .react-international-phone-input {
   height: 100% !important;

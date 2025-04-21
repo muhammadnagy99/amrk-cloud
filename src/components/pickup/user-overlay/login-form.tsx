@@ -19,7 +19,8 @@ const TEXTS: Record<string, any> = {
     orText: "أو",
     googleLogin: "تسجيل دخول باستخدام Google",
     appleLogin: "تسجيل دخول باستخدام Apple",
-    phoneAlert: "يرجى إدخال رقم الهاتف"
+    phoneAlert: "يرجى إدخال رقم الهاتف",
+    loading: "برجاء الانتظار...."
   },
   en: {
     headingPart1: "Welcome!",
@@ -29,7 +30,8 @@ const TEXTS: Record<string, any> = {
     orText: "OR",
     googleLogin: "Login with Google",
     appleLogin: "Login with Apple",
-    phoneAlert: "Please enter your phone number"
+    phoneAlert: "Please enter your phone number",
+    loading: "Please Wait...."
   }
 };
 
@@ -114,7 +116,7 @@ const LoginForm: FC<LoginFormProps> = ({ lang, onLoginSuccess, onRequestOTP }) =
             disabled={loading}
             className="w-full bg-[#b0438a] text-base text-white font-medium py-3 rounded-lg"
           >
-            {loading ? "Loading..." : t.loginButton}
+            {loading ? t.loading : t.loginButton}
           </button>
           
           <div className="flex items-center">

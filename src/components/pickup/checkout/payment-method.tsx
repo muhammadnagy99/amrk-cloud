@@ -49,14 +49,13 @@ export default function PaymentMethod({
   onPaymentError,
   onPaymentCancel 
 }: PaymentMethodProps) {
-  const [selectedPayment, setSelectedPayment] = useState<string>('applePay'); // Default to Apple Pay
+  const [selectedPayment, setSelectedPayment] = useState<string>('applePay');
   const [isApplePayAvailable, setIsApplePayAvailable] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const paymentFormRef = useRef<HTMLDivElement>(null);
   const applePayButtonRef = useRef<HTMLElement | null>(null);
   const t = TEXTS[lang] || TEXTS["en"];
 
-  // Initialize Apple Pay on component mount
   useEffect(() => {
     const initApplePay = async () => {
       try {
@@ -123,25 +122,20 @@ export default function PaymentMethod({
     );
   };
 
-  // Setup Apple Pay button click handler
   useEffect(() => {
-    // Initialize the Apple Pay button when it's available in the DOM
     if (selectedPayment === 'applePay' && isApplePayAvailable && applePayButtonRef.current) {
       const buttonElement = applePayButtonRef.current;
       
-      // Remove any existing event listeners
       const newButtonElement = buttonElement.cloneNode(true) as HTMLElement;
       if (buttonElement.parentNode) {
         buttonElement.parentNode.replaceChild(newButtonElement, buttonElement);
       }
       applePayButtonRef.current = newButtonElement;
 
-      // Add the click event listener
       newButtonElement.addEventListener('click', handleApplePayButtonClick);
     }
   }, [selectedPayment, isApplePayAvailable, amount]);
 
-  // Render the content for the selected payment method
   const renderSelectedPaymentContent = () => {
     switch (selectedPayment) {
       case 'applePay':

@@ -33,7 +33,6 @@ export async function POST(req: NextRequest) {
     const payType = 2 // predefined
     const tipValue = 0 // static for now
 
-    // 1. Fetch branch info
     const branchInfoRes = await fetch('https://api.amrk.app/amrkCloudWeb/branchInfo', {
       method: 'POST',
       headers: {
@@ -53,7 +52,7 @@ export async function POST(req: NextRequest) {
     let subtotal = 0
 
     for (const item of basketItems) {
-      const productRes = await fetch('https://api.dev.amrk.app/amrkCloudWeb/getMenuInfo', {
+      const productRes = await fetch('https://api.amrk.app/amrkCloudWeb/getMenuInfo', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -133,12 +132,12 @@ export async function POST(req: NextRequest) {
     }
 
     // 4. Final order request
-    const orderRes = await fetch("https://api.dev.amrk.app/orders/placePickupOrderConsumer", {
+    const orderRes = await fetch("https://api.amrk.app/orders/placePickupOrderConsumer", {
       method: "POST",
       headers: {
         "Accept": "application/json",
         "Content-Type": "application/json",
-        "Header": "Bearer",
+        "Header": "Bearer ",
       },
       body: JSON.stringify(payload),
     })
