@@ -135,23 +135,8 @@ export default function PaymentMethod({
     );
   };
 
-  useEffect(() => {
-    if (selectedPayment === 'applePay' && isApplePayAvailable && applePayButtonRef.current) {
-      const buttonElement = applePayButtonRef.current;
-      
-      const newButtonElement = buttonElement.cloneNode(true) as HTMLElement;
-      if (buttonElement.parentNode) {
-        buttonElement.parentNode.replaceChild(newButtonElement, buttonElement);
-      }
-      applePayButtonRef.current = newButtonElement;
+  const applePayRef = useRef<HTMLDivElement>(null);
 
-      newButtonElement.addEventListener('click', handleApplePayButtonClick);
-    }
-  }, [selectedPayment, isApplePayAvailable, amount]);
-
-  const renderSelectedPaymentContent = () => {
-    const applePayRef = useRef<HTMLDivElement | null>(null);
-  
   useEffect(() => {
     if (applePayRef.current) {
       applePayRef.current.innerHTML = '';
@@ -167,14 +152,17 @@ export default function PaymentMethod({
       applePayButton.className = 'w-full h-12';
       
       applePayButton.addEventListener('click', handleApplePayButtonClick);
-      
       wrapper.appendChild(applePayButton);
       
       return () => {
-        applePayButton.removeEventListener('click', handleApplePayButtonClick);
+        if (applePayButton) {
+          applePayButton.removeEventListener('click', handleApplePayButtonClick);
+        }
       };
     }
-  }, [selectedPayment, isLoading, lang, isApplePayAvailable]);
+  }, [selectedPayment, isApplePayAvailable, isLoading, lang]);
+
+  const renderSelectedPaymentContent = () => {
   
     switch (selectedPayment) {
       case 'applePay':
