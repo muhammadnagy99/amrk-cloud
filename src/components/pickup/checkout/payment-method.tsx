@@ -14,6 +14,19 @@ type PaymentMethodProps = {
   onPaymentCancel?: () => void;
 };
 
+declare global {
+  namespace JSX {
+    interface IntrinsicElements {
+      'apple-pay-button': React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement>;
+    }
+  }
+}
+
+// If using document.createElement, you might also need
+interface HTMLElementTagNameMap {
+  'apple-pay-button': HTMLElement;
+}
+
 const TEXTS: Record<string, any> = {
   ar: {
     title: " طرق الدفع",
@@ -137,6 +150,26 @@ export default function PaymentMethod({
   }, [selectedPayment, isApplePayAvailable, amount]);
 
   const renderSelectedPaymentContent = () => {
+    const applePayRef = useRef<HTMLDivElement | null>(null);
+    
+    useEffect(() => {
+      if (selectedPayment === 'applePay' && isApplePayAvailable && applePayRef.current && !isLoading) {
+        const wrapper = applePayRef.current;
+        wrapper.innerHTML = '';
+        
+        const applePayButton = document.createElement('apple-pay-button');
+        applePayButton.setAttribute('buttonstyle', 'black');
+        applePayButton.setAttribute('type', 'pay');
+        applePayButton.setAttribute('locale', lang === 'ar' ? 'ar-SA' : 'en-US');
+        applePayButton.className = 'w-full h-12';
+        
+        // Add the event listener directly here
+        applePayButton.addEventListener('click', handleApplePayButtonClick);
+        
+        wrapper.appendChild(applePayButton);
+      }
+    }, [selectedPayment, isLoading, lang, applePayRef]);
+  
     switch (selectedPayment) {
       case 'applePay':
         return (
@@ -146,13 +179,7 @@ export default function PaymentMethod({
                 <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-[#b0438a]"></div>
               </div>
             ) : (
-              React.createElement('apple-pay-button' as any, {
-                ref: applePayButtonRef,
-                buttonstyle: "black",
-                type: "pay",
-                locale: lang === 'ar' ? 'ar-SA' : 'en-US',
-                className: "w-full h-12"
-              })
+              <div ref={applePayRef} className="w-full h-12"></div>
             )}
           </div>
         );
@@ -161,7 +188,6 @@ export default function PaymentMethod({
           <div className="w-full">
             <div className="flex flex-col gap-4">
               <h4 className="font-medium text-sm">{t.cardDetails}</h4>
-
               <div className="flex flex-col gap-3 w-full">
                 {/* Card Number */}
                 <div className="flex flex-col gap-1">
@@ -172,7 +198,7 @@ export default function PaymentMethod({
                     placeholder="1234 5678 9012 3456"
                   />
                 </div>
-
+  
                 {/* Expiry Date and CVV on same row */}
                 <div className="flex gap-3 w-full">
                   <div className="flex flex-col gap-1 flex-1 w-[65%]">
@@ -192,7 +218,7 @@ export default function PaymentMethod({
                     />
                   </div>
                 </div>
-
+  
                 {/* Cardholder Name */}
                 <div className="flex flex-col gap-1 w-full">
                   <label className="text-sm text-gray-600">{t.cardholderName}</label>
@@ -202,7 +228,7 @@ export default function PaymentMethod({
                     placeholder="John Doe"
                   />
                 </div>
-
+  
                 {/* Pay Button */}
                 <button className="bg-[#b0438a] text-white rounded-lg py-3 px-6 font-medium mt-2 h-12">
                   {t.pay}
