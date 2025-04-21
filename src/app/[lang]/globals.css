@@ -135,3 +135,10 @@ input[type="checkbox"]:checked {
   height: 100% !important;
 }
 
+apple-pay-button {
+  --apple-pay-button-width: 150px !important;
+  --apple-pay-button-height: 40px !important;
+  --apple-pay-button-border-radius: 35px !important;
+  --apple-pay-button-padding: 0px 0px !important;
+  --apple-pay-button-box-sizing: border-box !important;
+}

@@ -47,6 +47,16 @@ export default function OrderSummary({
     total: number;
   }>(null);
 
+  // Price display component with currency always on the left visually
+  const PriceDisplay = ({ price, color, isDiscount = false }: { price: number; color: string; isDiscount?: boolean }) => {
+    return (
+      <div className="flex items-center gap-1" dir="ltr">
+        <RiyalCurrency color={color} />
+        <span>{isDiscount ? `- ${price.toFixed(2)}` : price.toFixed(2)}</span>
+      </div>
+    );
+  };
+
   useEffect(() => {
     if (!items.length) return;
     
@@ -83,28 +93,31 @@ export default function OrderSummary({
     <div className="py-3 border-b border-gray-300 bg-white flex flex-col gap-4">
       <div className="grid grid-cols-2 text-black text-xs font-light gap-3">
         <span className="justify-self-start rtl:text-right ltr:text-left">{t.subtotal}</span>
-        <span className="justify-self-end flex flex-row gap-1">
-          {summary.subtotal.toFixed(2)} {<RiyalCurrency color="gray" />}
+        <span className="justify-self-end">
+          <PriceDisplay price={summary.subtotal} color="gray" />
         </span>
+        
         <span className="justify-self-start rtl:text-right ltr:text-left">
           {t.vat} ({summary.vatPercent}%)
         </span>
-        <span className="justify-self-end flex flex-row gap-1">
-          {summary.vatAmount.toFixed(2)} {<RiyalCurrency color="gray" />}
+        <span className="justify-self-end">
+          <PriceDisplay price={summary.vatAmount} color="gray" />
         </span>
+        
         {summary.discount > 0 && (
           <>
             <span className="justify-self-start rtl:text-right ltr:text-left text-primaryColor">{t.discount}</span>
-            <span className="justify-self-end flex flex-row gap-1 text-primaryColor">
-              - {summary.discount.toFixed(2)} {<RiyalCurrency color="#b0438a" />}
+            <span className="justify-self-end text-primaryColor">
+              <PriceDisplay price={summary.discount} color="#b0438a" isDiscount={true} />
             </span>
           </>
         )}
       </div>
+      
       <div className="flex justify-between items-center font-medium text-base">
         <span className="text-black">{t.total}</span>
-        <span className="text-black flex flex-row gap-1 items-center">
-          {summary.total.toFixed(2)} {<RiyalCurrency color="black" />}
+        <span className="text-black">
+          <PriceDisplay price={summary.total} color="black" />
         </span>
       </div>
     </div>

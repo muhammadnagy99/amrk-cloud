@@ -65,13 +65,13 @@ export default function BasketCTAHome({ lang }: BasketCTAHomeProps) {
 
     // Listen for storage events (for changes from other tabs)
     window.addEventListener('storage', updateFromLocalStorage);
-    
+
     // Listen for custom event (for same-window updates)
     window.addEventListener('basketUpdated', updateFromLocalStorage);
-    
+
     // Listen for toggle basket overlay events
     window.addEventListener(TOGGLE_BASKET_OVERLAY, handleToggleEvent);
-    
+
     // Listen for close basket overlay events
     window.addEventListener(CLOSE_BASKET_OVERLAY, handleCloseEvent);
 
@@ -84,7 +84,7 @@ export default function BasketCTAHome({ lang }: BasketCTAHomeProps) {
     };
   }, [showBasketOverlay]);
 
-  if (itemsCount === 0) return <div />; 
+  if (itemsCount === 0) return <div />;
 
   const buttonLabel = lang === "ar" ? "عرض السلة" : "View Basket";
 
@@ -114,10 +114,10 @@ export default function BasketCTAHome({ lang }: BasketCTAHomeProps) {
             style={{
               transform: closingAnimation ? 'translateY(100%)' : 'translateY(0)',
               height: '100vh',
-              animation: showBasketOverlay && !closingAnimation 
-                ? 'slide-up 0.3s ease-out' 
-                : closingAnimation 
-                  ? 'slide-down 0.3s ease-out' 
+              animation: showBasketOverlay && !closingAnimation
+                ? 'slide-up 0.3s ease-out'
+                : closingAnimation
+                  ? 'slide-down 0.3s ease-out'
                   : 'none'
             }}
             onAnimationEnd={() => {
@@ -134,7 +134,7 @@ export default function BasketCTAHome({ lang }: BasketCTAHomeProps) {
           </div>
         </div>
       )}
-      
+
       {/* Bottom CTA Button */}
       <div className="fixed bottom-0 left-1/2 transform -translate-x-1/2 w-full bg-white shadow-[0_0_10px_0_rgba(0,0,0,0.2)] p-4 flex justify-between items-center z-40 rounded-lg gap-3 h-24">
         <button
@@ -148,12 +148,12 @@ export default function BasketCTAHome({ lang }: BasketCTAHomeProps) {
             <BasketIcon />
             <span className="text-sm font-medium">{buttonLabel}</span>
           </p>
-          <span className="flex flex-row gap-1 text-sm font-light items-center">
-            {totalPrice.toFixed(2)} {<RiyalCurrency color="white" />}
-          </span>
+          <div className="flex items-center gap-1 text-sm font-light" dir="ltr">
+            <RiyalCurrency color="white" />
+            <span>{totalPrice.toFixed(2)}</span>
+          </div>
         </button>
       </div>
-      
       {/* Animation styles */}
       <style jsx global>{`
         @keyframes slide-up {
