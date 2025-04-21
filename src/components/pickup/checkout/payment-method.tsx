@@ -151,24 +151,30 @@ export default function PaymentMethod({
 
   const renderSelectedPaymentContent = () => {
     const applePayRef = useRef<HTMLDivElement | null>(null);
+  
+  useEffect(() => {
+    if (applePayRef.current) {
+      applePayRef.current.innerHTML = '';
+    }
     
-    useEffect(() => {
-      if (selectedPayment === 'applePay' && isApplePayAvailable && applePayRef.current && !isLoading) {
-        const wrapper = applePayRef.current;
-        wrapper.innerHTML = '';
-        
-        const applePayButton = document.createElement('apple-pay-button');
-        applePayButton.setAttribute('buttonstyle', 'black');
-        applePayButton.setAttribute('type', 'pay');
-        applePayButton.setAttribute('locale', lang === 'ar' ? 'ar-SA' : 'en-US');
-        applePayButton.className = 'w-full h-12';
-        
-        // Add the event listener directly here
-        applePayButton.addEventListener('click', handleApplePayButtonClick);
-        
-        wrapper.appendChild(applePayButton);
-      }
-    }, [selectedPayment, isLoading, lang, applePayRef]);
+    if (selectedPayment === 'applePay' && isApplePayAvailable && applePayRef.current && !isLoading) {
+      const wrapper = applePayRef.current;
+      
+      const applePayButton = document.createElement('apple-pay-button');
+      applePayButton.setAttribute('buttonstyle', 'black');
+      applePayButton.setAttribute('type', 'pay');
+      applePayButton.setAttribute('locale', lang === 'ar' ? 'ar-SA' : 'en-US');
+      applePayButton.className = 'w-full h-12';
+      
+      applePayButton.addEventListener('click', handleApplePayButtonClick);
+      
+      wrapper.appendChild(applePayButton);
+      
+      return () => {
+        applePayButton.removeEventListener('click', handleApplePayButtonClick);
+      };
+    }
+  }, [selectedPayment, isLoading, lang, isApplePayAvailable]);
   
     switch (selectedPayment) {
       case 'applePay':
