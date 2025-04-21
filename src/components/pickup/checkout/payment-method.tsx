@@ -54,13 +54,13 @@ const TEXTS: Record<string, any> = {
   },
 };
 
-export default function PaymentMethod({ 
-  lang, 
-  amount = 0, 
-  token, 
-  onPaymentSuccess, 
+export default function PaymentMethod({
+  lang,
+  amount = 0,
+  token,
+  onPaymentSuccess,
   onPaymentError,
-  onPaymentCancel 
+  onPaymentCancel
 }: PaymentMethodProps) {
   const [selectedPayment, setSelectedPayment] = useState<string>('applePay');
   const [isApplePayAvailable, setIsApplePayAvailable] = useState<boolean>(false);
@@ -73,10 +73,10 @@ export default function PaymentMethod({
     const initApplePay = async () => {
       try {
         await loadApplePaySDK();
-        
+
         const isAvailable = checkApplePayAvailability();
         setIsApplePayAvailable(isAvailable);
-        
+
         if (!isAvailable) {
           setSelectedPayment('cardPay');
         }
@@ -100,7 +100,7 @@ export default function PaymentMethod({
 
     const applePayConfig = {
       merchantName: 'Amrk',
-      countryCode: 'SA', 
+      countryCode: 'SA',
       currencyCode: 'SAR' // Update with your currency
     };
 
@@ -136,121 +136,102 @@ export default function PaymentMethod({
   };
 
   useEffect(() => {
-    console.log("Effect running, selectedPayment:", selectedPayment);
-    
-    // Always clean up the container
-    if (applePayContainerRef.current) {
-      while (applePayContainerRef.current.firstChild) {
-        const child = applePayContainerRef.current.firstChild;
-        if (child instanceof HTMLElement) {
-          child.replaceWith(child.cloneNode(true));
-        }
-        applePayContainerRef.current.removeChild(child);
-      }
-    }
-    
-    // Only create Apple Pay button if appropriate
-    if (selectedPayment === 'applePay' && isApplePayAvailable && applePayContainerRef.current && !isLoading) {
-      console.log("Creating Apple Pay button");
-      
-      const applePayButton = document.createElement('apple-pay-button');
-      applePayButton.setAttribute('buttonstyle', 'black');
-      applePayButton.setAttribute('type', 'pay');
-      applePayButton.setAttribute('locale', lang === 'ar' ? 'ar-SA' : 'en-US');
-      applePayButton.className = 'w-full h-12';
-      
-      // Add event listener
-      applePayButton.addEventListener('click', handleApplePayButtonClick);
-      
-      // Append to container
-      applePayContainerRef.current.appendChild(applePayButton);
-      
-      // Clean up when effect reruns or component unmounts
-      return () => {
-        console.log("Cleaning up Apple Pay button");
-        applePayButton.removeEventListener('click', handleApplePayButtonClick);
-        
-        // Safety check to prevent "removeChild" error
-        if (applePayContainerRef.current && applePayContainerRef.current.contains(applePayButton)) {
-          applePayContainerRef.current.removeChild(applePayButton);
-        }
-      };
-    }
-  }, [selectedPayment, isApplePayAvailable, isLoading, lang, amount]);
+    console.log("Payment method changed to:", selectedPayment);
 
-  const renderSelectedPaymentContent = () => {
-  
-    switch (selectedPayment) {
-      case 'applePay':
-        return (
-          <div className="w-full">
-            {isLoading ? (
-              <div className="flex justify-center items-center h-12">
-                <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-[#b0438a]"></div>
+    if (paymentFormRef.current) {
+      paymentFormRef.current.innerHTML = '';
+
+      if (selectedPayment === 'applePay' && !isLoading) {
+        const container = document.createElement('div');
+        container.className = 'w-full';
+
+        if (isLoading) {
+          const loadingDiv = document.createElement('div');
+          loadingDiv.className = 'flex justify-center items-center h-12';
+          const spinner = document.createElement('div');
+          spinner.className = 'animate-spin rounded-full h-6 w-6 border-b-2 border-[#b0438a]';
+          loadingDiv.appendChild(spinner);
+          container.appendChild(loadingDiv);
+        } else if (isApplePayAvailable) {
+          const applePayButton = document.createElement('apple-pay-button');
+          applePayButton.setAttribute('buttonstyle', 'black');
+          applePayButton.setAttribute('type', 'pay');
+          applePayButton.setAttribute('locale', lang === 'ar' ? 'ar-SA' : 'en-US');
+          applePayButton.className = 'w-full h-12';
+
+          applePayButton.addEventListener('click', handleApplePayButtonClick);
+          container.appendChild(applePayButton);
+        } else {
+          const message = document.createElement('div');
+          message.className = 'flex justify-center items-center h-12 text-gray-500';
+          message.textContent = 'Apple Pay is not available on this device';
+          container.appendChild(message);
+        }
+
+        paymentFormRef.current.appendChild(container);
+      }
+      else if (selectedPayment === 'cardPay') {
+        const cardFormHTML = `
+        <div class="w-full">
+          <div class="flex flex-col gap-4">
+            <h4 class="font-medium text-sm">${t.cardDetails}</h4>
+            <div class="flex flex-col gap-3 w-full">
+              <!-- Card Number -->
+              <div class="flex flex-col gap-1">
+                <label class="text-sm text-gray-600">${t.cardNumber}</label>
+                <input
+                  type="text"
+                  class="border border-[#00000033] rounded-lg p-3 h-12"
+                  placeholder="1234 5678 9012 3456"
+                />
               </div>
-            ) : (
-              <div ref={applePayContainerRef} className="w-full h-12"></div>
-            )}
-          </div>
-        );
-      case 'cardPay':
-        return (
-          <div className="w-full">
-            <div className="flex flex-col gap-4">
-              <h4 className="font-medium text-sm">{t.cardDetails}</h4>
-              <div className="flex flex-col gap-3 w-full">
-                {/* Card Number */}
-                <div className="flex flex-col gap-1">
-                  <label className="text-sm text-gray-600">{t.cardNumber}</label>
+                
+              <!-- Expiry Date and CVV on same row -->
+              <div class="flex gap-3 w-full">
+                <div class="flex flex-col gap-1 flex-1 w-[65%]">
+                  <label class="text-sm text-gray-600">${t.expiryDate}</label>
                   <input
                     type="text"
-                    className="border border-[#00000033] rounded-lg p-3 h-12"
-                    placeholder="1234 5678 9012 3456"
+                    class="border border-[#00000033] rounded-lg p-3 h-12"
+                    placeholder="MM/YY"
                   />
                 </div>
-  
-                {/* Expiry Date and CVV on same row */}
-                <div className="flex gap-3 w-full">
-                  <div className="flex flex-col gap-1 flex-1 w-[65%]">
-                    <label className="text-sm text-gray-600">{t.expiryDate}</label>
-                    <input
-                      type="text"
-                      className="border border-[#00000033] rounded-lg p-3 h-12"
-                      placeholder="MM/YY"
-                    />
-                  </div>
-                  <div className="flex flex-col gap-1 w-[30%]">
-                    <label className="text-sm text-gray-600">{t.cvv}</label>
-                    <input
-                      type="text"
-                      className="border border-[#00000033] rounded-lg p-3 h-12"
-                      placeholder="123"
-                    />
-                  </div>
-                </div>
-  
-                {/* Cardholder Name */}
-                <div className="flex flex-col gap-1 w-full">
-                  <label className="text-sm text-gray-600">{t.cardholderName}</label>
+                <div class="flex flex-col gap-1 w-[30%]">
+                  <label class="text-sm text-gray-600">${t.cvv}</label>
                   <input
                     type="text"
-                    className="border border-[#00000033] rounded-lg p-3 h-12"
-                    placeholder="John Doe"
+                    class="border border-[#00000033] rounded-lg p-3 h-12"
+                    placeholder="123"
                   />
                 </div>
-  
-                {/* Pay Button */}
-                <button className="bg-[#b0438a] text-white rounded-lg py-3 px-6 font-medium mt-2 h-12">
-                  {t.pay}
-                </button>
               </div>
+                
+              <!-- Cardholder Name -->
+              <div class="flex flex-col gap-1 w-full">
+                <label class="text-sm text-gray-600">${t.cardholderName}</label>
+                <input
+                  type="text"
+                  class="border border-[#00000033] rounded-lg p-3 h-12"
+                  placeholder="John Doe"
+                />
+              </div>
+                
+              <!-- Pay Button -->
+              <button class="bg-[#b0438a] text-white rounded-lg py-3 px-6 font-medium mt-2 h-12">
+                ${t.pay}
+              </button>
             </div>
           </div>
-        );
-      default:
-        return null;
+        </div>
+      `;
+
+        paymentFormRef.current.innerHTML = cardFormHTML;
+      }
     }
-  };
+
+    return () => {
+    };
+  }, [selectedPayment, isLoading, isApplePayAvailable, lang]);
 
   // useEffect(() => {
   //   if (selectedPayment === 'cardPay' && paymentFormRef.current) {
@@ -311,7 +292,6 @@ export default function PaymentMethod({
           ref={paymentFormRef}
           className="w-full bg-white p-4 flex flex-col rounded-lg gap-3"
         >
-          {renderSelectedPaymentContent()}
         </div>
       </div>
     </>
