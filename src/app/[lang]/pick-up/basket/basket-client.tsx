@@ -120,7 +120,12 @@ export default function BasketPageClient({ props, onToggle }: { props: string, o
                                 onTotalChange={(val) => setSummaryTotal(val)}
                             />
 
-                            <PaymentMethod lang={lang} />
+                            <PaymentMethod lang={lang} amount={summaryTotal} onPaymentSuccess={(result) => {
+                                console.log('Payment successful!', result);
+                            }}
+                                onPaymentError={(error) => {
+                                    console.error('Payment failed:', error);
+                                }} />
                         </>
                     )}
 

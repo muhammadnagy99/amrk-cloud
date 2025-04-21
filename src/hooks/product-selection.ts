@@ -2,27 +2,30 @@
 import { useState } from "react";
 
 export function useProductSelections() {
-  const [required, setRequired] = useState<{ name: string; value: string }[]>([]);
-  const [optional, setOptional] = useState<{ name: string; value: string }[]>([]);
+  const [required, setRequired] = useState<{label: string; name: string; value: string }[]>([]);
+  const [optional, setOptional] = useState<{label: string; name: string; value: string }[]>([]);
 
-  const handleRequiredChange = (name: string, value: string) => {
+  const handleRequiredChange = (label: string, name: string, value: string) => {
     setRequired((prev) => {
-      const exists = prev.find((opt) => opt.value === value);
-      if (exists) {
-        return prev.filter((opt) => opt.value !== value);
+      const labelExists = prev.find((opt) => opt.label === label);
+      
+      if (labelExists) {
+        return prev.map((opt) => 
+          opt.label === label ? { label, name, value } : opt
+        );
       } else {
-        return [...prev, { name, value }];
+        return [...prev, { label, name, value }];
       }
     });
   };
 
-  const handleOptionalToggle = (name: string, value: string) => {
+  const handleOptionalToggle = (label: string, name: string, value: string) => {
     setOptional((prev) => {
       const exists = prev.find((opt) => opt.value === value);
       if (exists) {
         return prev.filter((opt) => opt.value !== value);
       } else {
-        return [...prev, { name, value }];
+        return [...prev, { label, name, value }];
       }
     });
   };

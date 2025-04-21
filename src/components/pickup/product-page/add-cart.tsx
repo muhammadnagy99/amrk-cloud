@@ -1,5 +1,5 @@
 'use client'
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ContentProvider from "@/src/content-provider";
 import { BasketIcon, MinusIcon, PlusIcon } from "./icons";
 import useBasket from "@/src/hooks/basket";
@@ -39,15 +39,40 @@ export default function AddCart({
   const [showAdded, setShowAdded] = useState(false);
   const [showGoToBasket, setShowGoToBasket] = useState(false);
   const [hasStartedAddFlow, setHasStartedAddFlow] = useState(false);
+  const [totalPrice, setTotalPrice] = useState(price);
 
-  const { openProductOverlay } = useProductOverlay();
+  useEffect(() => {
+    console.log(selectedRequired)
+    setTotalPrice(calculateTotalPrice());
+  }, [selectedRequired, selectedOptional, quantity, price]);
 
+  const calculateTotalPrice = (): number => {
+    const requiredExtras = selectedRequired.reduce((sum, opt) => {
+      const matchingOption = requiredOptions.find(option => option.value === opt.value);
+      if (matchingOption?.extraPrice) {
+        return sum + parseFloat(matchingOption.extraPrice);
+      }
+      return sum;
+    }, 0);
+    console.log("this is required => " +requiredExtras)
+    
+    const optionalExtras = selectedOptional.reduce((sum, opt) => {
+      const matchingOption = optionalOptions.find(option => option.value === opt.value);
+      if (matchingOption?.extraPrice) {
+        return sum + parseFloat(matchingOption.extraPrice);
+      }
+      return sum;
+    }, 0);
+    console.log("this is optional => " + optionalExtras)
+    
+    return (price + requiredExtras + optionalExtras) * quantity;
+  };
 
-  const getExtraPrice = (type: string, value: string): number => {
-    const source = type === "size" ? requiredOptions : optionalOptions;
-    const found = source.find((opt) => opt.value === value);
+  const getExtraPrice = (options: { label: string; value: string; extraPrice?: string }[], value: string): number => {
+    const found = options.find((opt) => opt.value === value);
     return found?.extraPrice ? parseFloat(found.extraPrice) : 0;
   };
+
 
   const handleAddToCart = () => {
     setLoading(true);
@@ -63,12 +88,12 @@ export default function AddCart({
 
     const requiredWithPrices = selectedRequired.map((opt) => ({
       ...opt,
-      extraPrice: getExtraPrice("size", opt.value),
+      extraPrice: getExtraPrice(requiredOptions, opt.value),
     }));
 
     const optionalWithPrices = selectedOptional.map((opt) => ({
       ...opt,
-      extraPrice: getExtraPrice("addons", opt.value),
+      extraPrice: getExtraPrice(optionalOptions, opt.value),
     }));
 
     const totalExtras =
@@ -107,31 +132,40 @@ export default function AddCart({
     basketEventService.toggleBasketOverlay();
   }
 
+  // Function to increment quantity
+  const incrementQuantity = () => {
+    setQuantity(q => q + 1);
+  };
+
+  // Function to decrement quantity (with minimum value of 1)
+  const decrementQuantity = () => {
+    setQuantity(q => Math.max(1, q - 1));
+  };
+
   return (
     <div className="fixed bottom-0 left-1/2 transform -translate-x-1/2 w-full bg-white shadow-[0_0_10px_0_rgba(0,0,0,0.2)] p-4 flex justify-between items-center z-50 rounded-lg gap-3 h-24">
       {!added && !loading && (
-        <div className="flex items-center bg-[#f9f9f9] px-4 py-2 rounded-lg gap-3">
+        <div className="flex items-center bg-[#f9f9f9] px-4 py-2 rounded-lg gap-3 w-34">
           <button
             className="text-gray-600 text-lg"
-            onClick={() => setQuantity((q) => Math.max(1, q + 1))}
+            onClick={incrementQuantity}
           >
             <PlusIcon />
-
           </button>
-          <span className="mx-4 text-lg font-medium">{quantity}</span>
+          <span className="mx-4 text-lg font-medium w-8 text-center">{quantity}</span>
           <button
             className="text-[#b0438a] text-lg"
-            onClick={() => setQuantity((q) => q - 1)}
+            onClick={decrementQuantity}
+            disabled={quantity <= 1}
           >
             <MinusIcon />
-
           </button>
         </div>
       )}
 
       <button
-        className={`flex items-center justify-between bg-[#b0438a] text-white ${showGoToBasket ? "w-full" : "w-[217px]"
-          } h-12 rounded-lg flex-1 transition-all duration-300`}
+        className={`flex items-center justify-between bg-[#b0438a] text-white ${showGoToBasket || loading || showAdded ? "w-full" : "w-60"}
+          h-12 rounded-lg transition-all duration-300`}
         disabled={loading}
         onClick={showGoToBasket ? showBasket : handleAddToCart}
       >
@@ -153,21 +187,21 @@ export default function AddCart({
                 {TEXTS.added}
               </span>
             ) : (
-              <span className="flex items-center">
-                <span className="ml-2">
+              <span className="flex items-center gap-1 justify-center h-full">
+                <span className="h-full">
                   <BasketIcon />
                 </span>
-                {TEXTS.text}
+                <span className="h-full text-sm flex">
+                  {TEXTS.text}
+                </span>
               </span>
             )}
             {!hasStartedAddFlow && (
-              <span className="flex flex-row gap-1 text-xs font-semibold">{price} {lang === 'ar' ? <RiyalCurrency color="white" /> : <p>{TEXTS.currency}</p>}</span>
+              <span className="flex flex-row gap-1 text-sm font-semibold items-center"><RiyalCurrency color="white" /> {totalPrice.toFixed(2)} </span>
             )}
-
           </div>
         )}
       </button>
-
     </div>
   );
 }

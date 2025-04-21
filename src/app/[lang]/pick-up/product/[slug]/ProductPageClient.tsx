@@ -54,7 +54,7 @@ export default function ProductPageClient({
     return (
         <MobileWrapper>
             <div className="flex flex-col gap-8 w-full h-screen overflow-y-auto pb-28">
-                <button className="absolute top-4 right-4 z-[1000]" onClick={onClose}>
+                <button className={`absolute top-4 z-[1000] ${lang === 'en' ? 'rotate-180 left-4' : 'right-4'}`} onClick={onClose}>
                     <BackArrow />
                 </button>
                 <ProductInfo name={name} description={description} imageSrc={imageSrc} />

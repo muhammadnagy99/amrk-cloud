@@ -22,7 +22,7 @@ export default function OptionalChoices({ lang, title, name, options, onToggle }
                   <span className="flex flex-row gap-1 text-xs font-normal">+ {option.extraPrice} {<RiyalCurrency color="black" /> }
 </span>
                 )}
-                <input type="checkbox" name={name} value={option.value} onChange={() => onToggle(name, option.value)}
+                <input type="checkbox" name={name} value={option.value} onChange={() => onToggle(title, name, option.value)}
                 />
               </div>
             </label>

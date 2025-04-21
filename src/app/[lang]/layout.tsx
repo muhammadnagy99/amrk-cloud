@@ -14,6 +14,9 @@ export const metadata: Metadata = {
   title: "Amrk Cloud",
   description:
     "Transform your restaurant's operations with Amrk RMS, an innovative management solution built to enhance productivity and customer satisfaction.",
+  other: {
+    'Content-Security-Policy': "default-src 'self'; script-src 'self' https://applepay.cdn-apple.com 'unsafe-inline';"
+  }
 };
 
 export default async function RootLayout({

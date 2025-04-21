@@ -82,7 +82,7 @@ export interface RequiredChoicesProps {
   title: string;
   name: string;
   options: ChoiceOption[];
-  onChange: (name: string, value: string) => void;
+  onChange: (title: string, name: string, value: string) => void;
 }
 
 export interface OptionalChoicesProps {
@@ -90,7 +90,7 @@ export interface OptionalChoicesProps {
   title: string;
   name: string;
   options: ChoiceOption[];
-  onToggle: (name: string, value: string) => void;
+  onToggle: (title: string, name: string, value: string) => void;
 }
 
 export interface BasketItem {

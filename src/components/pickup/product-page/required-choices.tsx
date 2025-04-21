@@ -22,10 +22,10 @@ export default function RequiredChoices({ lang, title, name, options, onChange }
               {option.extraPrice ? (
                 <div className="flex flex-row gap-4 items-center">
                   <span className="flex flex-row gap-1 text-xs font-normal">+ {option.extraPrice} {<RiyalCurrency color="black" />}</span>
-                  <input type="radio" name={name} value={option.value} onChange={() => onChange(name, option.value)} />
+                  <input type="radio" name={name} value={option.value} onChange={() => onChange(title, name, option.value)} />
                 </div>
               ) : (
-                <input type="radio" name={name} value={option.value} onChange={() => onChange(name, option.value)} />
+                <input type="radio" name={name} value={option.value} onChange={() => onChange(title, name, option.value)} />
               )}
             </label>
           </div>
