@@ -27,7 +27,7 @@ export async function GET(request: NextRequest) {
     };
     
     const response = await fetch(
-      "https://api.dev.amrk.app/amrkCloudWeb/getCategories", 
+      "https://api.amrk.app/amrkCloudWeb/getCategories", 
       requestOptions
     );
     

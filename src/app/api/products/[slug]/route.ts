@@ -26,7 +26,7 @@ export async function GET(
   }
 
   try {
-    const response = await fetch("https://api.dev.amrk.app/amrkCloudWeb/getMenuInfo", {
+    const response = await fetch("https://api.amrk.app/amrkCloudWeb/getMenuInfo", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

@@ -34,7 +34,7 @@ export async function POST(req: NextRequest) {
     const tipValue = 0 // static for now
 
     // 1. Fetch branch info
-    const branchInfoRes = await fetch('https://api.dev.amrk.app/amrkCloudWeb/branchInfo', {
+    const branchInfoRes = await fetch('https://api.amrk.app/amrkCloudWeb/branchInfo', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

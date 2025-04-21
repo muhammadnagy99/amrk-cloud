@@ -14,7 +14,7 @@ export default async function BranchDetails({ lang }: Props) {
 
   if (!brnid) return null;
 
-  const res = await fetch("https://api.dev.amrk.app/amrkCloudWeb/branchInfo", {
+  const res = await fetch("https://api.amrk.app/amrkCloudWeb/branchInfo", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

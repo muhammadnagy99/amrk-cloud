@@ -33,7 +33,6 @@ export default async function RootLayout({
 
   if (lang === 'en') {
     dir = 'ltr';
-
   }
   return (
     <html lang={lang} dir={dir}>
