@@ -80,6 +80,12 @@ export default function UserCustomize({ lang }: { lang: string }) {
     return (
         <div className="relative" ref={containerRef}>
             <div className="flex flex-row justify-between h-full gap-2">
+                <p
+                    onClick={handleUserClick}
+                    className="cursor-pointer w-9 h-9 flex justify-center items-center bg-white rounded-lg border-widget"
+                >
+                    <User />
+                </p>
                 <p className="w-9 h-9 flex justify-center items-center bg-white rounded-lg border-widget">
                     <LanguageSwitcher
                         icon={{
@@ -88,12 +94,6 @@ export default function UserCustomize({ lang }: { lang: string }) {
                         }}
                         ariaLabel={switchOption.ariaLabel}
                     />
-                </p>
-                <p
-                    onClick={handleUserClick}
-                    className="cursor-pointer w-9 h-9 flex justify-center items-center bg-white rounded-lg border-widget"
-                >
-                    <User />
                 </p>
             </div>
 

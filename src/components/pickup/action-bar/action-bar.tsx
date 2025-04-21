@@ -33,7 +33,7 @@ export default function ActionBar({ categories, onViewChange }: ActionBarProps) 
         {view === 'grid' ? <ListViewIcon /> : <GridViewIcon />}
       </button>
 
-      <div className="flex flex-row gap-2 w-[80%] overflow-x-auto whitespace-nowrap">
+      <div className="flex flex-row gap-2 w-[90%] overflow-x-auto whitespace-nowrap">
         {categories.map((category) => (
           <a
             key={category.id}
@@ -45,9 +45,9 @@ export default function ActionBar({ categories, onViewChange }: ActionBarProps) 
         ))}
       </div>
 
-      <button className="p-2.5 flex justify-center items-center border-widget rounded-lg w-[10%]">
+      {/* <button className="p-2.5 flex justify-center items-center border-widget rounded-lg w-[10%]">
         <SearchIcon />
-      </button>
+      </button> */}
     </div>
   );
 }

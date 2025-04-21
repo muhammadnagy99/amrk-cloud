@@ -9,7 +9,7 @@ interface BranchInfoProps {
 
 export default function BranchInfo({ title, description, lang }: BranchInfoProps) {
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col gap-4">
       <article className="flex flex-col">
         <h2 className="text-[13px] font-medium text-black">
           {title}

@@ -56,7 +56,6 @@ export default async function BranchDetails({ lang }: Props) {
 
       <div className="flex flex-row justify-between w-[80%]">
         <BranchInfo title={branchInfo.title} description={branchInfo.description} lang={lang} />
-        <Info />
       </div>
     </div>
   );

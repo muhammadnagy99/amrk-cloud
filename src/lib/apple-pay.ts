@@ -178,9 +178,8 @@ export interface ApplePayConfig {
         headers,
         body: JSON.stringify({
           "initivContext": "web",
-          "displayName": config.merchantName,
-          "validationURL": event.validationURL
-        })
+          "displayName": config.merchantName      
+          })
       })
       .then(response => {
         if (!response.ok) {
@@ -188,10 +187,9 @@ export interface ApplePayConfig {
         }
         return response.json();
       })
-      .then(merchantSession => {
+      .then(merchantSessionIdentifier => {
         console.log('Merchant session received');
-        // Complete merchant validation with the session received from your server
-        session.completeMerchantValidation(merchantSession);
+        session.completeMerchantValidation(merchantSessionIdentifier);
       })
       .catch(error => {
         console.error('Error validating merchant:', error);
@@ -246,12 +244,10 @@ export interface ApplePayConfig {
       })
       .then(result => {
         if (result.status === 'success' || result.success === true) {
-          // Complete the payment successfully
           session.completePayment(window.ApplePaySession.STATUS_SUCCESS);
           console.log('Payment completed successfully!');
           if (callbacks.onSuccess) callbacks.onSuccess(result);
         } else {
-          // Complete the payment with failure
           session.completePayment(window.ApplePaySession.STATUS_FAILURE);
           console.error('Payment processing failed:', result.error || result.message);
           if (callbacks.onError) callbacks.onError(result.error || result.message || 'Payment failed');

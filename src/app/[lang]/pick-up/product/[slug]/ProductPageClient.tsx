@@ -8,6 +8,7 @@ import MobileWrapper from "../../../mobile-wrapper";
 import { useProductSelections } from "@/src/hooks/product-selection";
 import { BackArrow } from "@/src/components/pickup/product-page/icons";
 import { ProductOverlayProvider } from "@/src/components/pickup/view-grid/category.tsx/product-overlay";
+import { useEffect } from "react";
 
 interface ProductPageClientProps {
     productId: string;
@@ -37,6 +38,12 @@ interface ProductPageClientProps {
     onClose: () => void;
 }
 
+const preloadImage = (src: string) => {
+    if (typeof window !== 'undefined') {
+        const img = new Image();
+        img.src = src;
+    }
+};
 
 export default function ProductPageClient({
     productId,
@@ -50,14 +57,17 @@ export default function ProductPageClient({
     onClose
 }: ProductPageClientProps) {
     const { required, optional, handleRequiredChange, handleOptionalToggle } = useProductSelections();
+    useEffect(() => {
+        if (imageSrc) {
+            preloadImage(imageSrc);
+        }
+    }, [imageSrc]);
 
     return (
         <MobileWrapper>
             <div className="flex flex-col gap-8 w-full h-screen overflow-y-auto pb-28">
-                <button className={`absolute top-4 z-[1000] ${lang === 'en' ? 'rotate-180 left-4' : 'right-4'}`} onClick={onClose}>
-                    <BackArrow />
-                </button>
-                <ProductInfo name={name} description={description} imageSrc={imageSrc} />
+               
+                <ProductInfo name={name} description={description} imageSrc={imageSrc} lang={lang} onClose={onClose}/>
 
                 {requiredOptions?.map((group, index) => (
                     <RequiredChoices

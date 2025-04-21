@@ -9,10 +9,6 @@ const ProductGridSkeletonLoader = () => {
                 <div className="flex flex-col w-full">
                     <div className="flex flex-col gap-1 w-full">
                         <div className="h-4 bg-gray-200 rounded w-3/4 animate-pulse" />
-
-                        {Math.random() > 0.3 && (
-                            <div className="h-3 bg-gray-200 rounded w-full mt-1 animate-pulse" />
-                        )}
                     </div>
 
                     <div className="flex flex-row gap-1 items-center mt-2">

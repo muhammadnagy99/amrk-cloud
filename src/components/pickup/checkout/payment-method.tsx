@@ -60,14 +60,11 @@ export default function PaymentMethod({
   useEffect(() => {
     const initApplePay = async () => {
       try {
-        // Load the Apple Pay SDK
         await loadApplePaySDK();
         
-        // Check if Apple Pay is available
         const isAvailable = checkApplePayAvailability();
         setIsApplePayAvailable(isAvailable);
         
-        // If not available, switch to card payment
         if (!isAvailable) {
           setSelectedPayment('cardPay');
         }
@@ -81,21 +78,18 @@ export default function PaymentMethod({
     initApplePay();
   }, []);
 
-  // Handle Apple Pay button click
   const handleApplePayButtonClick = () => {
     if (!isApplePayAvailable) {
       if (onPaymentError) onPaymentError('Apple Pay is not available');
       return;
     }
 
-    // Set loading state
     setIsLoading(true);
 
-    // Configure Apple Pay with correct locale
     const applePayConfig = {
       merchantName: 'Amrk',
-      countryCode: lang === 'ar' ? 'SA' : 'US', // Set country based on language
-      currencyCode: 'USD' // Update with your currency
+      countryCode: 'SA', 
+      currencyCode: 'SAR' // Update with your currency
     };
 
     // Process the Apple Pay payment
@@ -228,11 +222,11 @@ export default function PaymentMethod({
     }
   };
 
-  useEffect(() => {
-    if (selectedPayment === 'cardPay' && paymentFormRef.current) {
-      paymentFormRef.current.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-    }
-  }, [selectedPayment]);
+  // useEffect(() => {
+  //   if (selectedPayment === 'cardPay' && paymentFormRef.current) {
+  //     paymentFormRef.current.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  //   }
+  // }, [selectedPayment]);
 
 
   return (
