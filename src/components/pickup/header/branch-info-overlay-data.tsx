@@ -178,7 +178,7 @@ export default function BranchInfoDisplay({
       className={`bg-white w-full overflow-y-auto`}
       dir={textDirection}
     >
-      <div className="flex flex-col gap-4 w-full px-6 py-6">
+      <div className="flex flex-col gap-4 w-full">
         <div className="flex flex-row items-center gap-4 w-full">
           <div className="rounded-lg w-[20%] min-w-[59px]">
             {branchLogo ? (
@@ -200,7 +200,7 @@ export default function BranchInfoDisplay({
             )}
           </div>
           <div className="flex-1">
-            <h3 className={`font-bold ${alignClass}`}>{title}</h3>
+            <h3 className={`font-medium ${alignClass}`}>{title}</h3>
             {description && <p className={`text-sm text-gray-600 ${alignClass}`}>{description}</p>}
             {/* <div className={`text-sm mt-1 ${isCurrentlyOpen ? 'text-green-600' : 'text-red-600'} font-medium`}>
               {isCurrentlyOpen ? t.openNow : t.closedNow}
@@ -218,10 +218,10 @@ export default function BranchInfoDisplay({
             <h3 className={`text-sm font-medium ${alignClass}`}>{t.workingHoursTitle}</h3>
           </div>
 
-          <div className="space-y-3">
+          <div className="space-y-1">
             {workingHours.map((schedule, index) => (
               <div key={index} className="flex justify-between items-center">
-                <div className="text-sm font-medium">{t.days[schedule.day]}</div>
+                <div className="text-sm">{t.days[schedule.day]}</div>
                 <div className={`text-sm ${schedule.is_close ? 'text-red-500' : 'text-gray-700'}`}>
                   {formatHours(schedule)}
                 </div>
@@ -234,7 +234,7 @@ export default function BranchInfoDisplay({
 
         <div className="flex flex-col gap-2">
           <h3 className={`text-sm font-medium ${alignClass}`}>{t.location}</h3>
-          <div className="h-64 w-full rounded-lg overflow-hidden border border-gray-200">
+          <div className="h-58 w-full rounded-lg overflow-hidden border border-gray-200">
             <MapComponent
               locations={[location]}
               zoom={15}
