@@ -34,7 +34,7 @@ const PriceDisplay = ({ price, color, isDiscount = false }: { price: number; col
 };
 
 const Plus = () => (
-    <svg className='w-4' viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg">
+    <svg className='w-5' viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg">
         <circle cx="9" cy="9" r="7.5" fill="none" stroke="currentColor" stroke-width="2" />
         <line x1="5.5" y1="9" x2="12.5" y2="9" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
         <line x1="9" y1="5.5" x2="9" y2="12.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
@@ -42,7 +42,7 @@ const Plus = () => (
 );
 
 const Coupon = () => (
-<svg className='w-6 fill-[#B0438A] rotate-135' strokeWidth={1.5} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><path d="M40 11H8a4 4 0 0 0-4 4v5a1 1 0 0 0 1 1 2.77 2.77 0 0 1 1 .18 3 3 0 0 1 0 5.64A2.77 2.77 0 0 1 5 27a1 1 0 0 0-1 1v5a4 4 0 0 0 4 4h32a4 4 0 0 0 4-4V15a4 4 0 0 0-4-4zm2 22a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2v-4.1a5 5 0 0 0 0-9.8V15a2 2 0 0 1 2-2h32a2 2 0 0 1 2 2z"/><circle cx="13" cy="24" r="1"/><circle cx="13" cy="20" r="1"/><circle cx="13" cy="28" r="1"/><circle cx="13" cy="16" r="1"/><circle cx="13" cy="32" r="1"/><path d="M36.5 25a2.5 2.5 0 1 0 2.5 2.5 2.5 2.5 0 0 0-2.5-2.5zm0 3a.5.5 0 1 1 .5-.5.5.5 0 0 1-.5.5zM29.5 23a2.5 2.5 0 1 0-2.5-2.5 2.5 2.5 0 0 0 2.5 2.5zm0-3a.5.5 0 1 1-.5.5.5.5 0 0 1 .5-.5zM37.29 18.29l-10 10a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l10-10a1 1 0 0 0-1.42-1.42zM23 27h-6a1 1 0 0 0 0 2h6a1 1 0 0 0 0-2zM23 31h-6a1 1 0 0 0 0 2h6a1 1 0 0 0 0-2zM17 20a1 1 0 0 0 1-1v-3a1 1 0 0 0-2 0v3a1 1 0 0 0 1 1zM20 20a1 1 0 0 0 1-1v-3a1 1 0 0 0-2 0v3a1 1 0 0 0 1 1zM23 15a1 1 0 0 0-1 1v3a1 1 0 0 0 2 0v-3a1 1 0 0 0-1-1z"/></svg>
+<svg className='w-5 fill-[#B0438A] rotate-135' strokeWidth={1.5} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><path d="M40 11H8a4 4 0 0 0-4 4v5a1 1 0 0 0 1 1 2.77 2.77 0 0 1 1 .18 3 3 0 0 1 0 5.64A2.77 2.77 0 0 1 5 27a1 1 0 0 0-1 1v5a4 4 0 0 0 4 4h32a4 4 0 0 0 4-4V15a4 4 0 0 0-4-4zm2 22a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2v-4.1a5 5 0 0 0 0-9.8V15a2 2 0 0 1 2-2h32a2 2 0 0 1 2 2z"/><circle cx="13" cy="24" r="1"/><circle cx="13" cy="20" r="1"/><circle cx="13" cy="28" r="1"/><circle cx="13" cy="16" r="1"/><circle cx="13" cy="32" r="1"/><path d="M36.5 25a2.5 2.5 0 1 0 2.5 2.5 2.5 2.5 0 0 0-2.5-2.5zm0 3a.5.5 0 1 1 .5-.5.5.5 0 0 1-.5.5zM29.5 23a2.5 2.5 0 1 0-2.5-2.5 2.5 2.5 0 0 0 2.5 2.5zm0-3a.5.5 0 1 1-.5.5.5.5 0 0 1 .5-.5zM37.29 18.29l-10 10a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l10-10a1 1 0 0 0-1.42-1.42zM23 27h-6a1 1 0 0 0 0 2h6a1 1 0 0 0 0-2zM23 31h-6a1 1 0 0 0 0 2h6a1 1 0 0 0 0-2zM17 20a1 1 0 0 0 1-1v-3a1 1 0 0 0-2 0v3a1 1 0 0 0 1 1zM20 20a1 1 0 0 0 1-1v-3a1 1 0 0 0-2 0v3a1 1 0 0 0 1 1zM23 15a1 1 0 0 0-1 1v3a1 1 0 0 0 2 0v-3a1 1 0 0 0-1-1z"/></svg>
 )
 
 const CouponRedeem: React.FC<CouponRedeemProps> = ({
@@ -66,9 +66,9 @@ const CouponRedeem: React.FC<CouponRedeemProps> = ({
     return (
         <div className="bg-white rounded-lg flex flex-col gap-2">
             <div className={`flex items-center justify-between`}>
-                <h3 className={`flex gap-2 text-lg font-medium ${isRTL ? 'text-right' : 'text-left'}`}>
-                    <Coupon />
+                <h3 className={`flex gap-2 text-base font-medium ${isRTL ? 'text-right' : 'text-left'}`}>
                     {t.couponTitle}
+                    <Coupon />
                 </h3>
                 {appliedCoupon && (
                     <div className={`flex items-center text-sm`}>
