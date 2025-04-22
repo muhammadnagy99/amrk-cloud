@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Rubik } from "next/font/google";
 import "./globals.css";
 import { Locale } from "@/src/i18n-config";
+import { CookiesProvider } from 'next-client-cookies/server';
+
 
 const rubik = Rubik({
   subsets: ["latin"],
@@ -39,7 +41,9 @@ export default async function RootLayout({
       <body
         className={`flex flex-col justify-center antialiased bg-white`}
       >
-        {children}
+        <CookiesProvider>
+          {children}
+        </CookiesProvider>
       </body>
     </html>
   );

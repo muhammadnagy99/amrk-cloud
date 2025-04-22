@@ -10,14 +10,14 @@ const Overlay: React.FC<OverlayProps> = ({ isVisible, onClose, children }) => {
   if (!isVisible) return null; 
 
   return (
-    <div className="fixed inset-0 z-50 flex justify-center items-center">
+    <div className="fixed inset-0 z-[1000] flex justify-center items-center">
       <div
         className="absolute inset-0 bg-gray-500 opacity-50"
         onClick={onClose} 
       ></div>
 
       <div
-        className="relative bg-white p-6 rounded-lg shadow-lg z-60 w-[88%] md:w-[770px]"
+        className="relative bg-white p-6 rounded-lg shadow-lg z-60 w-[90%] md:w-[770px]"
         onClick={(e) => e.stopPropagation()} 
       >
        

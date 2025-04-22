@@ -4,6 +4,7 @@ import { Info } from "./assets/icons";
 import BranchInfo from "./assets/branch-info";
 import { transformBranchData } from "@/src/lib/branch-data-transform";
 import { getBranchIdFromCookies } from "@/src/lib/get-branch";
+import InfoOverlay from "../assets/info-overlay";
 
 type Props = {
   lang: string;
@@ -11,9 +12,9 @@ type Props = {
 
 export default async function BranchDetails({ lang }: Props) {
   const brnid = await getBranchIdFromCookies();
-
+  
   if (!brnid) return null;
-
+  
   const res = await fetch("https://api.amrk.app/amrkCloudWeb/branchInfo", {
     method: "POST",
     headers: {
@@ -23,15 +24,26 @@ export default async function BranchDetails({ lang }: Props) {
     body: JSON.stringify({ branchId: brnid }),
     cache: "no-store",
   });
-
+  
   if (!res.ok) {
     console.error("Failed to fetch branch data");
     return null;
   }
-
+  
   const data = await res.json();
   const { branchInfo, branchScheduleInfo, technicalInfo } = transformBranchData(data, lang);
-
+  
+  console.log(branchScheduleInfo.location);
+  // Create a branchData object for InfoOverlay component
+  const branchData = {
+    branchLogo: branchInfo.logo || "",
+    title: branchInfo.title,
+    description: branchInfo.description,
+    workingHours: branchScheduleInfo.workingHours,
+    location: branchScheduleInfo.location.geopoint,
+    lang: lang
+  };
+  
   return (
     <div className="w-full max-h-90 flex flex-row gap-3 p-3 bg-white rounded-lg border-widget">
       <div className="rounded-lg w-[20%]">
@@ -53,9 +65,10 @@ export default async function BranchDetails({ lang }: Props) {
           />
         )}
       </div>
-
+      
       <div className="flex flex-row justify-between w-[80%]">
         <BranchInfo title={branchInfo.title} description={branchInfo.description} lang={lang} />
+        <InfoOverlay branchInfo={branchData} />
       </div>
     </div>
   );
