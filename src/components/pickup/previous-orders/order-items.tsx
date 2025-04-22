@@ -25,6 +25,46 @@ interface Props {
 
 const OrderItemsDropdown: FC<Props> = ({ items, orderId, orderNum, totalPrice }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [isReordering, setIsReordering] = useState(false);
+  const [reorderSuccess, setReorderSuccess] = useState(false);
+  const [reorderError, setReorderError] = useState(false);
+
+  const handleReorder = async () => {
+    try {
+      setIsReordering(true);
+      setReorderSuccess(false);
+      setReorderError(false);
+
+      // Call the server-side API endpoint
+      const response = await fetch("/api/orders/reorder", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ orderId }),
+        credentials: "include", // Important: sends cookies with the request
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed with status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      
+      if (data.success) {
+        setReorderSuccess(true);
+        // Optionally redirect to order confirmation page or cart
+        // window.location.href = "/order-confirmation";
+      } else {
+        throw new Error("Reorder response indicated failure");
+      }
+    } catch (err) {
+      console.error("Failed to reorder:", err);
+      setReorderError(true);
+    } finally {
+      setIsReordering(false);
+    }
+  };
 
   return (
     <div className="flex flex-col bg-gray-100 rounded-lg p-3 gap-4">
@@ -74,9 +114,16 @@ const OrderItemsDropdown: FC<Props> = ({ items, orderId, orderNum, totalPrice })
       )}
 
       <div className="flex flex-row justify-between items-center">
-        <button className="px-4 py-2 border border-[#b0438a] rounded-4xl text-primaryColor text-[13px] cursor-pointer">
-          إعادة الطلب
+        <button 
+          className={`px-4 py-2 border border-[#b0438a] rounded-4xl text-[13px] cursor-pointer ${
+            isReordering ? 'opacity-50 cursor-not-allowed' : ''
+          } ${reorderSuccess ? 'bg-green-500 text-white border-green-500' : 'text-primaryColor'}`}
+          onClick={handleReorder}
+          disabled={isReordering}
+        >
+          {isReordering ? 'جاري الطلب...' : reorderSuccess ? 'تم إعادة الطلب' : 'إعادة الطلب'}
         </button>
+        {reorderError && <span className="text-red-500 text-xs">فشل إعادة الطلب</span>}
         <p className="flex flex-row gap-1 font-medium text-[13px]">
           <strong>{totalPrice.toFixed(2)}</strong> رس
         </p>

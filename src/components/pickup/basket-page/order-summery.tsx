@@ -9,6 +9,9 @@ interface Props {
   pointsValue: number;
   items: BasketItem[];
   onTotalChange?: (val: number) => void;
+  couponDiscount?: number;
+  couponCode?: string | null;
+  couponPercentage?: number;
 }
 
 const TEXTS: Record<string, any> = {
@@ -18,6 +21,7 @@ const TEXTS: Record<string, any> = {
     discount: "استبدال نقاط الولاء",
     total: "المبلغ الإجمالي",
     currency: "ر.س",
+    couponDiscount: 'خصم رمز الكوبون',
     loading: "جاري تحميل الملخص...",
   },
   en: {
@@ -26,6 +30,7 @@ const TEXTS: Record<string, any> = {
     discount: "Points Redeemed",
     total: "Total",
     currency: "SAR",
+    couponDiscount: 'Coupon Code Discount',
     loading: "Loading summary...",
   },
 };
@@ -35,7 +40,10 @@ export default function OrderSummary({
   redeemPoints,
   pointsValue,
   items,
-  onTotalChange
+  onTotalChange,
+  couponDiscount = 0,
+  couponCode = null,
+  couponPercentage = 0,
 }: Props) {
   const t = TEXTS[lang];
   const [loading, setLoading] = useState(true);
@@ -59,14 +67,14 @@ export default function OrderSummary({
 
   useEffect(() => {
     if (!items.length) return;
-    
+
     // Calculate summary on client side
     try {
       const subtotal = items.reduce((sum, item) => sum + item.totalPrice, 0);
       const vatPercent = 15;
       const vatAmount = subtotal * (vatPercent / 100);
       const discount = redeemPoints ? pointsValue : 0;
-      const total = subtotal + vatAmount - discount;
+      const total = subtotal + vatAmount - discount - couponDiscount;
       const calculatedSummary = {
         subtotal,
         vatAmount,
@@ -74,10 +82,10 @@ export default function OrderSummary({
         discount,
         total
       };
-      
+
       setSummary(calculatedSummary);
       setLoading(false);
-      
+
       if (onTotalChange) {
         onTotalChange(total);
       }
@@ -85,7 +93,8 @@ export default function OrderSummary({
       console.error("Error calculating order summary:", error);
       setLoading(false);
     }
-  }, [items, redeemPoints, pointsValue, onTotalChange]);
+  }, [items, redeemPoints, couponDiscount, pointsValue, onTotalChange]);
+
 
   if (loading || !summary) return <p>{t.loading}</p>;
 
@@ -96,14 +105,14 @@ export default function OrderSummary({
         <span className="justify-self-end">
           <PriceDisplay price={summary.subtotal} color="gray" />
         </span>
-        
+
         <span className="justify-self-start rtl:text-right ltr:text-left">
           {t.vat} ({summary.vatPercent}%)
         </span>
         <span className="justify-self-end">
           <PriceDisplay price={summary.vatAmount} color="gray" />
         </span>
-        
+
         {summary.discount > 0 && (
           <>
             <span className="justify-self-start rtl:text-right ltr:text-left text-primaryColor">{t.discount}</span>
@@ -112,8 +121,18 @@ export default function OrderSummary({
             </span>
           </>
         )}
+        {couponCode && couponDiscount > 0 && (
+          <>
+            <span className="justify-self-start rtl:text-right ltr:text-left text-primaryColor">
+              {t.couponDiscount} ({couponPercentage}%)
+            </span>
+            <span className="text-[#B0438A]">
+              <PriceDisplay price={couponDiscount} color="#b0438a" isDiscount={true} />
+            </span>
+          </>
+        )}
       </div>
-      
+
       <div className="flex justify-between items-center font-medium text-base">
         <span className="text-black">{t.total}</span>
         <span className="text-black">

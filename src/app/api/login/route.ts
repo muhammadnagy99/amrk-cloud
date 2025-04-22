@@ -29,10 +29,8 @@ export async function POST(request: Request) {
     
     const data = await response.json();
     
-    // Set cookies in the response
     const response_object = NextResponse.json({ success: true, user_id: data.user_id });
     
-    // Set cookies (Note: in App Router, you should use cookies() helper, but here's how with NextResponse)
     response_object.cookies.set('user_id', data.user_id, { 
       path: '/',
       maxAge: 3600, // 1 hour
@@ -44,7 +42,7 @@ export async function POST(request: Request) {
     response_object.cookies.set('user_phone', PhoneNumber, { 
       path: '/',
       maxAge: 3600, // 1 hour 
-      httpOnly: true,
+      httpOnly: false,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'strict'
     });

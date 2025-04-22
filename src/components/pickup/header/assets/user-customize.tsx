@@ -36,20 +36,20 @@ export default function UserCustomize({ lang }: { lang: string }) {
     const { isLoggedIn, login } = useAuth();
     const containerRef = useRef<HTMLDivElement>(null);
 
-    const handleUserClick = () => {
-        const cookies = document.cookie.split("; ").reduce((acc: Record<string, string>, cookie) => {
-            const [name, value] = cookie.split("=");
-            acc[name] = value;
-            return acc;
-        }, {});
+    const handleUserClick = async () => {
+        try {
+            const response = await fetch('/api/login-check');
+            const data = await response.json();
+            console.log(data)
 
-        const token = cookies["userToken"];
-        const userId = cookies["user_id"];
-
-        if (token && userId) {
-            login(); // user is already logged in
-        } else {
-            setIsOTPRequested(false); // show login form
+            if (data.authenticated) {
+                login();
+            } else {
+                setIsOTPRequested(false);
+            }
+        } catch (error) {
+            console.error('Authentication check failed:', error);
+            setIsOTPRequested(false);
         }
 
         setIsOpen((prev) => !prev);
@@ -111,7 +111,7 @@ export default function UserCustomize({ lang }: { lang: string }) {
                     </div>
 
                     <div className={`${!isLoggedIn && isOTPRequested ? 'block' : 'hidden'} w-full`}>
-                        <OTPInput lang={lang} onLoginSuccess={login} />
+                        <OTPInput lang={lang} onLoginSuccess={login} isVisible={isOTPRequested} />
                     </div>
 
                     <div className={`${isLoggedIn ? 'block' : 'hidden'} w-full`}>

@@ -19,32 +19,28 @@ export default function PreviousOrdersClient({ lang }: Props) {
   const [orders, setOrders] = useState<any[]>([]);
   const [error, setError] = useState(false);
 
+
   useEffect(() => {
-    const cookies = document.cookie.split("; ").reduce((acc: any, c) => {
-      const [key, value] = c.split("=");
-      acc[key] = decodeURIComponent(value);
-      return acc;
-    }, {});
+    const branchId = document.cookie
+      .split("; ")
+      .find(row => row.startsWith("branchId="))
+      ?.split("=")[1];
 
-    const userId = cookies["user_id"];
-    const token = cookies["userToken"];
-    const branchId = cookies["branchId"];
-
-    if (!userId || !token || !branchId) {
+    if (!branchId) {
       setError(true);
       return;
     }
 
-    fetch("https://api.dev.amrk.app/amrkCloudWeb/historyOrders", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({ userId, branchId }),
+    fetch("/api/orders/history", {
+      method: "GET",
+      credentials: "include",
     })
-      .then((res) => res.json())
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error(`Failed with status: ${res.status}`);
+        }
+        return res.json();
+      })
       .then((data) => {
         setOrders(data.order_lists || []);
       })

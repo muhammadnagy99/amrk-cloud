@@ -32,9 +32,9 @@ import {
     const t = TEXTS[lang] || TEXTS.en;
   
     const menuItems = [
-      { label: t.basicInfo, icon: <UserIcon />, action: 'pick-up/profile' },
-      { label: t.foodSettings, icon: <PencilIcon />, action: 'pick-up/food-settings' },
-      { label: t.pastOrders, icon: <ClipboardListIcon />, action: 'pick-up/orders' }
+      { label: t.basicInfo, icon: <UserIcon />, action: 'pick-up/profile/info' },
+      { label: t.foodSettings, icon: <PencilIcon />, action: 'pick-up/profile/allergies' },
+      { label: t.pastOrders, icon: <ClipboardListIcon />, action: 'pick-up/profile/previous-orders' }
     ];
   
     return (

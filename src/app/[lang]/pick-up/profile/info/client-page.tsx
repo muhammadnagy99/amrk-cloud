@@ -19,7 +19,8 @@ const TEXTS: Record<Locale, any> = {
     connectedToGoogle: "متصل بـ Google",
     deleteAccount: "حذف حساب المستخدم",
     emptyMessage: "يرجى تسجيل الدخول لعرض بياناتك الشخصية",
-    goBack: "العودة"
+    goBack: "العودة",
+    updating: "برجاء الانتظار...."
   },
   en: {
     title: "Basic Profile Information",
@@ -30,22 +31,20 @@ const TEXTS: Record<Locale, any> = {
     connectedToGoogle: "Connected with Google",
     deleteAccount: "Delete User Account",
     emptyMessage: "Please sign in to view your profile information",
-    goBack: "Go Back"
+    goBack: "Go Back",
+    updating: "Please Wait...."
   }
 };
 
 type Props = {
   params: {
-    lang: Locale;
+    lang: string;
   };
 };
 
 export default function InfoPageClient({ params }: Props) {
   const lang = params.lang || 'en';
   const t = TEXTS[lang];
-
-  const [userId, setUserId] = useState<string | null>(null);
-  const [token, setToken] = useState<string | null>(null);
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -54,51 +53,45 @@ export default function InfoPageClient({ params }: Props) {
 
   const [isLoading, setIsLoading] = useState(true);
   const [buttonDisabled, setButtonDisabled] = useState(true);
+  const [authenticated, setAuthenticated] = useState(false);
 
-  // Get cookie values
+  const [updating, setUpdating] = useState(false);
+
   useEffect(() => {
-    const cookies = document.cookie.split("; ").reduce((acc: Record<string, string>, cookie) => {
-      const [name, value] = cookie.split("=");
-      acc[name] = value;
-      return acc;
-    }, {});
-
-    if (cookies["user_id"] && cookies["userToken"]) {
-      setUserId(decodeURIComponent(cookies["user_id"]));
-      setToken(decodeURIComponent(cookies["userToken"]));
-    }
-  }, []);
-
-  // Fetch profile info
-  useEffect(() => {
-    if (!userId || !token) {
-      setIsLoading(false);
-      return;
-    }
-
-    fetch("https://api.dev.amrk.app/amrkCloudWeb/profileInfo", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}`
-      },
-      body: JSON.stringify({ userId }),
-    })
-      .then(res => res.json())
-      .then(data => {
+    const fetchProfileData = async () => {
+      try {
+        setIsLoading(true);
+        const response = await fetch('/api/profile');
+        
+        if (!response.ok) {
+          if (response.status === 401) {
+            setIsLoading(false);
+            return;
+          }
+          throw new Error('Failed to fetch profile');
+        }
+        
+        const data = await response.json();
+        setAuthenticated(true);
+        
         setName(data.name || "");
         setEmail(data.email || "");
         setPhone(data.phone_number || "");
-        setOriginalData({ name: data.name || "", email: data.email || "", phone: data.phone_number || "" });
+        setOriginalData({
+          name: data.name || "",
+          email: data.email || "",
+          phone: data.phone_number || ""
+        });
+      } catch (error) {
+        console.error("Failed to fetch profile:", error);
+      } finally {
         setIsLoading(false);
-      })
-      .catch(err => {
-        console.error("Failed to fetch profile:", err);
-        setIsLoading(false);
-      });
-  }, [userId, token]);
+      }
+    };
+  
+    fetchProfileData();
+  }, []);
 
-  // Check for input changes
   useEffect(() => {
     if (
       name !== originalData.name ||
@@ -111,21 +104,31 @@ export default function InfoPageClient({ params }: Props) {
   }, [name, email, originalData]);
 
   const handleUpdate = () => {
-    if (!userId || !token) return;
-
-    fetch("https://api.dev.amrk.app/amrkCloudWeb/updateProfileInfo", {
+    setUpdating(true)
+    
+    fetch("/api/profile/update", {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}`
+        "Content-Type": "application/json"
       },
-      body: JSON.stringify({ userId, name, email }),
+      body: JSON.stringify({ name, email }),
+      credentials: 'include'
     })
-      .then(res => res.json())
+      .then(res => {
+        if (!res.ok) {
+          throw new Error(`Update failed with status: ${res.status}`);
+        }
+        return res.json();
+      })
       .then(result => {
         console.log("Update result:", result);
-        setOriginalData({ name, email, phone }); // sync original
-        setButtonDisabled(true);
+        if (result.success) {
+          setOriginalData({ name, email, phone });
+          setButtonDisabled(true);
+          setUpdating(false)
+        } else {
+          throw new Error(result.message || "Failed to update profile");
+        }
       })
       .catch(error => {
         console.error("Update failed:", error);
@@ -133,10 +136,10 @@ export default function InfoPageClient({ params }: Props) {
   };
 
   if (isLoading) {
-    return null; // Or loading spinner
+    return null; 
   }
 
-  if (!userId || !token) {
+  if (!authenticated) {
     return (
       <MobileWrapper>
         <div className="flex flex-col items-center justify-center text-center gap-4 mt-20">
@@ -156,9 +159,9 @@ export default function InfoPageClient({ params }: Props) {
         <div className="w-full flex flex-col justify-between h-full">
           <div className="flex flex-col gap-12">
             <div className="flex flex-col gap-4">
-              <InputField label={t.name} icon={User} value={name} onChange={e => setName(e.target.value)} />
-              <InputField label={t.phone} icon={PhoneIcon} value={phone} disabled />
-              <InputField label={t.email} icon={EmailIcon} value={email} onChange={e => setEmail(e.target.value)} />
+              <InputField label={t.name} icon={User} value={name} onChange={e => setName(e.target.value)} lang={lang} />
+              <InputField label={t.phone} icon={PhoneIcon} value={phone} disabled lang={lang}/>
+              <InputField label={t.email} icon={EmailIcon} value={email} onChange={e => setEmail(e.target.value)} lang={lang}/>
             </div>
 
             <button
@@ -166,15 +169,15 @@ export default function InfoPageClient({ params }: Props) {
               disabled={buttonDisabled}
               onClick={handleUpdate}
             >
-              {t.updateBtn}
+              {updating ? t.updating : t.updateBtn}
             </button>
           </div>
 
           <div className="flex flex-col gap-6">
-            <div className="w-full flex h-12 items-center justify-center gap-4 px-5 rounded-lg bg-[#f8f8f8]">
+            {/* <div className="w-full flex h-12 items-center justify-center gap-4 px-5 rounded-lg bg-[#f8f8f8]">
               <GIcon />
               <span className="text-sm font-normal">{t.connectedToGoogle}</span>
-            </div>
+            </div> */}
             <div className="w-full h-[1px] bg-[#00000080]"></div>
             <button className="w-full flex h-12 items-center justify-start gap-4 text-[#c10505] px-5 rounded-lg border border-[#c10505]">
               <DeleteIcon />

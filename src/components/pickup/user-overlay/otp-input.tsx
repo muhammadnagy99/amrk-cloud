@@ -1,10 +1,11 @@
 'use client';
 
 import { FC, useRef, useState, useEffect } from "react";
-
+import { useCookies } from 'next-client-cookies';
 type OTPInputProps = {
   lang: string;
   onLoginSuccess: () => void;
+  isVisible: boolean;
 };
 
 const TEXTS: Record<string, any> = {
@@ -26,108 +27,125 @@ const TEXTS: Record<string, any> = {
   }
 };
 
-const OTPInput: FC<OTPInputProps> = ({ lang, onLoginSuccess }) => {
+const OTPInput: FC<OTPInputProps> = ({ lang, onLoginSuccess, isVisible }) => {
   const t = TEXTS[lang] || TEXTS.en;
-  
+
   const [otp, setOtp] = useState(["", "", "", ""]);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [timeLeft, setTimeLeft] = useState(30); // 30 seconds countdown
+  const [timeLeft, setTimeLeft] = useState(30);
+  const [timerInitialized, setTimerInitialized] = useState(false);
   const [canResend, setCanResend] = useState(false);
   const inputsRef = useRef<Array<HTMLInputElement | null>>([]);
+
+  const cookies = useCookies();
   
-  // Timer functionality
   useEffect(() => {
+    if (isVisible && !timerInitialized) {
+      setTimeLeft(30);
+      setCanResend(false);
+      setTimerInitialized(true);
+
+      setTimeout(() => {
+        inputsRef.current[0]?.focus();
+      }, 100);
+    }
+
+    if (!isVisible && timerInitialized) {
+      setTimerInitialized(false);
+    }
+  }, [isVisible, timerInitialized]);
+
+  useEffect(() => {
+    if (!isVisible || !timerInitialized) return;
+
     if (timeLeft <= 0) {
       setCanResend(true);
       return;
     }
-    
+
     const timerId = setTimeout(() => {
       setTimeLeft(timeLeft - 1);
     }, 1000);
-    
+
     return () => clearTimeout(timerId);
-  }, [timeLeft]);
-  
-  // Format the timer display: pad with leading zeros
+  }, [timeLeft, isVisible, timerInitialized]);
+
   const formatTime = (seconds: number) => {
     return seconds < 10 ? `0${seconds}` : seconds.toString();
   };
-  
+
   const handleChange = (index: number, value: string) => {
     if (!/^\d?$/.test(value)) return;
-    
+
     const newOtp = [...otp];
     newOtp[index] = value;
     setOtp(newOtp);
-    
+
     if (value && index < 3) {
       inputsRef.current[index + 1]?.focus();
     }
   };
-  
+
   const handleKeyDown = (index: number, e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Backspace' && !otp[index] && index > 0) {
       inputsRef.current[index - 1]?.focus();
     }
   };
-  
+
   const handlePaste = (e: React.ClipboardEvent) => {
     e.preventDefault();
     const pastedData = e.clipboardData.getData('text');
     if (!/^\d+$/.test(pastedData)) return;
-    
+
     const digits = pastedData.slice(0, 4).split('');
     const newOtp = [...otp];
-    
+
     digits.forEach((digit, index) => {
       if (index < 4) {
         newOtp[index] = digit;
       }
     });
-    
+
     setOtp(newOtp);
-    
+
     // Focus the appropriate input based on how many digits were pasted
     if (digits.length < 4) {
       inputsRef.current[digits.length]?.focus();
     }
   };
-  
+
   const handleSubmit = async () => {
     const code = otp.join("");
     if (code.length !== 4) {
       setError("Please enter all 4 digits");
       return;
     }
-    
-    // Get the phone number from cookies
-    const phone = getCookie("user_phone");
-    
+
+    const phone = cookies.get('user_phone');
+    console.log(phone)
+
     if (!phone) {
       setError("Phone number not found");
       return;
     }
-    
+
     setLoading(true);
     setError("");
-    
+
     try {
-      // Call our Next.js API route instead of the external API directly
       const response = await fetch("/api/validate-otp", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ 
-          otp: code, 
-          PhoneNumber: decodeURIComponent(phone) 
+        body: JSON.stringify({
+          otp: code,
+          PhoneNumber: decodeURIComponent(phone)
         }),
       });
-      
+
       const data = await response.json();
-      
+
       if (response.ok) {
-        // No need to set cookies here as that's handled by the API route
         onLoginSuccess();
       } else {
         setError(data.error || t.error);
@@ -139,27 +157,27 @@ const OTPInput: FC<OTPInputProps> = ({ lang, onLoginSuccess }) => {
       setLoading(false);
     }
   };
-  
+
   const handleResendOTP = async () => {
     if (!canResend) return;
-    
-    // Get the phone number from cookies
-    const phone = getCookie("user_phone");
-    
+
+    const phone = cookies.get("user_phone");
+
+    console.log(phone)
+
     if (!phone) {
       setError("Phone number not found");
       return;
     }
-    
+
     try {
       const response = await fetch("/api/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ PhoneNumber: decodeURIComponent(phone) }),
       });
-      
+
       if (response.ok) {
-        // Reset timer and disable resend button
         setTimeLeft(30);
         setCanResend(false);
         setError("");
@@ -172,19 +190,12 @@ const OTPInput: FC<OTPInputProps> = ({ lang, onLoginSuccess }) => {
     }
   };
   
-  // Helper function to get cookies
-  const getCookie = (name: string) => {
-    const value = `; ${document.cookie}`;
-    const parts = value.split(`; ${name}=`);
-    if (parts.length === 2) return parts.pop()?.split(';').shift();
-    return undefined;
-  };
-  
+
   return (
     <div className="flex flex-col items-center justify-center gap-5 pb-7 w-full">
       <h2 className={`text-base font-normal w-full ${lang === 'ar' ? "text-right" : ''}`}>{t.title}</h2>
-      
-      <div className="flex flex-row gap-2.5">
+
+      <div className="flex flex-row gap-2.5" dir="ltr">
         {otp.map((digit, i) => (
           <input
             key={i}
@@ -202,13 +213,13 @@ const OTPInput: FC<OTPInputProps> = ({ lang, onLoginSuccess }) => {
           />
         ))}
       </div>
-      
+
       {error && <p className="text-red-500 text-sm">{error}</p>}
-      
+
       <div className="text-sm text-[#b0438a] flex flex-row gap-4">
         <p className="flex flex-row gap-1">
           <span>{t.noCode}</span>{" "}
-          <span 
+          <span
             className={`font-medium cursor-pointer ${canResend ? 'text-[#b0438a] underline' : 'text-gray-400'}`}
             onClick={canResend ? handleResendOTP : undefined}
           >
@@ -219,7 +230,7 @@ const OTPInput: FC<OTPInputProps> = ({ lang, onLoginSuccess }) => {
           {t.timer}{formatTime(timeLeft)}
         </span>
       </div>
-      
+
       <button
         onClick={handleSubmit}
         disabled={loading}

@@ -62,7 +62,6 @@ const LoginForm: FC<LoginFormProps> = ({ lang, onLoginSuccess, onRequestOTP }) =
     setLoading(true);
     
     try {
-      // Call our Next.js API route instead of the external API directly
       const response = await fetch("/api/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -72,8 +71,7 @@ const LoginForm: FC<LoginFormProps> = ({ lang, onLoginSuccess, onRequestOTP }) =
       const data = await response.json();
       
       if (response.ok) {
-        // No need to set cookies here as that's handled by the API route
-        onRequestOTP(); // Navigate to OTP verification
+        onRequestOTP(); 
       } else {
         alert(data.error || "Login failed. Please check your phone number.");
       }

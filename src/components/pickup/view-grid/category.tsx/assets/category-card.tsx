@@ -60,10 +60,10 @@ export default function CategoryCard({ id, lang, imageUrl, name, price, descript
           )}
         </figcaption>
         <p className="text-primaryColor text-[13px]">
-          <p className="flex items-center gap-1" dir="ltr">
+          <span className="flex items-center gap-1" dir="ltr">
             <RiyalCurrency color="#b0438a" />
             <span>{price}</span>
-          </p>
+          </span>
         </p>
       </div>
     </figure>

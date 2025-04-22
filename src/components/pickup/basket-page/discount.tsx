@@ -27,7 +27,7 @@ export default function UserDiscount({ lang, points, onToggle }: UserDiscountPro
   };
 
   return (
-    <div className="flex flex-col gap-4 py-3 border-b border-gray-300">
+    <div className="flex flex-col gap-4 py-3">
       <h3 className="text-base text-black font-medium">{t.title}</h3>
       <label className="flex flex-row justify-between items-center">
         <p className="text-black text-sm font-normal">
