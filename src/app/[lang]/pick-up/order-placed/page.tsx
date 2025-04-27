@@ -1,11 +1,12 @@
-import NavBar from "@/src/components/pickup/navigation-bar/navigation-bar";
-import MobileWrapper from "../../mobile-wrapper";
-import HomeBtn from "@/src/components/pickup/order-placed/home-btn";
-import SuccessMessage from "@/src/components/pickup/order-placed/success-message";
-import OrderDetails from "@/src/components/pickup/order-placed/order-details";
-import CallWaiter from "@/src/components/pickup/order-placed/CallWaiter";
-import BranchDetails from "@/src/components/pickup/order-placed/branch-details";
+
+import BranchDetails from "@/src/components/header/branch-details";
+import NavBar from "@/src/components/navigation-bar/navigation-bar";
+import CallWaiter from "@/src/components/order-placed/CallWaiter";
+import HomeBtn from "@/src/components/order-placed/home-btn";
+import OrderDetails from "@/src/components/order-placed/order-details";
+import SuccessMessage from "@/src/components/order-placed/success-message";
 import { Locale } from "@/src/i18n-config";
+import MobileWrapper from "../../mobile-wrapper";
 
 type PageProps = {
     params: {
@@ -22,11 +23,11 @@ export default async function OrderPlacedPage(props: {
     return (
         <MobileWrapper>
             <div className="flex flex-col gap-7 w-[88%] h-screen overflow-y-auto pb-28 pt-10 relative">
-                <NavBar text="" lang={lang} />
+                <NavBar text="" lang={lang} type={2} />
                 <SuccessMessage lang={lang} />
                 <OrderDetails lang={lang} />
                 <CallWaiter lang={lang} />
-                <BranchDetails lang={lang} />
+                <BranchDetails lang={lang} type={2} />
             </div>
             <HomeBtn />
         </MobileWrapper>

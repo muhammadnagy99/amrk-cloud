@@ -13,6 +13,7 @@ export interface WrapperProps {
 export interface INavBar {
   text: string;
   lang: string;
+  type: number;
 }
 
 export interface InputFieldProps {

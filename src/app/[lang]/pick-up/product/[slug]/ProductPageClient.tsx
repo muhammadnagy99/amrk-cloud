@@ -1,14 +1,14 @@
 'use client';
 
-import ProductInfo from "@/src/components/pickup/product-page/product-info";
-import AddCart from "@/src/components/pickup/product-page/add-cart";
-import RequiredChoices from "@/src/components/pickup/product-page/required-choices";
-import OptionalChoices from "@/src/components/pickup/product-page/optional-choices";
-import MobileWrapper from "../../../mobile-wrapper";
+
+import AddCart from "@/src/components/product-page/add-cart";
+import OptionalChoices from "@/src/components/product-page/optional-choices";
+import ProductInfo from "@/src/components/product-page/product-info";
+import RequiredChoices from "@/src/components/product-page/required-choices";
+import { ProductOverlayProvider } from "@/src/components/view-grid/category.tsx/product-overlay";
 import { useProductSelections } from "@/src/hooks/product-selection";
-import { BackArrow } from "@/src/components/pickup/product-page/icons";
-import { ProductOverlayProvider } from "@/src/components/pickup/view-grid/category.tsx/product-overlay";
 import { useEffect } from "react";
+import MobileWrapper from "../../../mobile-wrapper";
 
 interface ProductPageClientProps {
     productId: string;
@@ -36,6 +36,7 @@ interface ProductPageClientProps {
         }[];
     }[];
     onClose: () => void;
+    type:number;
 }
 
 const preloadImage = (src: string) => {
@@ -54,7 +55,8 @@ export default function ProductPageClient({
     price,
     requiredOptions,
     optionalOptions,
-    onClose
+    onClose,
+    type
 }: ProductPageClientProps) {
     const { required, optional, handleRequiredChange, handleOptionalToggle } = useProductSelections();
     useEffect(() => {
@@ -92,7 +94,7 @@ export default function ProductPageClient({
                 ))}
 
             </div>
-            <ProductOverlayProvider lang={lang}>
+            <ProductOverlayProvider lang={lang} type={type}>
                 <AddCart
                     productId={productId}
                     lang={lang}
@@ -101,6 +103,7 @@ export default function ProductPageClient({
                     optionalOptions={optionalOptions?.flatMap((group) => group.options) || []}
                     selectedRequired={required}
                     selectedOptional={optional}
+                    type={type}
                 />
             </ProductOverlayProvider>
 

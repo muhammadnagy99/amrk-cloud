@@ -6,7 +6,8 @@ import { match as matchLocale } from "@formatjs/intl-localematcher";
 import Negotiator from "negotiator";
 
 type Locale = typeof i18n.locales[number];
-const DEFAULT_LOCALE: Locale = "ar"; 
+const DEFAULT_LOCALE: Locale = "ar";
+
 function getLocaleFromCookie(request: NextRequest): Locale | undefined {
   const cookieLocale = request.cookies.get("locale")?.value;
   return i18n.locales.includes(cookieLocale as Locale)
@@ -26,26 +27,70 @@ function getLocaleFromHeaders(request: NextRequest): Locale {
 }
 
 const queryRedirectMap: Record<string, { path: string; cookieKey: string }> = {
-  brnid: { path: "/pick-up", cookieKey: "brnid" },
+  brnid: {
+    path: "/pick-up",
+    cookieKey: "brnid"
+  },
 };
 
 function getRedirectInfoFromQuery(request: NextRequest): {
   redirectPath: string;
   cookieKey: string;
   cookieValue: string;
+  additionalCookies?: Record<string, string>;
 } | null {
   const url = request.nextUrl;
-  for (const key in queryRedirectMap) {
-    const value = url.searchParams.get(key);
-    if (value) {
-      const { path, cookieKey } = queryRedirectMap[key];
+  const brnidValue = url.searchParams.get("brnid");
+  const tableIdValue = url.searchParams.get("tableId");
+  const typeValue = url.searchParams.get("type");
+  
+  // Check for brnid with tableId for dine-in
+  if (brnidValue && tableIdValue) {
+    // Dine-in case with brnid and tableId
+    return {
+      redirectPath: "/dine-in",
+      cookieKey: "dine_brnid",
+      cookieValue: brnidValue,
+      additionalCookies: {
+        "tableId": tableIdValue
+      }
+    };
+  }
+  
+  // Check for brnid with different type values
+  if (brnidValue) {
+    if (typeValue === "1") {
+      // Dine-in case with type=1
       return {
-        redirectPath: path,
-        cookieKey,
-        cookieValue: value,
+        redirectPath: "/dine-in",
+        cookieKey: "dine_brnid",
+        cookieValue: brnidValue
+      };
+    } else if (typeValue === "2" || !typeValue) {
+      // Pick-up case (type=2 or no type specified)
+      return {
+        redirectPath: "/pick-up",
+        cookieKey: "brnid",
+        cookieValue: brnidValue
       };
     }
   }
+  
+  // Check for other redirects using queryRedirectMap
+  for (const key in queryRedirectMap) {
+    if (key !== "brnid") { // Skip brnid as we handled it above
+      const value = url.searchParams.get(key);
+      if (value) {
+        const { path, cookieKey } = queryRedirectMap[key];
+        return {
+          redirectPath: path,
+          cookieKey,
+          cookieValue: value
+        };
+      }
+    }
+  }
+  
   return null;
 }
 
@@ -71,13 +116,21 @@ export function middleware(request: NextRequest) {
 
   const redirectInfo = getRedirectInfoFromQuery(request);
   if (redirectInfo) {
-    const { redirectPath, cookieKey, cookieValue } = redirectInfo;
+    const { redirectPath, cookieKey, cookieValue, additionalCookies } = redirectInfo;
 
-    const response = NextResponse.redirect(
-      new URL(`/${resolvedLocale}${redirectPath}`, request.url)
-    );
+    const redirectUrl = new URL(`/${resolvedLocale}${redirectPath}`, request.url);
+    
+    const response = NextResponse.redirect(redirectUrl);
     response.cookies.set("locale", resolvedLocale);
     response.cookies.set(cookieKey, cookieValue);
+    
+    // Set any additional cookies if provided
+    if (additionalCookies) {
+      for (const [key, value] of Object.entries(additionalCookies)) {
+        response.cookies.set(key, value);
+      }
+    }
+    
     return response;
   }
 

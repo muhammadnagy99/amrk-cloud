@@ -1,9 +1,11 @@
 'use client'
 
+import NavBar from "@/src/components/navigation-bar/navigation-bar";
+import ReturnCTA from "@/src/components/payment-gateway/return-CTA";
 import { useState, useEffect } from "react";
-import NavBar from "@/src/components/pickup/navigation-bar/navigation-bar";
 import MobileWrapper from "../../mobile-wrapper";
-import ReturnCTA from "@/src/components/pickup/payment-gateway/return-CTA";
+
+
 
 const TEXTS: Record<string, any> = {
   ar: {
@@ -82,7 +84,7 @@ export default function PaymentGateWayClient({ props }: { props: string }) {
       {loading && <LoadingOverlay message={t.loadingMessage} />}
 
       <div className="flex flex-col gap-8 w-[88%] h-screen overflow-y-auto pb-28 pt-10 relative">
-        <NavBar text={t.title} lang={lang} />
+        <NavBar text={t.title} lang={lang} type={2} />
 
         {error && !loading && (
           <div className="flex flex-col items-center justify-center text-center mt-10 text-red-600">

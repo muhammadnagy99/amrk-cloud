@@ -33,7 +33,7 @@ export async function POST(request: Request) {
     
     response_object.cookies.set('user_id', data.user_id, { 
       path: '/',
-      maxAge: 3600, // 1 hour
+      maxAge: 259200, // 1 hour
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'strict'
@@ -41,7 +41,7 @@ export async function POST(request: Request) {
     
     response_object.cookies.set('user_phone', PhoneNumber, { 
       path: '/',
-      maxAge: 3600, // 1 hour 
+      maxAge: 259200, // 1 hour 
       httpOnly: false,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'strict'

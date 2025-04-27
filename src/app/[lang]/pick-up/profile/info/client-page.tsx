@@ -1,13 +1,13 @@
 'use client';
 
 import { useEffect, useState } from "react";
-import NavBar from "@/src/components/pickup/navigation-bar/navigation-bar";
-import InputField from "@/src/components/pickup/profile/input-field";
-import { GIcon } from "@/src/components/pickup/user-overlay/icons";
-import { PhoneIcon } from "@/src/components/pickup/order-placed/icons";
-import { User, EmailIcon, DeleteIcon } from "@/src/components/pickup/profile/icons";
+
 import { Locale } from "@/src/i18n-config";
 import MobileWrapper from "../../../mobile-wrapper";
+import NavBar from "@/src/components/navigation-bar/navigation-bar";
+import { PhoneIcon } from "@/src/components/order-placed/icons";
+import { User, EmailIcon, DeleteIcon } from "@/src/components/profile/icons";
+import InputField from "@/src/components/profile/input-field";
 
 const TEXTS: Record<Locale, any> = {
   ar: {
@@ -155,7 +155,7 @@ export default function InfoPageClient({ params }: Props) {
   return (
     <MobileWrapper>
       <div className="flex flex-col gap-8 w-[88%] h-screen overflow-y-auto pb-28 pt-10">
-        <NavBar text={t.title} lang={lang} />
+        <NavBar text={t.title} lang={lang} type={2} />
         <div className="w-full flex flex-col justify-between h-full">
           <div className="flex flex-col gap-12">
             <div className="flex flex-col gap-4">

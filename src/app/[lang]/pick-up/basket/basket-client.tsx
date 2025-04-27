@@ -1,19 +1,18 @@
 "use client";
 
 import { useEffect, useState } from "react";
+
 import MobileWrapper from "../../mobile-wrapper";
-import BasketCTA from "@/src/components/pickup/basket-page/basket-CTA";
-import UserDiscount from "@/src/components/pickup/basket-page/discount";
-import OrderSummary from "@/src/components/pickup/basket-page/order-summery";
-import NavBar from "@/src/components/pickup/navigation-bar/navigation-bar";
-import BasketItemsList from "@/src/components/pickup/basket-page/basket-items-list";
+import BasketItemsList from "@/src/components/basket-page/basket-items-list";
+import UserDiscount from "@/src/components/basket-page/discount";
+import OrderSummary from "@/src/components/basket-page/order-summery";
+import CouponRedeem from "@/src/components/basket-page/redeem-coupon";
+import CarPickUp from "@/src/components/checkout/car-pickup";
+import PaymentMethod from "@/src/components/checkout/payment-method";
+import CleintNavBar from "@/src/components/navigation-bar/custom-navbar";
+import { ProductOverlayProvider } from "@/src/components/view-grid/category.tsx/product-overlay";
 import { Locale } from "@/src/i18n-config";
-import PaymentMethod from "@/src/components/pickup/checkout/payment-method";
-import CarPickUp from "@/src/components/pickup/checkout/car-pickup";
-import CleintNavBar from "@/src/components/pickup/navigation-bar/custom-navbar";
-import { ProductOverlayProvider } from "@/src/components/pickup/view-grid/category.tsx/product-overlay";
-import { toast } from "react-hot-toast";
-import CouponRedeem from "@/src/components/pickup/basket-page/redeem-coupon";
+import toast from "react-hot-toast";
 
 const TEXTS: Record<Locale, any> = {
     ar: {
@@ -42,7 +41,7 @@ export interface BasketItem {
     totalPrice: number;
 }
 
-const BASKET_KEY = "basket_items";
+const BASKET_NAME: Record<number, string> = { 1: "dine_basket_items",  2 : "basket_items" };
 
 const LoadingOverlay = () => (
     <div className="fixed inset-0 z-[1000] flex items-center justify-center bg-white backdrop-blur-sm">
@@ -50,7 +49,7 @@ const LoadingOverlay = () => (
     </div>
 );
 
-export default function BasketPageClient({ props, onToggle }: { props: string, onToggle: () => void }) {
+export default function BasketPageClient({ props, onToggle, type }: { props: string, onToggle: () => void, type:number }) {
     const [redeem, setRedeem] = useState(false);
     const [basket, setBasket] = useState<BasketItem[]>([]);
     const [isLoading, setIsLoading] = useState(true);
@@ -63,6 +62,7 @@ export default function BasketPageClient({ props, onToggle }: { props: string, o
     const [couponDiscount, setCouponDiscount] = useState(0);
     const [couponDiscountPercentage, setCouponDiscountPercentage] = useState(0);
 
+    const basketName = BASKET_NAME[type];
     const lang = props || "ar";
     const t = TEXTS[lang];
 
@@ -127,7 +127,7 @@ export default function BasketPageClient({ props, onToggle }: { props: string, o
     useEffect(() => {
         const loadBasketAndPlaceOrder = async () => {
             setIsLoading(true);
-            const stored = localStorage.getItem(BASKET_KEY);
+            const stored = localStorage.getItem(basketName);
 
             if (stored) {
                 const parsedBasket = JSON.parse(stored);
@@ -150,7 +150,7 @@ export default function BasketPageClient({ props, onToggle }: { props: string, o
     const updateBasket = async (updated: BasketItem[]) => {
         setIsLoading(true);
         setBasket(updated);
-        localStorage.setItem(BASKET_KEY, JSON.stringify(updated));
+        localStorage.setItem(basketName, JSON.stringify(updated));
 
         // Place order with updated basket
         if (updated.length > 0) {
@@ -221,7 +221,7 @@ export default function BasketPageClient({ props, onToggle }: { props: string, o
                         </div>
                     ) : (
                         <>
-                            <ProductOverlayProvider lang={lang}>
+                            <ProductOverlayProvider lang={lang} type={type}>
                                 <BasketItemsList
                                     lang={lang}
                                     items={basket}
@@ -261,7 +261,7 @@ export default function BasketPageClient({ props, onToggle }: { props: string, o
                                 amount={summaryTotal}
                                 onPaymentSuccess={(result) => {
                                     console.log('Payment successful!', result);
-                                    localStorage.removeItem(BASKET_KEY);
+                                    localStorage.removeItem(basketName);
                                     localStorage.removeItem('previous_basket_hash');
                                     setBasket([]);
                                     toast.success(t.orderSuccess);

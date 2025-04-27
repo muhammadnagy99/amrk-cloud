@@ -9,10 +9,17 @@ export interface BasketItem {
   totalPrice: number;
 }
 
-const BASKET_KEY = 'basket_items';
+const BASKET_KEYS: Record<number, string> = {
+  1: 'dine_',
+  2: ''
+};
 
-export default function useBasket() {
+
+export default function useBasket(type: number) {
   const [basket, setBasket] = useState<BasketItem[]>([]);
+
+  const BASKET_KEY = `${BASKET_KEYS[type]}basket_items`;
+
 
   useEffect(() => {
     const data = localStorage.getItem(BASKET_KEY);

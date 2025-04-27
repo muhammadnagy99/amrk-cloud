@@ -107,7 +107,7 @@ export async function POST(req: NextRequest) {
       userId,
       tableId: "",
       vat,
-      userName: phone,
+      userName: rawPhone,
       unitPrice,
       orderNote: "",
       packOrderTogo: true,
@@ -137,13 +137,11 @@ export async function POST(req: NextRequest) {
       headers: {
         "Accept": "application/json",
         "Content-Type": "application/json",
-        "Header": "Bearer ",
+        'Authorization': `Bearer ${token}`,
       },
       body: JSON.stringify(payload),
     })
-
-
-
+    console.log(orderRes.headers)
      const orderResult = await orderRes.text() 
     return NextResponse.json(orderResult)
 

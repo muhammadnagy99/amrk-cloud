@@ -163,6 +163,7 @@ export default function ProductPage({
             requiredOptions={processedData.requiredOptions}
             optionalOptions={processedData.optionalOptions}
             onClose={onClose}
+            type={2}
         />
     );
 }

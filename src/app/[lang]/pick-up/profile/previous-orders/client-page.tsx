@@ -1,9 +1,9 @@
 'use client';
 
+import NavBar from "@/src/components/navigation-bar/navigation-bar";
+import OrderItemsDropdown from "@/src/components/order-placed/order-items";
 import { useEffect, useState } from "react";
-import NavBar from "@/src/components/pickup/navigation-bar/navigation-bar";
 import MobileWrapper from "../../../mobile-wrapper";
-import OrderItemsDropdown from "@/src/components/pickup/previous-orders/order-items";
 
 type Props = {
   lang: string;
@@ -19,21 +19,14 @@ export default function PreviousOrdersClient({ lang }: Props) {
   const [orders, setOrders] = useState<any[]>([]);
   const [error, setError] = useState(false);
 
-
   useEffect(() => {
-    const branchId = document.cookie
-      .split("; ")
-      .find(row => row.startsWith("branchId="))
-      ?.split("=")[1];
-
-    if (!branchId) {
-      setError(true);
-      return;
-    }
-
     fetch("/api/orders/history", {
-      method: "GET",
+      method: "POST", // Changed from GET to POST to match the API implementation
       credentials: "include",
+      headers: {
+        "Content-Type": "application/json"
+      }
+      // No need to include a body as the API will extract the info from cookies
     })
       .then((res) => {
         if (!res.ok) {
@@ -49,7 +42,6 @@ export default function PreviousOrdersClient({ lang }: Props) {
         setError(true);
       });
   }, []);
-
   if (error) {
     return (
       <MobileWrapper>
@@ -66,7 +58,7 @@ export default function PreviousOrdersClient({ lang }: Props) {
   return (
     <MobileWrapper>
       <div className="flex flex-col gap-8 w-[88%] h-screen overflow-y-auto pb-28 pt-10">
-        <NavBar text={t.title} lang={lang} />
+        <NavBar text={t.title} lang={lang} type={2}/>
         <div className="flex flex-col gap-4">
           {orders.map((order, index) => (
             <OrderItemsDropdown
@@ -84,6 +76,7 @@ export default function PreviousOrdersClient({ lang }: Props) {
                   number: 1,
                 })),
               }))}
+              lang={lang}
             />
           ))}
         </div>

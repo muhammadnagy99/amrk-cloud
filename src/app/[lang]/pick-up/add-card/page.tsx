@@ -1,10 +1,11 @@
-import NavBar from "@/src/components/pickup/navigation-bar/navigation-bar";
-import MobileWrapper from "../../mobile-wrapper";
-import PaymentCTA from "@/src/components/pickup/checkout/Payment-CTA";
-import SaveCard from "@/src/components/pickup/add-cart/save-card";
-import Terms from "@/src/components/pickup/add-cart/term";
-import CardInputForm from "@/src/components/pickup/add-cart/credit-form";
+
+import CardInputForm from "@/src/components/add-cart/credit-form";
+import SaveCard from "@/src/components/add-cart/save-card";
+import Terms from "@/src/components/add-cart/term";
+import PaymentCTA from "@/src/components/checkout/Payment-CTA";
+import NavBar from "@/src/components/navigation-bar/navigation-bar";
 import { Locale } from "@/src/i18n-config";
+import MobileWrapper from "../../mobile-wrapper";
 
 type PageProps = {
   params: {
@@ -31,7 +32,7 @@ export default async function CardPage(props: {
   return (
     <MobileWrapper>
       <div className="flex flex-col gap-8 w-[88%] h-screen overflow-y-auto pb-28 pt-10 relative">
-        <NavBar text={t.title} lang={lang} />
+        <NavBar text={t.title} lang={lang} type={2} />
         <CardInputForm lang={lang} />
         <SaveCard lang={lang} />
         <Terms lang={lang} />

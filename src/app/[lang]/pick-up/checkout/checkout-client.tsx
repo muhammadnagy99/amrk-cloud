@@ -1,16 +1,16 @@
 'use client'
 
-import NavBar from "@/src/components/pickup/navigation-bar/navigation-bar";
-import MobileWrapper from "../../mobile-wrapper";
-import PaymentMethod from "@/src/components/pickup/checkout/payment-method";
-import CarPickUp from "@/src/components/pickup/checkout/car-pickup";
-import PaymentCTA from "@/src/components/pickup/checkout/Payment-CTA";
+import BasketItemsList from "@/src/components/basket-page/basket-items-list";
+import UserDiscount from "@/src/components/basket-page/discount";
+import OrderSummary from "@/src/components/basket-page/order-summery";
+import CarPickUp from "@/src/components/checkout/car-pickup";
+import PaymentMethod from "@/src/components/checkout/payment-method";
+import NavBar from "@/src/components/navigation-bar/navigation-bar";
 import { Locale } from "@/src/i18n-config";
-import OrderSummary from "@/src/components/pickup/basket-page/order-summery";
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
+import MobileWrapper from "../../mobile-wrapper";
 import { BasketItem } from "../basket/basket-client";
-import BasketItemsList from "@/src/components/pickup/basket-page/basket-items-list";
-import UserDiscount from "@/src/components/pickup/basket-page/discount";
+
 
 const TEXTS: Record<Locale, any> = {
     ar: {
@@ -55,7 +55,7 @@ export default function CheckoutPageCleint({ props }: { props: string }) {
     return (
         <MobileWrapper>
             <div className="flex flex-col gap-8 w-[88%] overflow-y-auto pt-10 mb-16">
-                <NavBar text={t.title} lang={lang} />
+                <NavBar text={t.title} lang={lang} type={2} />
                 {basket.length === 0 ? (
                     <div className="flex flex-col items-center justify-center text-center gap-4 mt-20">
                         <p className="text-gray-500 text-sm">{t.emptyMessage}</p>
