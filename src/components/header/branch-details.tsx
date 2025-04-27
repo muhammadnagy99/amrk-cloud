@@ -83,7 +83,7 @@ export default async function BranchDetails({ lang, type }: Props) {
       </div>
       
       {/* Only render TableInfo if type is 1 and pass the tableId */}
-      {type === 1 && tableId && <TableInfo table={tableId} total={34} />}
+      {type === 1 && tableId && <TableInfo table={tableId} total={34} lang={lang} />}
     </div>
   );
 }

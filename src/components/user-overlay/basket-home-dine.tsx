@@ -97,6 +97,8 @@ export default function BasketCTAHome({ lang, type }: BasketCTAHomeProps) {
   // if (itemsCount === 0) return <div />;
 
   const buttonLabel = lang === "ar" ? "عرض السلة" : "View Basket";
+  const billBtnLabel = lang === 'ar' ? "فاتورتك" : "Your Bill";
+  const waiterBtnLabel = lang === 'ar' ? "الاتصال بالنادل" : "Call Waiter";
 
   const toggleBasketOverlay = () => {
     setShowBasketOverlay(!showBasketOverlay);
@@ -212,7 +214,7 @@ export default function BasketCTAHome({ lang, type }: BasketCTAHomeProps) {
 
           {(itemsCount === 0) && (
             <p className="flex flex-row items-center gap-2">
-              <span className="text-sm font-medium">فاتورتك</span>
+              <span className="text-sm font-medium">{billBtnLabel}</span>
             </p>
           )}
         </button>
@@ -225,7 +227,7 @@ export default function BasketCTAHome({ lang, type }: BasketCTAHomeProps) {
 
           {(itemsCount === 0) && (
             <p className="flex flex-row items-center gap-2">
-              <span className="text-sm font-medium">الاتصال بالنادل</span>
+              <span className="text-sm font-medium"> {waiterBtnLabel}</span>
             </p>
           )}
         </button>
