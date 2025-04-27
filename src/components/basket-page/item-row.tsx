@@ -44,7 +44,6 @@ export default function CartItem({
   const t = TEXTS[lang];
   const isRTL = lang === 'ar';
 
-  // Price display component with currency always on the left visually
   const PriceDisplay = ({ price, color }: { price: number; color: "gray" | "black" }) => {
     return (
       <div className="flex items-center gap-1" dir="ltr">
@@ -67,7 +66,7 @@ export default function CartItem({
       </div>
       <ul className="text-[#00000080] text-xs flex flex-col gap-2">
         {options.map((option, index) => (
-          <li key={index} className="flex flex-row justify-between pr-4">
+          <li key={index} className={`flex flex-row justify-between ${lang === 'ar' ? 'pr-4' : 'pl-4'}`}>
             <span>• {option.name}</span>
             <span>
               <PriceDisplay price={option.price} color="gray" />

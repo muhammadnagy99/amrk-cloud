@@ -17,7 +17,6 @@ function maskPhoneNumber(fullNumber: string): string {
   
 export async function POST(req: NextRequest) {
    
-
   try {
     const cookies = req.cookies
     const body = await req.json()
@@ -131,6 +130,7 @@ export async function POST(req: NextRequest) {
       itemsMenu,
     }
 
+    console.log(payload)
     // 4. Final order request
     const orderRes = await fetch("https://api.amrk.app/orders/placePickupOrderConsumer", {
       method: "POST",
@@ -141,7 +141,6 @@ export async function POST(req: NextRequest) {
       },
       body: JSON.stringify(payload),
     })
-    console.log(orderRes.headers)
      const orderResult = await orderRes.text() 
     return NextResponse.json(orderResult)
 

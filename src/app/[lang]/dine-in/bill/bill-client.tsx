@@ -4,6 +4,8 @@ import CleintNavBar from "@/src/components/navigation-bar/custom-navbar";
 import { Locale } from "@/src/i18n-config";
 import { useState } from "react";
 import MobileWrapper from "../../mobile-wrapper";
+import CartItem from "@/src/components/dine-in/bill-row";
+import BillPay from "@/src/components/user-overlay/bill-pay";
 
 const TEXTS: Record<Locale, any> = {
     ar: {
@@ -38,20 +40,56 @@ const LoadingOverlay = () => (
     </div>
 );
 
-export default function BillClient({ props, onToggle, type }: { props: string, onToggle: () => void, type:number }) {
+export default function BillClient({ props, onToggle, type }: { props: string, onToggle: () => void, type: number }) {
     const [isLoading, setIsLoading] = useState(false);
 
     const lang = props || "ar";
     const t = TEXTS[lang];
 
-  
+    const testItems = [
+        {
+            user: 'current',
+            quantity: 2,
+            name: "Double Cheeseburger",
+            basePrice: 25.00,
+            options: [
+                { name: "Extra cheese", price: 5.00 },
+                { name: "No onions", price: 0.00 },
+                { name: "Special sauce", price: 3.00 }
+            ],
+            totalPrice: 58.00,
+            mode: "regular"
+        },
+        {
+            user: 'Ali',
+            quantity: 1,
+            name: "French Fries",
+            basePrice: 12.00,
+            options: [],
+            totalPrice: 12.00,
+            mode: "regular"
+        },
+        {
+            user: 'Ahmed',
+            quantity: 1,
+            name: "Ice Cream Sundae",
+            basePrice: 18.00,
+            options: [
+                { name: "Extra chocolate", price: 3.00 },
+                { name: "Nuts", price: 2.00 }
+            ],
+            totalPrice: 23.00,
+            mode: "regular"
+        }
+    ];
+
 
     return (
-            <MobileWrapper>
-                <div className="flex flex-col gap-5 w-[88%] overflow-y-auto pt-10 mb-18">
-                    <CleintNavBar text={t.title} lang={lang} onClose={onToggle} />
+        <MobileWrapper>
+            <div className="flex flex-col gap-5 w-[88%] overflow-y-auto pt-10 mb-18">
+                <CleintNavBar text={t.title} lang={lang} onClose={onToggle} />
 
-                    {/* {
+                {/* {
                         isLoading ? (
                             <LoadingOverlay />
                         ) : true ? (
@@ -69,8 +107,26 @@ export default function BillClient({ props, onToggle, type }: { props: string, o
                                            
                             </>
                         )} */}
-                        
+
+                <div className="flex flex-col">
+                    {testItems.map((item, index) => (
+                        <CartItem
+                            user={item.user}
+                            quantity={item.quantity}
+                            name={item.name}
+                            basePrice={item.basePrice}
+                            options={item.options}
+                            totalPrice={item.totalPrice}
+                            onDelete={() => { }}
+                            onClick={() => { }}
+                            lang={lang}
+                            mode={item.mode}
+                        />
+                    ))}
                 </div>
-            </MobileWrapper>
+
+                <BillPay lang={lang} />
+            </div>
+        </MobileWrapper>
     );
 }

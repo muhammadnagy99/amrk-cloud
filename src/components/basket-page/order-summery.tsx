@@ -124,7 +124,7 @@ export default function OrderSummary({
         {couponCode && couponDiscount > 0 && (
           <>
             <span className="justify-self-start rtl:text-right ltr:text-left text-primaryColor">
-              {t.couponDiscount} ({couponPercentage}%)
+              {t.couponDiscount} ({couponPercentage})
             </span>
             <span className="text-[#B0438A]">
               <PriceDisplay price={couponDiscount} color="#b0438a" isDiscount={true} />

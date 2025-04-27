@@ -104,6 +104,7 @@ export default function ProductPageClient({
                     selectedRequired={required}
                     selectedOptional={optional}
                     type={type}
+                    onClose={onClose}
                 />
             </ProductOverlayProvider>
 

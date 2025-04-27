@@ -63,8 +63,6 @@ export default function ProductPageClient({
             preloadImage(imageSrc);
         }
     }, [imageSrc]);
-
-    console.log(type)
     return (
         <MobileWrapper>
             <div className="flex flex-col gap-8 w-full h-screen overflow-y-auto pb-28">
@@ -104,6 +102,7 @@ export default function ProductPageClient({
                     selectedRequired={required}
                     selectedOptional={optional}
                     type={type}
+                    onClose={onClose}
                 />
             </ProductOverlayProvider>
 

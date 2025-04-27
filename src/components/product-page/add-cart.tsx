@@ -18,6 +18,8 @@ interface Props {
   selectedRequired: { name: string; value: string }[];
   selectedOptional: { name: string; value: string }[];
   type: number;
+  onClose: () => void;
+
 }
 
 export default function AddCart({
@@ -28,7 +30,8 @@ export default function AddCart({
   optionalOptions,
   selectedRequired,
   selectedOptional,
-  type
+  type,
+  onClose
 }: Props) {
   const TYPE = "add_cart";
   const TEXTS = ContentProvider({ type: TYPE, lang });
@@ -118,6 +121,7 @@ export default function AddCart({
     setTimeout(() => {
       setAdded(true);
       setLoading(false);
+      onClose();
     }, 500);
     setTimeout(() => {
       setAdded(true);

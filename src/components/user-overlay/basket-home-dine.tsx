@@ -96,7 +96,7 @@ export default function BasketCTAHome({ lang, type }: BasketCTAHomeProps) {
 
   // if (itemsCount === 0) return <div />;
 
-  const buttonLabel = lang === "ar" ? "عرض السلة" : "View Basket";
+  const buttonLabel = lang === "ar" ? " السلة" : "Basket";
   const billBtnLabel = lang === 'ar' ? "فاتورتك" : "Your Bill";
   const waiterBtnLabel = lang === 'ar' ? "الاتصال بالنادل" : "Call Waiter";
 
@@ -115,7 +115,7 @@ export default function BasketCTAHome({ lang, type }: BasketCTAHomeProps) {
         setShowBasketOverlay(false);
         setClosingAnimation(false);
         setShowClosingAnimation(false);
-      }, 300); 
+      }, 300);
     }
   };
 
@@ -181,7 +181,7 @@ export default function BasketCTAHome({ lang, type }: BasketCTAHomeProps) {
             }}
           >
             <div className="h-full overflow-auto">
-             <BillClient props={lang} onToggle={closeBillOverlay} type={type} />
+              <BillClient props={lang} onToggle={closeBillOverlay} type={type} />
             </div>
           </div>
         </div>
@@ -194,7 +194,9 @@ export default function BasketCTAHome({ lang, type }: BasketCTAHomeProps) {
             onClick={toggleBasketOverlay}
             className="flex items-center justify-between px-4 bg-[#b0438a] text-white w-[60%] min-w-[220px] h-12 rounded-lg flex-1"
           >
-
+            <p className="h-6 w-6 bg-[#922b6e] rounded-full text-white text-xs font-medium flex justify-center items-center">
+              {itemsCount}
+            </p>
             <p className="flex flex-row items-center gap-2">
               <BasketIcon />
               <span className="text-sm font-medium">{buttonLabel}</span>

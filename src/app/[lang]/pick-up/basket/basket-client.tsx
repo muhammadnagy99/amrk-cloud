@@ -13,6 +13,7 @@ import CleintNavBar from "@/src/components/navigation-bar/custom-navbar";
 import { ProductOverlayProvider } from "@/src/components/view-grid/category.tsx/product-overlay";
 import { Locale } from "@/src/i18n-config";
 import toast from "react-hot-toast";
+import Cookies from 'js-cookie';
 
 const TEXTS: Record<Locale, any> = {
     ar: {
@@ -60,7 +61,7 @@ export default function BasketPageClient({ props, onToggle, type }: { props: str
 
     const [couponCode, setCouponCode] = useState<string | null>(null);
     const [couponDiscount, setCouponDiscount] = useState(0);
-    const [couponDiscountPercentage, setCouponDiscountPercentage] = useState(0);
+    const [couponDiscountValue, setCouponDiscountValue] = useState(0);
 
     const basketName = BASKET_NAME[type];
     const lang = props || "ar";
@@ -172,34 +173,52 @@ export default function BasketPageClient({ props, onToggle, type }: { props: str
         document.cookie = `use_point=${checked}; path=/`;
     };
 
-    const handleApplyCoupon = (code: string) => {
-        // Here you would typically validate the coupon with an API
-        // For this example, we'll mock a successful coupon application
-
-        // Mock validation - in a real app, this would be an API call
-        if (code.toUpperCase() === 'DISCOUNT10') {
-            setCouponCode(code);
-            setCouponDiscountPercentage(10);
-            // The actual discount amount will be calculated in OrderSummary
-            toast.success(`Coupon ${code} applied successfully!`);
-        } else {
-            toast.error('Invalid coupon code');
+    const handleApplyCoupon = async (code: string) => {
+        try {
+            const response = await fetch('/api/validate-coupon', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ couponCode: code, type: '2' })
+            });
+    
+            if (!response.ok) {
+                const errorData = await response.json().catch(() => null);
+                throw new Error(errorData?.message || `Error: ${response.status}`);
+            }
+    
+            const result = await response.json();
+            
+            if (result && result.success === "OK") {
+                setCouponCode(code);
+                setCouponDiscountValue(result.coupon_value);
+                toast.success(`Coupon ${code} applied successfully!`);
+                return result; 
+            } else {
+                throw new Error(result.message || 'Invalid coupon code');
+            }
+        } catch (error) {
+            console.error("Error applying coupon:", error);
+            const errorMessage = error instanceof Error ? error.message : 'Error validating coupon';
+            toast.error(errorMessage);
+            throw error; 
         }
     };
 
     const handleRemoveCoupon = () => {
         setCouponCode(null);
-        setCouponDiscountPercentage(0);
+        setCouponDiscountValue(0);
         setCouponDiscount(0);
     };
 
     // Update coupon discount amount when summary total changes
     useEffect(() => {
-        if (couponDiscountPercentage > 0) {
-            const discountAmount = (summaryTotal * couponDiscountPercentage) / 100;
+        if (couponDiscountValue > 0) {
+            const discountAmount = couponDiscountValue;
             setCouponDiscount(discountAmount);
         }
-    }, [summaryTotal, couponDiscountPercentage]);
+    }, [summaryTotal, couponDiscountValue]);
 
     return (
         <MobileWrapper>
@@ -242,7 +261,7 @@ export default function BasketPageClient({ props, onToggle, type }: { props: str
                                 onApplyCoupon={handleApplyCoupon}
                                 onRemoveCoupon={handleRemoveCoupon}
                                 appliedCoupon={couponCode}
-                                discount={couponDiscountPercentage}
+                                discount={couponDiscountValue}
                             />
 
                             <OrderSummary
@@ -251,7 +270,7 @@ export default function BasketPageClient({ props, onToggle, type }: { props: str
                                 pointsValue={redeem ? pointsValue : 0}
                                 couponDiscount={couponCode ? couponDiscount : 0}
                                 couponCode={couponCode}
-                                couponPercentage={couponDiscountPercentage}
+                                couponPercentage={couponDiscountValue}
                                 items={basket}
                                 onTotalChange={(val) => setSummaryTotal(val)}
                             />
