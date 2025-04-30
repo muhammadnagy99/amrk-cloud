@@ -60,7 +60,7 @@ export default function SelectFieldDisplay({
                     {options.map((option) => (
                         <div
                             key={option.value}
-                            className={`px-4 py-2 hover:bg-gray-100 cursor-pointer ${option.value === value ? 'bg-gray-50 font-medium' : ''}`}
+                            className={`px-4 py-2 hover:bg-gray-100 text-sm cursor-pointer ${option.value === value ? 'bg-gray-50 font-medium' : ''}`}
                             onClick={() => handleSelect(option.value)}
                         >
                             {option.label}
