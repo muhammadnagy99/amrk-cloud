@@ -3,7 +3,8 @@ import { cookies } from 'next/headers';
 // Create a Record to map type numbers to cookie names
 const BRANCH_COOKIE_NAME: Record<number, string> = {
   1: 'dine_brnid',
-  2: 'brnid'
+  2: 'brnid',
+  4: 'table_brnid'
 };
 
 export async function getBranchIdFromCookies(type: number = 1): Promise<string> {

@@ -73,6 +73,12 @@ function getRedirectInfoFromQuery(request: NextRequest): {
         cookieKey: "brnid",
         cookieValue: brnidValue
       };
+    }else if (typeValue === "4" || !typeValue) {
+      return {
+        redirectPath: "/table-reservation",
+        cookieKey: "table_brnid",
+        cookieValue: brnidValue
+      };
     }
   }
   

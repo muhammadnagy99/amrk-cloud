@@ -17,13 +17,10 @@ const Overlay: React.FC<OverlayProps> = ({ isVisible, onClose, children }) => {
       ></div>
 
       <div
-        className="relative bg-white p-6 rounded-lg shadow-lg z-60 w-[90%] md:w-[770px]"
+        className="relative bg-white p-6 rounded-lg shadow-lg z-60 w-[90%] max-w-[400px]"
         onClick={(e) => e.stopPropagation()} 
       >
-       
-        {children}
-
-    
+        {children}    
         <button
           onClick={onClose} 
           className="absolute top-4 right-4"

@@ -66,13 +66,13 @@ export default function CartItem({
 
     return (
         <div className="py-3 border-b border-gray-300 bg-white flex flex-col gap-1 min-h-[88px] justify-between">
-            <div className="flex bg-black h-8 items-center px-4">
+            <div className={`${mode === 'CH' ? 'hidden' : ''} flex bg-black h-8 items-center px-4`}>
                 <span className="text-white text-sm font-medium">
                     {getText()}
                 </span>
             </div>
-            <label className="flex gap-2 items-center mt-2">
-                <div className="flex items-center">
+            <label className="flex gap-2 items-center mt-2 ">
+                <div className={`flex items-center ${mode === 'CH' ? 'hidden' : ''}`}>
                     <input type="checkbox" name={user} value={user} className=""
                     />
                 </div>
