@@ -80,13 +80,13 @@ export default function CheckoutPageCleint({ props }: { props: string }) {
                             points={points}
                             onToggle={handleToggle}
                         />
-                        <OrderSummary
+                        {/* <OrderSummary
                             lang={lang}
                             redeemPoints={redeem}
                             pointsValue={redeem ? pointsValue : 0}
                             items={basket}
                             onTotalChange={(val) => setSummaryTotal(val)}
-                        />
+                        /> */}
                         <CarPickUp lang={lang} />
 
                         <PaymentMethod lang={lang} amount={summaryTotal} onPaymentSuccess={(result) => {
