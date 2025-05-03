@@ -8,7 +8,8 @@ interface Props {
   redeemPoints: boolean;
   pointsValue: number;
   items: BasketItem[];
-  onTotalChange?: (val: number) => void;
+  onTotalChange: (val: number) => void;
+  onSummeryChange: (val: Summery) => void;
   couponDiscount?: number;
   couponCode?: string | null;
   couponPercentage?: number;
@@ -35,12 +36,21 @@ const TEXTS: Record<string, any> = {
   },
 };
 
+interface Summery {
+  subtotal: number;
+  vatAmount: number;
+  vatPercent: number;
+  discount: number;
+  total: number;
+}
+
 export default function OrderSummary({
   lang,
   redeemPoints,
   pointsValue,
   items,
   onTotalChange,
+  onSummeryChange,
   couponDiscount = 0,
   couponCode = null,
   couponPercentage = 0,
@@ -67,7 +77,7 @@ export default function OrderSummary({
 
   useEffect(() => {
     if (!items.length) return;
-
+  
     // Calculate summary on client side
     try {
       const subtotal = items.reduce((sum, item) => sum + item.totalPrice, 0);
@@ -82,18 +92,20 @@ export default function OrderSummary({
         discount,
         total
       };
-
+  
       setSummary(calculatedSummary);
       setLoading(false);
-
-      if (onTotalChange) {
+  
+      // Only call these when the calculation has actually changed
+      if (onTotalChange && calculatedSummary.total !== summary?.total) {
+        onSummeryChange(calculatedSummary);
         onTotalChange(total);
       }
     } catch (error) {
       console.error("Error calculating order summary:", error);
       setLoading(false);
     }
-  }, [items, redeemPoints, couponDiscount, pointsValue, onTotalChange]);
+  }, [items, redeemPoints, couponDiscount, pointsValue]);  // Remove onTotalChange from dependencies
 
 
   if (loading || !summary) return <p>{t.loading}</p>;

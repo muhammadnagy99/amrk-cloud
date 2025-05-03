@@ -58,6 +58,13 @@ export default function BasketPageClient({ props, onToggle, type }: { props: str
     const points = 1203;
     const pointsValue = 12.03;
     const [summaryTotal, setSummaryTotal] = useState(0);
+    const [summary, setSummary] = useState<null | {
+        subtotal: number;
+        vatAmount: number;
+        vatPercent: number;
+        discount: number;
+        total: number;
+      }>(null);
 
     const [couponCode, setCouponCode] = useState<string | null>(null);
     const [couponDiscount, setCouponDiscount] = useState(0);
@@ -273,11 +280,13 @@ export default function BasketPageClient({ props, onToggle, type }: { props: str
                                 couponPercentage={couponDiscountValue}
                                 items={basket}
                                 onTotalChange={(val) => setSummaryTotal(val)}
+                                onSummeryChange={(val) => setSummary(val)}
                             />
 
                             <PaymentMethod
                                 lang={lang}
                                 amount={summaryTotal}
+                                vat={summary?.vatAmount}
                                 onPaymentSuccess={(result) => {
                                     console.log('Payment successful!', result);
                                     localStorage.removeItem(basketName);

@@ -59,7 +59,7 @@ const NumPersons: React.FC<NumPersonsProps> = ({
           disabled={count <= 1}
           className="flex items-center justify-center w-8 h-8 disabled:text-gray-100"
         >
-          <span className="text-2xl text-[#B0438A]">−</span>
+          <span className={`text-2xl ${count > 1 ?  'text-[#B0438A]' : 'text-[#BCBCBC]'}`}>−</span>
         </button>
       </div>
     </div>
