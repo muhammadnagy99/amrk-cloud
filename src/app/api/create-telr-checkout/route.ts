@@ -1,5 +1,5 @@
 // app/api/create-telr-checkout/route.ts
-import { cookies } from 'next/headers';
+import { cookies } from 'next/headers'
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(request: NextRequest) {
