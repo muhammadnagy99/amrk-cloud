@@ -141,7 +141,7 @@ export const EnLangSwitcher = () => (
 
 export const ArLangSwitcher = () => (
   <svg
-    width="24"
+    width="30"
     height="12"
     viewBox="0 0 31 15"
     fill="none"

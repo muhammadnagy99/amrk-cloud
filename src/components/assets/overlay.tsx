@@ -17,7 +17,7 @@ const Overlay: React.FC<OverlayProps> = ({ isVisible, onClose, children }) => {
       ></div>
 
       <div
-        className="relative bg-white p-6 rounded-lg shadow-lg z-60 w-[90%] max-w-[400px]"
+        className="relative bg-white p-6 rounded-lg shadow-[0_0_20px_0_rgba(0,0,0,0.1)] z-60 w-[90%] max-w-[400px]"
         onClick={(e) => e.stopPropagation()} 
       >
         {children}    

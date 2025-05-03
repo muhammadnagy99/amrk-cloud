@@ -20,7 +20,7 @@ export default function SelectFieldDisplay({
     lang
 }: SelectFieldProps) {
     const [isOpen, setIsOpen] = useState(false);
-
+    
     const handleSelect = (optionValue: string) => {
         if (onChange) {
             onChange(optionValue);
@@ -30,6 +30,7 @@ export default function SelectFieldDisplay({
 
     // Find the label for the current value
     const selectedLabel = options.find(option => option.value === value)?.label || '';
+    const hasSelectedValue = value !== '' && selectedLabel !== '';
 
     return (
         <div className="relative">
@@ -40,12 +41,14 @@ export default function SelectFieldDisplay({
                 <div className="flex flex-row gap-4 w-[95%] justify-center items-center relative">
                     {Icon && <Icon />}
                     <div className="w-full">
-                        <label className={`absolute text-[#00000099] text-[8px] font-light top-0 ${lang === 'en' ? 'left-5' : 'right-5'}`}>
+                        <label className={`absolute text-[#00000099] ${hasSelectedValue ? 'text-[8px] font-light top-0' : 'text-sm font-light top-1/2 transform -translate-y-1/2'} ${lang === 'en' ? 'left-5' : 'right-5'}`}>
                             {label}
                         </label>
-                        <div className="w-full bg-transparent outline-none mt-3 font-light text-sm">
-                            {selectedLabel}
-                        </div>
+                        {hasSelectedValue && (
+                            <div className="w-full bg-transparent outline-none mt-3 font-light text-sm">
+                                {selectedLabel}
+                            </div>
+                        )}
                     </div>
                 </div>
                 <div className={`transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}>

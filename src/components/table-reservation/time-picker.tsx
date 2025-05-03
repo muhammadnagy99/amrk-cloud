@@ -57,7 +57,6 @@ const Clock = () => (
     <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M9.99996 1.66699C14.6025 1.66699 18.3333 5.39783 18.3333 10.0003C18.3333 14.6028 14.6025 18.3337 9.99996 18.3337C5.39746 18.3337 1.66663 14.6028 1.66663 10.0003C1.66663 5.39783 5.39746 1.66699 9.99996 1.66699ZM9.99996 5.00032C9.77894 5.00032 9.56698 5.08812 9.4107 5.2444C9.25442 5.40068 9.16662 5.61264 9.16662 5.83366V10.0003C9.16667 10.2213 9.2545 10.4332 9.41079 10.5895L11.9108 13.0895C12.068 13.2413 12.2785 13.3253 12.497 13.3234C12.7155 13.3215 12.9245 13.2338 13.079 13.0793C13.2335 12.9248 13.3211 12.7158 13.323 12.4973C13.3249 12.2788 13.2409 12.0683 13.0891 11.9112L10.8333 9.65532V5.83366C10.8333 5.61264 10.7455 5.40068 10.5892 5.2444C10.4329 5.08812 10.221 5.00032 9.99996 5.00032Z" fill="#B0438A" />
     </svg>
-
 )
 
 interface TimePickerProps {
@@ -83,13 +82,22 @@ const TimePicker: React.FC<TimePickerProps> = ({
     const [selectedSecond, setSelectedSecond] = useState<number>(0);
     const [selectedPeriod, setSelectedPeriod] = useState<'AM' | 'PM'>(initialTime?.period || 'AM');
     const timePickerRef = useRef<HTMLDivElement>(null);
+    
+    // Refs for scrolling to the selected values
+    const hoursContainerRef = useRef<HTMLDivElement>(null);
+    const minutesContainerRef = useRef<HTMLDivElement>(null);
+    const periodContainerRef = useRef<HTMLDivElement>(null);
+    
+    // Refs for the selected hour, minute, and period elements
+    const selectedHourRef = useRef<HTMLDivElement>(null);
+    const selectedMinuteRef = useRef<HTMLDivElement>(null);
+    const selectedPeriodRef = useRef<HTMLDivElement>(null);
 
     const [overlayVisible, setOverlayVisible] = useState<boolean>(false);
 
     const hideOverlay = (): void => {
         setOverlayVisible(false);
     };
-
 
     // Close the time picker when clicking outside
     useEffect(() => {
@@ -104,6 +112,47 @@ const TimePicker: React.FC<TimePickerProps> = ({
             document.removeEventListener('mousedown', handleClickOutside);
         };
     }, []);
+
+    // Scroll to selected values when the overlay becomes visible
+    useEffect(() => {
+        if (overlayVisible) {
+            // Use setTimeout to ensure the DOM is fully rendered
+            setTimeout(() => {
+                // Scroll to selected hour
+                if (hoursContainerRef.current && selectedHourRef.current) {
+                    const hourElement = selectedHourRef.current;
+                    const hourContainer = hoursContainerRef.current;
+                    const scrollPosition = hourElement.offsetTop - (hourContainer.clientHeight / 2) + (hourElement.clientHeight / 2) - 40 ;
+                    hourContainer.scrollTo({
+                        top: scrollPosition,
+                        behavior: 'smooth'
+                    });
+                }
+                
+                // Scroll to selected minute
+                if (minutesContainerRef.current && selectedMinuteRef.current) {
+                    const minuteElement = selectedMinuteRef.current;
+                    const minuteContainer = minutesContainerRef.current;
+                    const scrollPosition = minuteElement.offsetTop - (minuteContainer.clientHeight / 2) + (minuteElement.clientHeight / 2) - 40;
+                    minuteContainer.scrollTo({
+                        top: scrollPosition,
+                        behavior: 'smooth'
+                    });
+                }
+                
+                // Period container doesn't need scrolling as it's small, but included for completeness
+                if (periodContainerRef.current && selectedPeriodRef.current) {
+                    const periodElement = selectedPeriodRef.current;
+                    const periodContainer = periodContainerRef.current;
+                    const scrollPosition = periodElement.offsetTop - (periodContainer.clientHeight / 2) + (periodElement.clientHeight / 2) - 40;
+                    periodContainer.scrollTo({
+                        top: scrollPosition,
+                        behavior: 'smooth'
+                    });
+                }
+            }, 50); // Small delay to ensure rendering is complete
+        }
+    }, [overlayVisible]);
 
     // Format time for display
     const formatTime = (): string => {
@@ -123,7 +172,7 @@ const TimePicker: React.FC<TimePickerProps> = ({
     // Handle time selection
     const handleTimeSelect = (): void => {
         setIsOpen(false);
-        setOverlayVisible(false)
+        setOverlayVisible(false);
         if (onTimeChange) {
             onTimeChange({
                 hour: selectedHour,
@@ -135,14 +184,13 @@ const TimePicker: React.FC<TimePickerProps> = ({
 
     // Handle cancel
     const handleCancel = (): void => {
-
         if (initialTime) {
             setSelectedHour(initialTime.hour);
             setSelectedMinute(initialTime.minute);
             setSelectedPeriod(initialTime.period);
         }
         setIsOpen(false);
-        setOverlayVisible(false)
+        setOverlayVisible(false);
     };
 
     // Generate options for hours (1-12)
@@ -154,11 +202,10 @@ const TimePicker: React.FC<TimePickerProps> = ({
     // Generate options for seconds (0-59)
     const secondOptions = Array.from({ length: 60 }, (_, i) => i);
     
-
     return (
         <div className="relative" ref={timePickerRef}>
             <div
-                className="flex items-center justify-between h-[52px] px-3 border-widget rounded-lg cursor-pointer "
+                className="flex items-center justify-between h-[52px] px-3 border-widget rounded-lg cursor-pointer"
                 onClick={() => { setOverlayVisible(true) }}
             >
                 <div className={`flex items-center gap-2`}>
@@ -185,12 +232,17 @@ const TimePicker: React.FC<TimePickerProps> = ({
                     <div className="grid grid-cols-3 gap-2 mb-4" dir='ltr'>
                         {/* Hours */}
                         <div className="flex flex-col items-center">
-                            <div className="h-32 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
+                            <div 
+                                className="h-32 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100"
+                                ref={hoursContainerRef}
+                            >
                                 {hourOptions.map(hour => (
                                     <div
                                         key={`hour-${hour}`}
-                                        className={`py-2 px-3 text-sm text-center cursor-pointer rounded-lg  ${selectedHour === hour ? 'bg-[#B0438A] text-white' : ''
-                                            }`}
+                                        ref={selectedHour === hour ? selectedHourRef : null}
+                                        className={`py-2 px-3 text-sm text-center cursor-pointer rounded-lg ${
+                                            selectedHour === hour ? 'bg-[#B0438A] text-white' : ''
+                                        }`}
                                         onClick={() => setSelectedHour(hour)}
                                     >
                                         {hour.toString().padStart(2, '0')}
@@ -201,12 +253,17 @@ const TimePicker: React.FC<TimePickerProps> = ({
 
                         {/* Minutes */}
                         <div className="flex flex-col items-center">
-                            <div className="h-32 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
+                            <div 
+                                className="h-32 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100"
+                                ref={minutesContainerRef}
+                            >
                                 {minuteOptions.map(minute => (
                                     <div
                                         key={`minute-${minute}`}
-                                        className={`py-2 px-3 text-sm text-center cursor-pointer rounded-lg  ${selectedMinute === minute ? 'bg-[#B0438A] text-white' : ''
-                                            }`}
+                                        ref={selectedMinute === minute ? selectedMinuteRef : null}
+                                        className={`py-2 px-3 text-sm text-center cursor-pointer rounded-lg ${
+                                            selectedMinute === minute ? 'bg-[#B0438A] text-white' : ''
+                                        }`}
                                         onClick={() => setSelectedMinute(minute)}
                                     >
                                         {minute.toString().padStart(2, '0')}
@@ -215,20 +272,26 @@ const TimePicker: React.FC<TimePickerProps> = ({
                             </div>
                         </div>
 
-
                         {/* AM/PM */}
                         <div className="flex flex-col items-center">
-                            <div className="flex flex-col h-32 justify-start">
+                            <div 
+                                className="flex flex-col h-32 justify-start"
+                                ref={periodContainerRef}
+                            >
                                 <div
-                                    className={`py-2 px-3 text-sm text-center cursor-pointer rounded-lg ${selectedPeriod === 'AM' ? 'bg-[#B0438A] text-white' : ''
-                                        }`}
+                                    ref={selectedPeriod === 'AM' ? selectedPeriodRef : null}
+                                    className={`py-2 px-3 text-sm text-center cursor-pointer rounded-lg ${
+                                        selectedPeriod === 'AM' ? 'bg-[#B0438A] text-white' : ''
+                                    }`}
                                     onClick={() => setSelectedPeriod('AM')}
                                 >
                                     {labels.am}
                                 </div>
                                 <div
-                                    className={`py-2 px-3 text-sm text-center cursor-pointer rounded-lg  ${selectedPeriod === 'PM' ? 'bg-[#B0438A] text-white' : ''
-                                        }`}
+                                    ref={selectedPeriod === 'PM' ? selectedPeriodRef : null}
+                                    className={`py-2 px-3 text-sm text-center cursor-pointer rounded-lg ${
+                                        selectedPeriod === 'PM' ? 'bg-[#B0438A] text-white' : ''
+                                    }`}
                                     onClick={() => setSelectedPeriod('PM')}
                                 >
                                     {labels.pm}

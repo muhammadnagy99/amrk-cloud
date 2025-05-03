@@ -46,7 +46,7 @@ const NumPersons: React.FC<NumPersonsProps> = ({
       <div className="text-base">
         {translations[lang].title}
       </div>
-      <div className="flex items-center gap-4 bg-[#F9F9F9] py-0.5">
+      <div className={`${lang === 'en' ? 'flex flex-row-reverse': 'flex'} items-center gap-4 bg-[#F9F9F9] py-0.5 rounded-lg`}>
         <button
           onClick={handleIncrease}
           className="flex items-center justify-center w-8 h-8"

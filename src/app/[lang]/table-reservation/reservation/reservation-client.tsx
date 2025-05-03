@@ -30,9 +30,9 @@ const TEXTS: Record<Locale, any> = {
         bookingInfo: "بيانات الحجز",
         notes: "هل لديك ملاحظات؟",
         bookingTerms: "شروط الحجز",
-        nameLabel: "الاسم",
-        emailLabel: "البريد الإلكتروني",
-        phoneLabel: "رقم الجوال",
+        nameLabel: "الاسم - اجباري",
+        emailLabel: "البريد الالكتروني - اجباري",
+        phoneLabel: "رقم الجوال - اختياري",
         branchLabel: "الفرع",
         dateTimeLabel: "الموعد المحدد",
         guestsLabel: "عدد الأفراد",
@@ -73,9 +73,9 @@ const TEXTS: Record<Locale, any> = {
         bookingInfo: "Reservation Details",
         notes: "Additional Notes",
         bookingTerms: "Reservation Terms",
-        nameLabel: "Full Name",
-        emailLabel: "Email Address",
-        phoneLabel: "Mobile Number",
+        nameLabel: "Full Name - Must",
+        emailLabel: "Email Address - Must",
+        phoneLabel: "Mobile Number - Optional",
         branchLabel: "Branch",
         dateTimeLabel: "Appointment Date",
         guestsLabel: "Number of Guests",
@@ -132,7 +132,7 @@ interface props {
 export default function ReservationClient({ props, onToggle, type, branchName, date, guests, floor }: props) {
     const lang = props || "ar";
     const t = TEXTS[lang];
-    const [occasion, setOccasion] = useState('regular');
+    const [occasion, setOccasion] = useState('');
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [phone, setPhone] = useState('');
@@ -310,7 +310,7 @@ export default function ReservationClient({ props, onToggle, type, branchName, d
                         </div>
                     </div>
                 </div>
-                <ScheduleBtn />
+                <ScheduleBtn lang={lang} />
             </MobileWrapper>
         </>
     )

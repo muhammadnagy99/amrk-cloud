@@ -114,8 +114,19 @@ const DatePicker: React.FC<DatePickerProps> = ({
             month: 'long',
             year: 'numeric'
         };
-        // Always use Gregorian calendar for date display with the selected locale
-        return date.toLocaleDateString(locale, options);
+        
+        // Format the date using the selected locale
+        let formattedDate = date.toLocaleDateString(locale, options);
+        
+        // If locale is Arabic, ensure the date portion uses Western numerals
+        if (locale === 'ar') {
+            // Extract numeric parts and convert Arabic numerals to Western numerals
+            formattedDate = formattedDate.replace(/[٠-٩]/g, (digit) => {
+                return String(('٠١٢٣٤٥٦٧٨٩'.indexOf(digit)));
+            });
+        }
+        
+        return formattedDate;
     };
 
     // Check if date is in the past
@@ -145,6 +156,28 @@ const DatePicker: React.FC<DatePickerProps> = ({
     const nextMonth = (): void => {
         setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 1));
     };
+    
+    // Ensure numbers are always displayed in English/Western format (0-9)
+    const formatToWesternNumber = (num: number): string => {
+        return num.toString();
+    };
+    
+    // Format month name with Western numerals for the year
+    const formatMonthYearDisplay = (date: Date): string => {
+        const monthName = date.toLocaleDateString(locale, { month: 'long' });
+        const year = date.getFullYear().toString();
+        
+        // If in Arabic mode, ensure the year is displayed with Western numerals
+        if (locale === 'ar') {
+            // Convert any Arabic numerals in the year to Western numerals
+            const westernYear = year.replace(/[٠-٩]/g, (digit) => {
+                return String(('٠١٢٣٤٥٦٧٨٩'.indexOf(digit)));
+            });
+            return `${monthName} ${westernYear}`;
+        }
+        
+        return `${monthName} ${year}`;
+    };
 
     // Render calendar
     const renderCalendar = (): React.ReactElement => {
@@ -153,7 +186,8 @@ const DatePicker: React.FC<DatePickerProps> = ({
         const daysInMonth = getDaysInMonth(year, month);
         const firstDayOfMonth = getFirstDayOfMonth(year, month);
 
-        const monthName = currentMonth.toLocaleDateString(locale, { month: 'long' });
+        // Get formatted month and year with proper numerals
+        const monthYearDisplay = formatMonthYearDisplay(currentMonth);
 
         // Day names based on locale (using Gregorian calendar)
         const dayNames: string[] = [];
@@ -191,7 +225,8 @@ const DatePicker: React.FC<DatePickerProps> = ({
                                 ? 'bg-[#B0438A] text-white cursor-pointer'
                                 : 'hover:bg-gray-200 cursor-pointer'}`}
                 >
-                    {d}
+                    {/* Always use Western numerals for day display */}
+                    {formatToWesternNumber(d)}
                 </div>
             );
         }
@@ -231,7 +266,7 @@ const DatePicker: React.FC<DatePickerProps> = ({
                         {direction === 'rtl' ? <RightArrow /> : <LeftArrow />}
                     </button>
                     <div className='font-semibold text-[#B0438A] text-base'>
-                        {monthName} {year}
+                        {monthYearDisplay}
                     </div>
                     <button
                         onClick={nextMonth}

@@ -21,7 +21,7 @@ export default function LangWrapper({ lang }: { lang: string}) {
     const switchOption = LANGUAGE_OPTIONS[oppositeLang];
 
     return (
-        <p className="w-9 h-9 flex justify-center items-center bg-white rounded-lg border-widget">
+        <p className="w-11 h-10 flex justify-center items-center bg-white rounded-lg border-widget">
             <LanguageSwitcher
                 icon={{
                     url: switchOption.url,
