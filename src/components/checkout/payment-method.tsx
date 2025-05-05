@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from "react";
 import { AppleIcon, CreditCard } from "./icons";
 import { loadApplePaySDK, checkApplePayAvailability, processApplePayment } from "@/src/lib/apple-pay";
 import React from "react";
+import { ApplePayButton } from "./apple-pay-btn";
 
 type PaymentMethodProps = {
   lang: string;
@@ -215,19 +216,19 @@ export default function PaymentMethod({
       );
     }
 
-    // if (selectedPayment === 'applePay' && isApplePayAvailable) {
-    //   return (
-    //     <div className="w-full">
-    //       <apple-pay-button
-    //         buttonstyle="black"
-    //         type="pay"
-    //         locale={lang === 'ar' ? 'ar-SA' : 'en-US'}
-    //         className="w-full h-12"
-    //         onClick={handleApplePayButtonClick}
-    //       />
-    //     </div>
-    //   );
-    // }
+    if (selectedPayment === 'applePay' && isApplePayAvailable) {
+      return (
+        <div className="w-full">
+          <ApplePayButton
+            buttonStyle="black"
+            buttonType="pay"
+            locale={lang === 'ar' ? 'ar-SA' : 'en-US'}
+            onClick={handleApplePayButtonClick}
+            className="w-full h-12"
+          />
+        </div>
+      );
+    }
 
     if (selectedPayment === 'cardPay') {
       if (telrError) {
