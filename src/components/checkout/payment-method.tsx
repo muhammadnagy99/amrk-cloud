@@ -73,10 +73,9 @@ export default function PaymentMethod({
 
     const initialize = async () => {
       try {
-        // Initialize Apple Pay - commented out as in your original code
-        // await loadApplePaySDK();
-        // const isAvailable = checkApplePayAvailability();
-        // if (isMounted) setIsApplePayAvailable(isAvailable);
+        await loadApplePaySDK();
+        const isAvailable = checkApplePayAvailability();
+        if (isMounted) setIsApplePayAvailable(isAvailable);
 
         // Fetch Telr iframe URL
         const response = await fetch('/api/create-telr-checkout', {
