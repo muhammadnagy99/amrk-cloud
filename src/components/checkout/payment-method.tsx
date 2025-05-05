@@ -4,6 +4,7 @@ import { AppleIcon, CreditCard } from "./icons";
 import { loadApplePaySDK, checkApplePayAvailability, processApplePayment } from "@/src/lib/apple-pay";
 import React from "react";
 import { ApplePayButton } from "./apple-pay-btn";
+import { useIframeListener } from "@/src/hooks/useFrame";
 
 type PaymentMethodProps = {
   lang: string;
@@ -201,7 +202,6 @@ export default function PaymentMethod({
       </div>
     );
   };
-
   // Render payment form based on current state
   const renderPaymentForm = () => {
     const { isLoading, telrUrl, telrError } = paymentState;
@@ -254,6 +254,13 @@ export default function PaymentMethod({
 
     return null;
   };
+
+  const { status } = useIframeListener();
+
+  useEffect(() => {
+    console.log("This is the Recieved Status: " + status)
+  }, [status])
+  
 
   return (
     <>
