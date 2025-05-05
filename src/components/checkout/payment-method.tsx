@@ -200,22 +200,23 @@ export default function PaymentMethod({
     } 
     else if (selectedPayment === 'cardPay') {
       // Render Telr iframe for card payment
-      if (telrError) {
-        // Show error state
-        const errorContainer = document.createElement('div');
-        errorContainer.className = 'flex justify-center items-center h-48 w-full text-red-500';
-        errorContainer.textContent = t.paymentError;
-        paymentFormRef.current.appendChild(errorContainer);
-        return;
-      }
+      // if (telrError) {
+      //   // Show error state
+      //   const errorContainer = document.createElement('div');
+      //   errorContainer.className = 'flex justify-center items-center h-48 w-full text-red-500';
+      //   errorContainer.textContent = t.paymentError;
+      //   paymentFormRef.current.appendChild(errorContainer);
+      //   return;
+      // }
       
       if (telrUrl) {
         // Create iframe with Telr checkout URL
         const container = document.createElement('div');
-        container.className = 'w-full h-[400px]';
+        container.className = 'w-full h-64';
         
         const iframe = document.createElement('iframe');
         iframe.src = telrUrl;
+        console.log(telrUrl)
         iframe.className = 'w-full h-full border-none';
         iframe.allowFullscreen = true;
         
@@ -282,8 +283,31 @@ export default function PaymentMethod({
           ref={paymentFormRef}
           className="w-full bg-white p-4 flex flex-col rounded-lg gap-3"
         >
-          {/* Payment form content rendered by useEffect */}
-        </div>
+          {/* Static Payment Forms with Conditional Display */}
+         
+          
+          {/* Loading Indicator */}
+          <div className={`flex justify-center items-center h-48 w-full ${isLoading ? 'block' : 'hidden'}`}>
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#b0438a]"></div>
+            <div className="ml-3 text-[#b0438a]">{t.loading}</div>
+          </div>
+          
+          {/* Error Message */}
+          <div className={`flex justify-center items-center h-48 w-full text-red-500 ${telrError && !isLoading ? 'block' : 'hidden'}`}>
+            {t.paymentError}
+          </div>
+          
+          {/* Card Payment Iframe */}
+          <div className={`w-full h-[400px] ${selectedPayment === 'cardPay' && !isLoading && !telrError ? 'block' : 'hidden'}`}>
+            {telrUrl && (
+              <iframe 
+                src={telrUrl} 
+                className="w-full h-full border-none" 
+                allowFullScreen 
+              />
+            )}
+          </div>
+          </div>
       </div>
     </>
   );
