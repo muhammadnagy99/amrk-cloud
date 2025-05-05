@@ -76,6 +76,7 @@ export default function BasketPageClient({ props, onToggle, type }: { props: str
 
     const [basketReady, setBasketReady] = useState(false);
 
+    console.log(basketReady)
 
     const generateBasketHash = (basketItems: BasketItem[]) => {
         return JSON.stringify(basketItems);
@@ -137,6 +138,7 @@ export default function BasketPageClient({ props, onToggle, type }: { props: str
     // Load basket from localStorage and place order before displaying
     useEffect(() => {
         const loadBasketAndPlaceOrder = async () => {
+            console.log('Opened')
             setIsLoading(true);
             const stored = localStorage.getItem(basketName);
 

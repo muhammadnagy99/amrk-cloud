@@ -111,10 +111,6 @@ export default function PaymentMethod({
             telrUrl: '',
             telrError: true
           });
-
-          if (onPaymentError) {
-            onPaymentError('Failed to initialize payment options');
-          }
         }
       }
     };
@@ -260,7 +256,6 @@ export default function PaymentMethod({
   useEffect(() => {
     console.log("This is the Recieved Status: " + status)
   }, [status])
-  
 
   return (
     <>
