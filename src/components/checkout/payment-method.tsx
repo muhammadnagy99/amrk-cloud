@@ -22,7 +22,6 @@ declare global {
   }
 }
 
-// If using document.createElement, you might also need
 interface HTMLElementTagNameMap {
   'apple-pay-button': HTMLElement;
 }
@@ -59,24 +58,25 @@ export default function PaymentMethod({
 }: PaymentMethodProps) {
   const [selectedPayment, setSelectedPayment] = useState<string>('cardPay');
   const [isApplePayAvailable, setIsApplePayAvailable] = useState<boolean>(false);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [telrUrl, setTelrUrl] = useState<string>('');
-  const [telrError, setTelrError] = useState<boolean>(false);
-  const paymentFormRef = useRef<HTMLDivElement>(null);
+  const [paymentState, setPaymentState] = useState({
+    isLoading: true,
+    telrUrl: '',
+    telrError: false
+  });
+  const iframeRef = useRef<HTMLIFrameElement>(null);
   const t = TEXTS[lang] || TEXTS["en"];
 
-  // Initialize Apple Pay and fetch Telr iframe URL on component mount
+  // Single useEffect for initialization - only runs once on mount
   useEffect(() => {
+    let isMounted = true; // For handling async operations on unmounted component
+
     const initialize = async () => {
       try {
-        // Initialize Apple Pay
+        // Initialize Apple Pay - commented out as in your original code
         // await loadApplePaySDK();
         // const isAvailable = checkApplePayAvailability();
-        // setIsApplePayAvailable(isAvailable);
-        
-        // if (!isAvailable) {
-        //   setSelectedPayment('cardPay');
-        // }
+        // if (isMounted) setIsApplePayAvailable(isAvailable);
+
         // Fetch Telr iframe URL
         const response = await fetch('/api/create-telr-checkout', {
           method: 'POST',
@@ -91,25 +91,47 @@ export default function PaymentMethod({
         }
 
         const data = await response.json();
-        console.log(data)
 
-        setTelrUrl(data.url);
-        setIsLoading(false);
+        if (isMounted) {
+          setPaymentState({
+            isLoading: false,
+            telrUrl: data.url,
+            telrError: false
+          });
+        }
       } catch (error) {
         console.error('Initialization error:', error);
-        setIsApplePayAvailable(false);
-        setSelectedPayment('cardPay');
-        setTelrError(true);
-        setIsLoading(false);
-        
-        if (onPaymentError) {
-          onPaymentError('Failed to initialize payment options');
+
+        if (isMounted) {
+          setIsApplePayAvailable(false);
+          setSelectedPayment('cardPay');
+          setPaymentState({
+            isLoading: false,
+            telrUrl: '',
+            telrError: true
+          });
+
+          if (onPaymentError) {
+            onPaymentError('Failed to initialize payment options');
+          }
         }
       }
     };
 
     initialize();
-  }, [amount, onPaymentError]);
+
+    // Cleanup function to prevent state updates on unmounted component
+    return () => {
+      isMounted = false;
+    };
+  }, [amount]); // Include all external values the effect depends on
+
+  // Effect to scroll to payment form when switching to card payment
+  useEffect(() => {
+    if (selectedPayment === 'cardPay' && iframeRef.current) {
+      iframeRef.current.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+  }, [selectedPayment]);
 
   const handleApplePayButtonClick = () => {
     if (!isApplePayAvailable) {
@@ -117,7 +139,7 @@ export default function PaymentMethod({
       return;
     }
 
-    setIsLoading(true);
+    setPaymentState(prev => ({ ...prev, isLoading: true }));
 
     const applePayConfig = {
       merchantName: 'Amrk',
@@ -139,130 +161,110 @@ export default function PaymentMethod({
         },
         onSuccess: (result) => {
           console.log('Payment successful:', result);
-          setIsLoading(false);
+          setPaymentState(prev => ({ ...prev, isLoading: false }));
           if (onPaymentSuccess) onPaymentSuccess(result);
         },
         onError: (error) => {
           console.error('Payment failed:', error);
-          setIsLoading(false);
+          setPaymentState(prev => ({ ...prev, isLoading: false }));
           if (onPaymentError) onPaymentError(error);
         },
         onCancel: () => {
           console.log('Payment cancelled');
-          setIsLoading(false);
+          setPaymentState(prev => ({ ...prev, isLoading: false }));
           if (onPaymentCancel) onPaymentCancel();
         }
       }
     );
   };
 
-  // Handle payment form rendering based on selected payment method
-  useEffect(() => {
-    if (!paymentFormRef.current) return;
-    
-    // Clear previous content
-    paymentFormRef.current.innerHTML = '';
-    
+  // Render Apple Pay button if available
+  const renderApplePayButton = () => {
+    if (!isApplePayAvailable) return null;
+
+    return (
+      <div className="flex flex-col gap-2 items-center">
+        <label className="w-[99%] border border-[#00000033] rounded-lg p-4 flex items-center cursor-pointer gap-4 h-14">
+          <input
+            type="radio"
+            name="payment"
+            value="applePay"
+            checked={selectedPayment === 'applePay'}
+            onChange={() => setSelectedPayment('applePay')}
+            className="h-5 w-5"
+          />
+          <div className="flex items-center gap-4">
+            <AppleIcon />
+            <span className="text-sm font-normal">{t.applePay}</span>
+          </div>
+        </label>
+      </div>
+    );
+  };
+
+  // Render payment form based on current state
+  const renderPaymentForm = () => {
+    const { isLoading, telrUrl, telrError } = paymentState;
+
     if (isLoading) {
-      // Show loading state
-      const loadingContainer = document.createElement('div');
-      loadingContainer.className = 'flex justify-center items-center h-48 w-full';
-      
-      const loadingSpinner = document.createElement('div');
-      loadingSpinner.className = 'animate-spin rounded-full h-8 w-8 border-b-2 border-[#b0438a]';
-      
-      const loadingText = document.createElement('div');
-      loadingText.className = 'ml-3 text-[#b0438a]';
-      loadingText.textContent = t.loading;
-      
-      loadingContainer.appendChild(loadingSpinner);
-      loadingContainer.appendChild(loadingText);
-      paymentFormRef.current.appendChild(loadingContainer);
-      
-      return;
+      return (
+        <div className="flex justify-center items-center h-48 w-full">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#b0438a]" />
+          <div className="ml-3 text-[#b0438a]">{t.loading}</div>
+        </div>
+      );
     }
-    
-    if (selectedPayment === 'applePay' && isApplePayAvailable) {
-      // Render Apple Pay button
-      const container = document.createElement('div');
-      container.className = 'w-full';
-      
-      const applePayButton = document.createElement('apple-pay-button');
-      applePayButton.setAttribute('buttonstyle', 'black');
-      applePayButton.setAttribute('type', 'pay');
-      applePayButton.setAttribute('locale', lang === 'ar' ? 'ar-SA' : 'en-US');
-      applePayButton.className = 'w-full h-12';
-      
-      applePayButton.addEventListener('click', handleApplePayButtonClick);
-      container.appendChild(applePayButton);
-      
-      paymentFormRef.current.appendChild(container);
-    } 
-    else if (selectedPayment === 'cardPay') {
-      // Render Telr iframe for card payment
-      if (telrError) {
-        // Show error state
-        const errorContainer = document.createElement('div');
-        errorContainer.className = 'flex justify-center items-center h-48 w-full text-red-500';
-        errorContainer.textContent = t.paymentError;
-        paymentFormRef.current.appendChild(errorContainer);
-        return;
-      }
-      
-      if (telrUrl) {
-        // Create iframe with Telr checkout URL
-        const container = document.createElement('div');
-        container.className = 'w-full h-64';
-        
-        const iframe = document.createElement('iframe');
-        iframe.src = telrUrl;
-        console.log(telrUrl)
-        iframe.className = 'w-full h-full border-none';
-        iframe.allowFullscreen = true;
-        
-        container.appendChild(iframe);
-        paymentFormRef.current.appendChild(container);
-      }
-    }
-    
-    // Scroll to payment form when switching to card payment
+
+    // if (selectedPayment === 'applePay' && isApplePayAvailable) {
+    //   return (
+    //     <div className="w-full">
+    //       <apple-pay-button
+    //         buttonstyle="black"
+    //         type="pay"
+    //         locale={lang === 'ar' ? 'ar-SA' : 'en-US'}
+    //         className="w-full h-12"
+    //         onClick={handleApplePayButtonClick}
+    //       />
+    //     </div>
+    //   );
+    // }
+
     if (selectedPayment === 'cardPay') {
-      paymentFormRef.current.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      if (telrError) {
+        return (
+          <div className="flex justify-center items-center h-48 w-full text-red-500">
+            {t.paymentError}
+          </div>
+        );
+      }
+
+      if (telrUrl) {
+        return (
+          <div className="w-full h-[400px]">
+            <iframe
+              ref={iframeRef}
+              src={telrUrl}
+              className="w-full h-full border-none"
+              allowFullScreen
+            />
+          </div>
+        );
+      }
     }
-  }, [selectedPayment, isLoading, isApplePayAvailable, telrUrl, telrError, lang, t]);
+
+    return null;
+  };
 
   return (
     <>
-      <div className={`bg-white flex flex-col gap-4`}>
+      <div className="bg-white flex flex-col gap-4">
         <h3 className="text-black font-medium text-base">{t.title}</h3>
         <div className="flex flex-col gap-3">
-          {/* Apple Pay - Only show if available */}
-          {/* {isApplePayAvailable && (
-            <div className="flex flex-col gap-2 items-center">
-              <label
-                className={`w-[99%] border border-[#00000033] rounded-lg p-4 flex items-center cursor-pointer gap-4 h-14`}
-              >
-                <input
-                  type="radio"
-                  name="payment"
-                  value="applePay"
-                  checked={selectedPayment === 'applePay'}
-                  onChange={() => setSelectedPayment('applePay')}
-                  className="h-5 w-5"
-                />
-                <div className="flex items-center gap-4">
-                  <AppleIcon />
-                  <span className="text-sm font-normal">{t.applePay}</span>
-                </div>
-              </label>
-            </div>
-          )} */}
+          {renderApplePayButton()}
 
           {/* Card Payment */}
           <div className="flex flex-col gap-2 items-center">
-            <label
-              className={`w-[99%] border border-[#00000033] rounded-lg p-4 flex items-center cursor-pointer text-sm font-normal gap-4 h-14`}
-            >
+            <label className="w-[99%] border border-[#00000033] rounded-lg p-4 flex items-center cursor-pointer text-sm font-normal gap-4 h-14">
               <input
                 type="radio"
                 name="payment"
@@ -279,11 +281,8 @@ export default function PaymentMethod({
           </div>
         </div>
 
-        <div
-          ref={paymentFormRef}
-          className="w-full bg-white p-4 flex flex-col rounded-lg gap-3"
-        >
-          {/* Payment form content rendered by useEffect */}
+        <div className="w-full bg-white p-4 flex flex-col rounded-lg gap-3">
+          {renderPaymentForm()}
         </div>
       </div>
     </>
