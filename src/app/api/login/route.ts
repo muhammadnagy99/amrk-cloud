@@ -12,6 +12,7 @@ export async function POST(request: Request) {
       );
     }
     
+    console.log(PhoneNumber)
     // Make the request to the external API
     const response = await fetch('https://api.amrk.app/amrkCloudWeb/login', {
       method: 'POST',

@@ -57,7 +57,7 @@ export default function PaymentMethod({
   onPaymentError,
   onPaymentCancel
 }: PaymentMethodProps) {
-  const [selectedPayment, setSelectedPayment] = useState<string>('applePay');
+  const [selectedPayment, setSelectedPayment] = useState<string>('cardPay');
   const [isApplePayAvailable, setIsApplePayAvailable] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [telrUrl, setTelrUrl] = useState<string>('');
@@ -70,14 +70,13 @@ export default function PaymentMethod({
     const initialize = async () => {
       try {
         // Initialize Apple Pay
-        await loadApplePaySDK();
-        const isAvailable = checkApplePayAvailability();
-        setIsApplePayAvailable(isAvailable);
+        // await loadApplePaySDK();
+        // const isAvailable = checkApplePayAvailability();
+        // setIsApplePayAvailable(isAvailable);
         
-        if (!isAvailable) {
-          setSelectedPayment('cardPay');
-        }
-
+        // if (!isAvailable) {
+        //   setSelectedPayment('cardPay');
+        // }
         // Fetch Telr iframe URL
         const response = await fetch('/api/create-telr-checkout', {
           method: 'POST',
@@ -92,6 +91,8 @@ export default function PaymentMethod({
         }
 
         const data = await response.json();
+        console.log(data)
+
         setTelrUrl(data.url);
         setIsLoading(false);
       } catch (error) {
@@ -211,7 +212,7 @@ export default function PaymentMethod({
       if (telrUrl) {
         // Create iframe with Telr checkout URL
         const container = document.createElement('div');
-        container.className = 'w-full h-64';
+        container.className = 'w-full h-[400px]';
         
         const iframe = document.createElement('iframe');
         iframe.src = telrUrl;
@@ -235,7 +236,7 @@ export default function PaymentMethod({
         <h3 className="text-black font-medium text-base">{t.title}</h3>
         <div className="flex flex-col gap-3">
           {/* Apple Pay - Only show if available */}
-          {isApplePayAvailable && (
+          {/* {isApplePayAvailable && (
             <div className="flex flex-col gap-2 items-center">
               <label
                 className={`w-[99%] border border-[#00000033] rounded-lg p-4 flex items-center cursor-pointer gap-4 h-14`}
@@ -254,7 +255,7 @@ export default function PaymentMethod({
                 </div>
               </label>
             </div>
-          )}
+          )} */}
 
           {/* Card Payment */}
           <div className="flex flex-col gap-2 items-center">

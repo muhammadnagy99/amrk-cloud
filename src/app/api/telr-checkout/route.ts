@@ -51,14 +51,11 @@ export async function POST(req: NextRequest) {
     };
 
     console.log(payload)
-    const telrRes = await fetch("https://api.amrk.app/payments/createTelrCheckoutIframeV1", {
+    const telrRes = await fetch("https://api.amrk.app/amrkCloudWeb/createTelrCheckoutIframeV1", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`, 
-        "x-amrk-language": "ar",
-        "x-amrk-user-calling-from": "CONSUMER_PROD_2.0.0_WEB",
-        "x-amrk-app-id": "amrk-eu1",
       },
       body: JSON.stringify(payload),
     });

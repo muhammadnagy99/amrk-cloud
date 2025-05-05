@@ -130,8 +130,6 @@ export async function POST(req: NextRequest) {
       itemsMenu,
     }
 
-    console.log(`Bearer ${token}`);
-    // 4. Final order request
     const orderRes = await fetch("https://api.amrk.app/amrkCloudWeb/placePickupOrderConsumer", {
       method: "POST",
       headers: {

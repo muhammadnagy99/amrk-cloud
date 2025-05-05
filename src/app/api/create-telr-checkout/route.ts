@@ -14,8 +14,6 @@ export async function POST(request: NextRequest) {
     const basketId = cookieStore.get('basket_id')?.value ;
     const token = cookieStore.get('userToken')?.value
 
-    console.log(userId)
-
     
     // Set up headers for the external API call
     const headers = new Headers();
@@ -51,7 +49,7 @@ export async function POST(request: NextRequest) {
     console.log(requestBody);
     
     // Make the API call to Amrk
-    const response = await fetch("https://api.amrk.app/payments/createTelrCheckoutIframeV1", {
+    const response = await fetch("https://api.amrk.app/amrkCloudWeb/createTelrCheckoutIframeV1", {
       method: "POST",
       headers: headers,
       body: requestBody
@@ -63,6 +61,7 @@ export async function POST(request: NextRequest) {
     
     // Return the result
     const result = await response.json();
+    console.log(result)
     return NextResponse.json(result);
     
   } catch (error) {

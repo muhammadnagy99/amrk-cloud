@@ -42,7 +42,7 @@ export interface BasketItem {
     totalPrice: number;
 }
 
-const BASKET_NAME: Record<number, string> = { 1: "dine_basket_items",  2 : "basket_items" };
+const BASKET_NAME: Record<number, string> = { 1: "dine_basket_items", 2: "basket_items" };
 
 const LoadingOverlay = () => (
     <div className="fixed inset-0 z-[1000] flex items-center justify-center bg-white backdrop-blur-sm">
@@ -50,7 +50,7 @@ const LoadingOverlay = () => (
     </div>
 );
 
-export default function BasketPageClient({ props, onToggle, type }: { props: string, onToggle: () => void, type:number }) {
+export default function BasketPageClient({ props, onToggle, type }: { props: string, onToggle: () => void, type: number }) {
     const [redeem, setRedeem] = useState(false);
     const [basket, setBasket] = useState<BasketItem[]>([]);
     const [isLoading, setIsLoading] = useState(true);
@@ -64,7 +64,7 @@ export default function BasketPageClient({ props, onToggle, type }: { props: str
         vatPercent: number;
         discount: number;
         total: number;
-      }>(null);
+    }>(null);
 
     const [couponCode, setCouponCode] = useState<string | null>(null);
     const [couponDiscount, setCouponDiscount] = useState(0);
@@ -73,6 +73,9 @@ export default function BasketPageClient({ props, onToggle, type }: { props: str
     const basketName = BASKET_NAME[type];
     const lang = props || "ar";
     const t = TEXTS[lang];
+
+    const [basketReady, setBasketReady] = useState(false);
+
 
     const generateBasketHash = (basketItems: BasketItem[]) => {
         return JSON.stringify(basketItems);
@@ -143,11 +146,17 @@ export default function BasketPageClient({ props, onToggle, type }: { props: str
 
                 if (parsedBasket.length > 0) {
                     await placePickupOrder(parsedBasket);
+                    setBasketReady(true);
+
                 } else {
                     setIsLoading(false);
+                    setBasketReady(true);
+
                 }
             } else {
                 setIsLoading(false);
+                setBasketReady(true);
+
             }
         };
 
@@ -189,19 +198,19 @@ export default function BasketPageClient({ props, onToggle, type }: { props: str
                 },
                 body: JSON.stringify({ couponCode: code, type: '2' })
             });
-    
+
             if (!response.ok) {
                 const errorData = await response.json().catch(() => null);
                 throw new Error(errorData?.message || `Error: ${response.status}`);
             }
-    
+
             const result = await response.json();
-            
+
             if (result && result.success === "OK") {
                 setCouponCode(code);
                 setCouponDiscountValue(result.coupon_value);
                 toast.success(`Coupon ${code} applied successfully!`);
-                return result; 
+                return result;
             } else {
                 throw new Error(result.message || 'Invalid coupon code');
             }
@@ -209,7 +218,7 @@ export default function BasketPageClient({ props, onToggle, type }: { props: str
             console.error("Error applying coupon:", error);
             const errorMessage = error instanceof Error ? error.message : 'Error validating coupon';
             toast.error(errorMessage);
-            throw error; 
+            throw error;
         }
     };
 
@@ -283,22 +292,25 @@ export default function BasketPageClient({ props, onToggle, type }: { props: str
                                 onSummeryChange={(val) => setSummary(val)}
                             />
 
-                            <PaymentMethod
-                                lang={lang}
-                                amount={summaryTotal}
-                                vat={summary?.vatAmount}
-                                onPaymentSuccess={(result) => {
-                                    console.log('Payment successful!', result);
-                                    localStorage.removeItem(basketName);
-                                    localStorage.removeItem('previous_basket_hash');
-                                    setBasket([]);
-                                    toast.success(t.orderSuccess);
-                                }}
-                                onPaymentError={(error) => {
-                                    console.error('Payment failed:', error);
-                                    toast.error(t.orderError);
-                                }}
-                            />
+                            {basketReady && (
+                                <PaymentMethod
+                                    lang={lang}
+                                    amount={summaryTotal}
+                                    vat={summary?.vatAmount}
+                                    onPaymentSuccess={(result) => {
+                                        console.log('Payment successful!', result);
+                                        localStorage.removeItem(basketName);
+                                        localStorage.removeItem('previous_basket_hash');
+                                        setBasket([]);
+                                        toast.success(t.orderSuccess);
+                                    }}
+                                    onPaymentError={(error) => {
+                                        console.error('Payment failed:', error);
+                                        toast.error(t.orderError);
+                                    }}
+                                />
+                            )}
+
                         </>
                     )}
             </div>
