@@ -29,7 +29,7 @@ export default async function OrderPlacedPage(props: {
                 <CallWaiter lang={lang} />
                 <BranchDetails lang={lang} type={1} />
             </div>
-            <HomeBtn />
+            {/* <HomeBtn lang=/> */}
         </MobileWrapper>
     )
 }
