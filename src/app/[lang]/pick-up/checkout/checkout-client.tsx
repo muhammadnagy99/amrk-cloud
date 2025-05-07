@@ -89,12 +89,12 @@ export default function CheckoutPageCleint({ props }: { props: string }) {
                         /> */}
                         <CarPickUp lang={lang} />
 
-                        <PaymentMethod lang={lang} amount={summaryTotal} onPaymentSuccess={(result) => {
+                        {/* <PaymentMethod lang={lang} amount={summaryTotal} onPaymentSuccess={(result) => {
                             console.log('Payment successful!', result);
                         }}
                             onPaymentError={(error) => {
                                 console.error('Payment failed:', error);
-                            }} />
+                            }} /> */}
                     </>
                 )}
             </div>
