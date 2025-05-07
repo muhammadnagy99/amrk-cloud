@@ -8,6 +8,7 @@ import SuccessMessage from "@/src/components/order-placed/success-message";
 import { Locale } from "@/src/i18n-config";
 import MobileWrapper from "../../mobile-wrapper";
 import OrderPlacedClient from "./order-client";
+import { Suspense } from "react";
 
 type PageProps = {
     params: {
@@ -22,6 +23,6 @@ export default async function OrderPlacedPage(props: {
     const params = await props.params;
     const lang = params.lang
     return (
-        <OrderPlacedClient lang={lang} />
+      <Suspense></Suspense>
     )
 }
