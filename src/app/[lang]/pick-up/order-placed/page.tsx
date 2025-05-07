@@ -7,6 +7,7 @@ import OrderDetails from "@/src/components/order-placed/order-details";
 import SuccessMessage from "@/src/components/order-placed/success-message";
 import { Locale } from "@/src/i18n-config";
 import MobileWrapper from "../../mobile-wrapper";
+import OrderPlacedClient from "./order-client";
 
 type PageProps = {
     params: {
@@ -21,15 +22,6 @@ export default async function OrderPlacedPage(props: {
     const params = await props.params;
     const lang = params.lang
     return (
-        <MobileWrapper>
-            <div className="flex flex-col gap-7 w-[88%] h-screen overflow-y-auto pb-28 pt-10 relative">
-                <NavBar text="" lang={lang} type={2} />
-                <SuccessMessage lang={lang} />
-                <OrderDetails lang={lang} />
-                <CallWaiter lang={lang} />
-                <BranchDetails lang={lang} type={2} />
-            </div>
-            <HomeBtn />
-        </MobileWrapper>
+        <OrderPlacedClient lang={lang} />
     )
 }

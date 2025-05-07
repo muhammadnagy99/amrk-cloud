@@ -5,6 +5,7 @@ import { loadApplePaySDK, checkApplePayAvailability, processApplePayment } from 
 import React from "react";
 import { ApplePayButton } from "./apple-pay-btn";
 import { useIframeListener } from "@/src/hooks/useFrame";
+import OrderPlacedClient from "@/src/app/[lang]/pick-up/order-placed/order-client";
 
 type PaymentMethodProps = {
   lang: string;
@@ -14,6 +15,8 @@ type PaymentMethodProps = {
   onPaymentSuccess?: (result: any) => void;
   onPaymentError?: (error: string) => void;
   onPaymentCancel?: () => void;
+  onPlaceOrder: () => void;
+  onCloseBasket: () => void
 };
 
 declare global {
@@ -56,17 +59,22 @@ export default function PaymentMethod({
   token,
   onPaymentSuccess,
   onPaymentError,
-  onPaymentCancel
+  onPaymentCancel,
+  onPlaceOrder,
+  onCloseBasket
 }: PaymentMethodProps) {
   const [selectedPayment, setSelectedPayment] = useState<string>('cardPay');
   const [isApplePayAvailable, setIsApplePayAvailable] = useState<boolean>(false);
   const [paymentState, setPaymentState] = useState({
     isLoading: true,
     telrUrl: '',
-    telrError: false
+    telrError: false,
+    refernce: ''
   });
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const t = TEXTS[lang] || TEXTS["en"];
+
+
 
   // Single useEffect for initialization - only runs once on mount
   useEffect(() => {
@@ -97,7 +105,8 @@ export default function PaymentMethod({
           setPaymentState({
             isLoading: false,
             telrUrl: data.url,
-            telrError: false
+            telrError: false,
+            refernce: data.payment_session
           });
         }
       } catch (error) {
@@ -109,7 +118,8 @@ export default function PaymentMethod({
           setPaymentState({
             isLoading: false,
             telrUrl: '',
-            telrError: true
+            telrError: true,
+            refernce: ''
           });
         }
       }
@@ -117,11 +127,10 @@ export default function PaymentMethod({
 
     initialize();
 
-    // Cleanup function to prevent state updates on unmounted component
     return () => {
       isMounted = false;
     };
-  }, [amount]); // Include all external values the effect depends on
+  }, [amount]);
 
   // Effect to scroll to payment form when switching to card payment
   useEffect(() => {
@@ -255,10 +264,26 @@ export default function PaymentMethod({
 
   useEffect(() => {
     console.log("This is the Recieved Status: " + status)
+    const { refernce } = paymentState;
+
+    if (status === 'paid') {
+      localStorage.setItem(
+        `pick-up-current-order`,
+        JSON.stringify({
+          refernce,
+          timestamp: Date.now()
+        })
+      );
+      localStorage.removeItem('basket_items'); 
+      onPlaceOrder();
+      onCloseBasket();
+    }
   }, [status])
+
 
   return (
     <>
+
       <div className="bg-white flex flex-col gap-4">
         <h3 className="text-black font-medium text-base">{t.title}</h3>
         <div className="flex flex-col gap-3">

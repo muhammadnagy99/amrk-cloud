@@ -130,6 +130,8 @@ export async function POST(req: NextRequest) {
       itemsMenu,
     }
 
+    console.log(payload);
+
     const orderRes = await fetch("https://api.amrk.app/amrkCloudWeb/placePickupOrderConsumer", {
       method: "POST",
       headers: {

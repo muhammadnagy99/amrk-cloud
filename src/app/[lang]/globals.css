@@ -145,3 +145,6 @@ apple-pay-button {
 
 
 
+.p-toast-message-content{
+  justify-content: space-between;
+}

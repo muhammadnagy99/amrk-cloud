@@ -36,7 +36,7 @@ const OrderItemsDropdown: FC<OrderItemsDropdownProps> = ({ items, lang }) => {
                 onClick={() => setIsOpen(!isOpen)}
             >
                 <p className="flex flex-row gap-4 items-center">
-                    <span>{t.itemLabel(items.length)}</span>
+                    <span>{t.itemLabel(items.length - 1)}</span>
                     {isOpen ? <ChevronUpIcon /> : <ChevronDownIcon />}
                 </p>
                 <p className="flex flex-row gap-1 font-medium text-[13px]">

@@ -3,6 +3,8 @@ import { Rubik } from "next/font/google";
 import "./globals.css";
 import { Locale } from "@/src/i18n-config";
 import { CookiesProvider } from 'next-client-cookies/server';
+import "primereact/resources/themes/lara-light-indigo/theme.css";
+
 
 
 const rubik = Rubik({

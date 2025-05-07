@@ -9,6 +9,7 @@ import BasketPageClient from "@/src/app/[lang]/pick-up/basket/basket-client";
 interface BasketCTAHomeProps {
   lang: string; // e.g. "en" or "ar"
   type: number;
+  onPlaceOrder: () => void;
 }
 
 interface BasketItem {
@@ -26,7 +27,7 @@ interface BasketItem {
 const BASKET_NAME: Record<number, string> = { 1: "dine_basket_items",  2 : "basket_items" };
 
 
-export default function BasketCTAHome({ lang, type }: BasketCTAHomeProps) {
+export default function BasketCTAHome({ lang, type, onPlaceOrder }: BasketCTAHomeProps) {
   const [itemsCount, setItemsCount] = useState(0);
   const [totalPrice, setTotalPrice] = useState(0);
   const [showBasketOverlay, setShowBasketOverlay] = useState(false);
@@ -134,7 +135,7 @@ export default function BasketCTAHome({ lang, type }: BasketCTAHomeProps) {
           >
             {/* Basket Page Component */}
             <div className="h-full overflow-auto">
-              <BasketPageClient props={lang} onToggle={closeBasketOverlay} type={type}/>
+              <BasketPageClient props={lang} onToggle={closeBasketOverlay} type={type} onPlaceOrder={onPlaceOrder}/>
             </div>
           </div>
         </div>

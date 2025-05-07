@@ -13,7 +13,7 @@ import CleintNavBar from "@/src/components/navigation-bar/custom-navbar";
 import { ProductOverlayProvider } from "@/src/components/view-grid/category.tsx/product-overlay";
 import { Locale } from "@/src/i18n-config";
 import toast from "react-hot-toast";
-import Cookies from 'js-cookie';
+import BasketCTA from "@/src/components/basket-page/basket-CTA";
 
 const TEXTS: Record<Locale, any> = {
     ar: {
@@ -50,7 +50,7 @@ const LoadingOverlay = () => (
     </div>
 );
 
-export default function BasketPageClient({ props, onToggle, type }: { props: string, onToggle: () => void, type: number }) {
+export default function BasketPageClient({ props, onToggle, onPlaceOrder, type }: { props: string, onToggle: () => void, onPlaceOrder: () => void, type: number }) {
     const [redeem, setRedeem] = useState(false);
     const [basket, setBasket] = useState<BasketItem[]>([]);
     const [isLoading, setIsLoading] = useState(true);
@@ -70,13 +70,14 @@ export default function BasketPageClient({ props, onToggle, type }: { props: str
     const [couponDiscount, setCouponDiscount] = useState(0);
     const [couponDiscountValue, setCouponDiscountValue] = useState(0);
 
+    const [itemsCount, setItemsCount] = useState(0);
+
     const basketName = BASKET_NAME[type];
     const lang = props || "ar";
     const t = TEXTS[lang];
 
     const [basketReady, setBasketReady] = useState(false);
-
-    console.log(basketReady)
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
 
     const generateBasketHash = (basketItems: BasketItem[]) => {
         return JSON.stringify(basketItems);
@@ -137,8 +138,25 @@ export default function BasketPageClient({ props, onToggle, type }: { props: str
 
     // Load basket from localStorage and place order before displaying
     useEffect(() => {
+        const checkLogin = async () => {
+            try {
+                const response = await fetch('/api/login-check');
+                const data = await response.json();
+                console.log(data)
+
+                if (data.authenticated) {
+                    setIsLoggedIn(true);
+                    setIsLoading(false)
+                } else {
+                    setIsLoggedIn(false);
+                    setIsLoading(false)
+                }
+            } catch (error) {
+                console.error('Authentication check failed:', error);
+            }
+        }
+
         const loadBasketAndPlaceOrder = async () => {
-            console.log('Opened')
             setIsLoading(true);
             const stored = localStorage.getItem(basketName);
 
@@ -147,7 +165,10 @@ export default function BasketPageClient({ props, onToggle, type }: { props: str
                 setBasket(parsedBasket);
 
                 if (parsedBasket.length > 0) {
-                    await placePickupOrder(parsedBasket);
+                    setItemsCount(parsedBasket.length)
+                    if (isLoggedIn) {
+                        await placePickupOrder(parsedBasket);
+                    }
                     setBasketReady(true);
 
                 } else {
@@ -162,8 +183,10 @@ export default function BasketPageClient({ props, onToggle, type }: { props: str
             }
         };
 
+
+        checkLogin();
         loadBasketAndPlaceOrder();
-    }, []);
+    }, [isLoggedIn]);
 
     // Update localStorage when basket changes
     const updateBasket = async (updated: BasketItem[]) => {
@@ -238,84 +261,101 @@ export default function BasketPageClient({ props, onToggle, type }: { props: str
         }
     }, [summaryTotal, couponDiscountValue]);
 
+    const onLoggedEnd = () => {
+        setIsLoggedIn((prev) => !prev)
+    }
+
     return (
-        <MobileWrapper>
-            <div className="flex flex-col gap-5 w-[88%] overflow-y-auto pt-10 mb-18">
-                <CleintNavBar text={t.title} lang={lang} onClose={onToggle} />
+        <>
+            <MobileWrapper>
+                <div className="flex flex-col gap-5 w-[88%] overflow-y-auto pt-10 mb-18">
+                    <CleintNavBar text={t.title} lang={lang} onClose={onToggle} />
 
-                {
-                    isLoading ? (
-                        <LoadingOverlay />
-                    ) : basket.length === 0 ? (
-                        <div className="flex flex-col items-center justify-center text-center gap-4 mt-20">
-                            <p className="text-gray-500 text-sm">{t.emptyMessage}</p>
-                            <button
-                                onClick={onToggle}
-                                className="text-[#B0438A] underline text-sm font-medium"
-                            >
-                                {t.goBack}
-                            </button>
-                        </div>
-                    ) : (
-                        <>
-                            <ProductOverlayProvider lang={lang} type={type}>
-                                <BasketItemsList
+                    {
+                        isLoading ? (
+                            <LoadingOverlay />
+                        ) : basket.length === 0 ? (
+                            <div className="flex flex-col items-center justify-center text-center gap-4 mt-20">
+                                <p className="text-gray-500 text-sm">{t.emptyMessage}</p>
+                                <button
+                                    onClick={onToggle}
+                                    className="text-[#B0438A] underline text-sm font-medium"
+                                >
+                                    {t.goBack}
+                                </button>
+                            </div>
+                        ) : (
+                            <>
+                                <ProductOverlayProvider lang={lang} type={type}>
+                                    <BasketItemsList
+                                        lang={lang}
+                                        items={basket}
+                                        onDeleteItem={handleDeleteItem}
+                                        mode={`BA`}
+                                    />
+                                </ProductOverlayProvider>
+                                {isLoggedIn && (
+                                    <CarPickUp lang={lang} />
+                                )}
+
+                                {isLoggedIn && (
+                                    <UserDiscount
+                                        lang={lang}
+                                        points={points}
+                                        onToggle={handleToggle}
+                                    />
+                                )}
+
+
+                                <CouponRedeem
                                     lang={lang}
+                                    onApplyCoupon={handleApplyCoupon}
+                                    onRemoveCoupon={handleRemoveCoupon}
+                                    appliedCoupon={couponCode}
+                                    discount={couponDiscountValue}
+                                />
+
+
+                                <OrderSummary
+                                    lang={lang}
+                                    redeemPoints={redeem}
+                                    pointsValue={redeem ? pointsValue : 0}
+                                    couponDiscount={couponCode ? couponDiscount : 0}
+                                    couponCode={couponCode}
+                                    couponPercentage={couponDiscountValue}
                                     items={basket}
-                                    onDeleteItem={handleDeleteItem}
-                                    mode={`BA`}
+                                    onTotalChange={(val) => setSummaryTotal(val)}
+                                    onSummeryChange={(val) => setSummary(val)}
                                 />
-                            </ProductOverlayProvider>
-                            <CarPickUp lang={lang} />
 
-                            <UserDiscount
-                                lang={lang}
-                                points={points}
-                                onToggle={handleToggle}
-                            />
+                                {isLoggedIn && basketReady && (
+                                    <PaymentMethod
+                                        lang={lang}
+                                        amount={summaryTotal}
+                                        vat={summary?.vatAmount}
+                                        onPaymentSuccess={(result) => {
+                                            console.log('Payment successful!', result);
+                                            localStorage.removeItem(basketName);
+                                            localStorage.removeItem('previous_basket_hash');
+                                            setBasket([]);
+                                            toast.success(t.orderSuccess);
+                                        }}
+                                        onPaymentError={(error) => {
+                                            console.error('Payment failed:', error);
+                                            toast.error(t.orderError);
+                                        }}
+                                        onPlaceOrder={onPlaceOrder}
+                                        onCloseBasket={onToggle}
+                                    />
+                                )}
 
-                            <CouponRedeem
-                                lang={lang}
-                                onApplyCoupon={handleApplyCoupon}
-                                onRemoveCoupon={handleRemoveCoupon}
-                                appliedCoupon={couponCode}
-                                discount={couponDiscountValue}
-                            />
-
-                            <OrderSummary
-                                lang={lang}
-                                redeemPoints={redeem}
-                                pointsValue={redeem ? pointsValue : 0}
-                                couponDiscount={couponCode ? couponDiscount : 0}
-                                couponCode={couponCode}
-                                couponPercentage={couponDiscountValue}
-                                items={basket}
-                                onTotalChange={(val) => setSummaryTotal(val)}
-                                onSummeryChange={(val) => setSummary(val)}
-                            />
-
-                            {basketReady && (
-                                <PaymentMethod
-                                    lang={lang}
-                                    amount={summaryTotal}
-                                    vat={summary?.vatAmount}
-                                    onPaymentSuccess={(result) => {
-                                        console.log('Payment successful!', result);
-                                        localStorage.removeItem(basketName);
-                                        localStorage.removeItem('previous_basket_hash');
-                                        setBasket([]);
-                                        toast.success(t.orderSuccess);
-                                    }}
-                                    onPaymentError={(error) => {
-                                        console.error('Payment failed:', error);
-                                        toast.error(t.orderError);
-                                    }}
-                                />
-                            )}
-
-                        </>
-                    )}
-            </div>
-        </MobileWrapper>
+                                {!isLoggedIn && (
+                                    <BasketCTA lang={lang} itemsCount={itemsCount} total={summaryTotal} onLoginEnd={onLoggedEnd} />
+                                )}
+                            </>
+                        )}
+                </div>
+            </MobileWrapper>
+        </>
     );
 }

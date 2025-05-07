@@ -15,7 +15,8 @@ const TEXTS: Record<string, any> = {
     resend: "إعادة الإرسال",
     confirm: "تأكيد",
     timer: "00:",
-    error: "رمز OTP غير صحيح"
+    error: "رمز OTP غير صحيح",
+    loading: "برجاء الانتظار...."
   },
   en: {
     title: "Enter the OTP sent to your phone",
@@ -23,7 +24,8 @@ const TEXTS: Record<string, any> = {
     resend: "Resend",
     confirm: "Confirm",
     timer: "00:",
-    error: "Invalid OTP code"
+    error: "Invalid OTP code",
+    loading: "Please Wait...."
   }
 };
 
@@ -39,7 +41,7 @@ const OTPInput: FC<OTPInputProps> = ({ lang, onLoginSuccess, isVisible }) => {
   const inputsRef = useRef<Array<HTMLInputElement | null>>([]);
 
   const cookies = useCookies();
-  
+
   useEffect(() => {
     if (isVisible && !timerInitialized) {
       setTimeLeft(30);
@@ -189,7 +191,7 @@ const OTPInput: FC<OTPInputProps> = ({ lang, onLoginSuccess, isVisible }) => {
       setError("Failed to resend OTP");
     }
   };
-  
+
 
   return (
     <div className="flex flex-col items-center justify-center gap-5 pb-7 w-full">
@@ -234,9 +236,9 @@ const OTPInput: FC<OTPInputProps> = ({ lang, onLoginSuccess, isVisible }) => {
       <button
         onClick={handleSubmit}
         disabled={loading}
-        className="w-full bg-[#b0438a] text-white py-3 rounded-lg text-lg font-semibold hover:bg-purple-600 transition-all duration-300 disabled:bg-purple-300"
+        className="w-full bg-[#b0438a] text-white py-3 rounded-lg text-lg font-semibold transition-all duration-300"
       >
-        {loading ? "Processing..." : t.confirm}
+        {loading ? t.loading : t.confirm}
       </button>
     </div>
   );

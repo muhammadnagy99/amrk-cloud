@@ -1,5 +1,5 @@
 'use client';
-
+import { Toast } from 'primereact/toast';
 import { useState, useEffect, useRef } from "react";
 import LoginForm from "../../user-overlay/login-form";
 import OTPInput from "../../user-overlay/otp-input";
@@ -8,12 +8,14 @@ import Wrapper from "../../user-overlay/wrapper";
 import { ArLangSwitcher, ELnag, EnLangSwitcher, User } from "./icons";
 import LanguageSwitcher from "./language-switcher";
 
+
 const useAuth = () => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const login = () => setIsLoggedIn(true);
     const logout = () => setIsLoggedIn(false);
     return { isLoggedIn, login, logout };
 };
+
 
 const LANGUAGE_OPTIONS = {
     en: {
@@ -30,11 +32,25 @@ const LANGUAGE_OPTIONS = {
     }
 };
 
+const TEXTS: Record<string, any> = {
+    ar: {
+        success: 'تم تسجيل الدخول بنجاح'
+    },
+    en: {
+        success: 'Logged In Successfully'
+    }
+};
+
 export default function UserCustomize({ lang, type }: { lang: string, type: number }) {
     const [isOpen, setIsOpen] = useState(false);
     const [isOTPRequested, setIsOTPRequested] = useState(false);
     const { isLoggedIn, login } = useAuth();
     const containerRef = useRef<HTMLDivElement>(null);
+    const [showProfile, setShowProfile] = useState(false)
+    const toast = useRef<any>(null);
+
+    const t = TEXTS[lang] || TEXTS.en;
+
 
     const handleUserClick = async () => {
         try {
@@ -44,6 +60,7 @@ export default function UserCustomize({ lang, type }: { lang: string, type: numb
 
             if (data.authenticated) {
                 login();
+                setShowProfile(true);
             } else {
                 setIsOTPRequested(false);
             }
@@ -51,9 +68,27 @@ export default function UserCustomize({ lang, type }: { lang: string, type: numb
             console.error('Authentication check failed:', error);
             setIsOTPRequested(false);
         }
-
         setIsOpen((prev) => !prev);
     };
+
+    const ToestSuccess = () => {
+        toast.current!.show({
+            severity: 'success',
+            summary: t.success,
+            life: 2000,
+            content: (props: any) => (
+                <p>
+                    {props.message.summary}
+                </p>
+            )
+        });
+    };
+
+    const onLoginSuccess = () => {
+        setIsOpen(false);
+        login();
+        ToestSuccess()
+    }
 
 
     useEffect(() => {
@@ -73,7 +108,6 @@ export default function UserCustomize({ lang, type }: { lang: string, type: numb
         };
     }, [isOpen]);
 
-
     const oppositeLang = lang === 'en' ? 'ar' : 'en';
     const switchOption = LANGUAGE_OPTIONS[oppositeLang];
 
@@ -86,6 +120,7 @@ export default function UserCustomize({ lang, type }: { lang: string, type: numb
                 >
                     <User />
                 </p>
+                <Toast ref={toast} position='top-center' />
                 <p className="w-9 h-9 flex justify-center items-center bg-white rounded-lg border-widget">
                     <LanguageSwitcher
                         icon={{
@@ -111,7 +146,7 @@ export default function UserCustomize({ lang, type }: { lang: string, type: numb
                     </div>
 
                     <div className={`${!isLoggedIn && isOTPRequested ? 'block' : 'hidden'} w-full`}>
-                        <OTPInput lang={lang} onLoginSuccess={login} isVisible={isOTPRequested} />
+                        <OTPInput lang={lang} onLoginSuccess={onLoginSuccess} isVisible={isOTPRequested} />
                     </div>
 
                     <div className={`${isLoggedIn ? 'block' : 'hidden'} w-full`}>

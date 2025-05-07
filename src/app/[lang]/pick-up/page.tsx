@@ -4,7 +4,7 @@ import { Locale } from "@/src/i18n-config";
 import { getBranchIdFromCookies } from "@/src/lib/get-branch";
 import MobileWrapper from "../mobile-wrapper";
 import ScreenWrapper from "../screen-wrapper";
-import BasketCTAHome from "@/src/components/user-overlay/basket-home-pickup";
+import HomeActions from "./home-action";
 
 export const dynamic = "force-dynamic";
 
@@ -28,7 +28,7 @@ export default async function Home(props: {
             type={TYPE}
           />
         </div>
-        <BasketCTAHome lang={lang} type={TYPE} />
+        <HomeActions lang={lang} type={TYPE} />
       </ScreenWrapper>
     </MobileWrapper>
   );
