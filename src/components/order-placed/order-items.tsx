@@ -3,9 +3,10 @@
 import { FC, useState } from "react";
 import { ChevronDownIcon, ChevronUpIcon } from "../order-placed/icons";
 import { Addon } from "@/src/interfaces/interfaces";
+import { RiyalCurrency } from "../basket-page/icons";
 
 interface OrderItemsDropdownProps {
-    items: { name: string; price: number; }[];
+    items: { name: string; price: number; number: number; }[];
     lang: string;
     orderId: any;
     orderNum: any;
@@ -36,21 +37,33 @@ const OrderItemsDropdown: FC<OrderItemsDropdownProps> = ({ items, lang }) => {
                 onClick={() => setIsOpen(!isOpen)}
             >
                 <p className="flex flex-row gap-4 items-center">
-                    <span>{t.itemLabel(items.length - 1)}</span>
+                    <span className="text-sm font-normal">{t.itemLabel(items.length - 1)}</span>
                     {isOpen ? <ChevronUpIcon /> : <ChevronDownIcon />}
                 </p>
-                <p className="flex flex-row gap-1 font-medium text-[13px]">
-                    <strong>{total.toFixed(2)}</strong> {t.currency}
+                <p className="flex flex-row items-center gap-1 font-medium text-[13px]" dir="ltr">
+                    <RiyalCurrency color="black" />
+                    <strong>{total.toFixed(2)}</strong>
                 </p>
             </div>
 
             {isOpen && (
                 <ul className="rounded-lg px-1 py-1 text-[#00000080] font-normal">
                     {items.map((item, index) => (
-                        <li key={index} className="flex justify-between flex-row text-[12px]">
-                            <span>{item.name}</span>
-                            <p className="flex flex-row gap-1">
-                                <strong className="font-medium">{item.price.toFixed(2)}</strong> {t.currency}
+                        <li key={index} className="flex justify-between flex-row text-[13px]">
+                            <p className="flex flex-row gap-2">
+                                {!item.name.startsWith('VAT') && !item.name.startsWith('ضريبة') && (
+                                    <span dir="ltr">
+                                        x
+                                        {item.number}
+                                    </span>
+                                )}
+                                <span>
+                                    {item.name}
+                                </span>
+                            </p>
+                            <p className="flex flex-row gap-1 items-center" dir="ltr">
+                                <RiyalCurrency color="gray" />
+                                <strong className="font-medium">{item.price.toFixed(2)}</strong>
                             </p>
                         </li>
                     ))}
