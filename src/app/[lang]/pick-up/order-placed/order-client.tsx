@@ -23,7 +23,7 @@ export default function OrderPlacedClient({ lang, onToggle }: PageProps) {
                 <CallWaiter lang={lang} />
                 <BranchDetails lang={lang} type={2} />
             </div>
-            <HomeBtn />
+            <HomeBtn onClose={onToggle} lang={lang}/>
         </MobileWrapper>
     )
 }
