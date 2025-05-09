@@ -116,15 +116,20 @@ interface ProductPageProps {
     lang: string;
     isOverlay: boolean;
     onClose: () => void;
+    onEdit: boolean;
+    basketId: string | null;
 }
 
 export default function ProductPage({
     productId,
     lang,
     isOverlay,
-    onClose
+    onClose,
+    onEdit,
+    basketId
 }: ProductPageProps) {
    
+
     const [processedData, setProcessedData] = useState<ProcessedProductData | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -163,6 +168,8 @@ export default function ProductPage({
             optionalOptions={processedData.optionalOptions}
             onClose={onClose}
             type={1}
+            onEdit={onEdit}
+            basketId={basketId}
         />
     );
 }

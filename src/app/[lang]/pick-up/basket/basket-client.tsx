@@ -36,6 +36,7 @@ const TEXTS: Record<Locale, any> = {
 
 export interface BasketItem {
     id: string;
+    basket_id: string;
     quantity: number;
     required: { name: string; value: string; extraPrice?: number }[];
     optional: { name: string; value: string; extraPrice?: number }[];
@@ -79,11 +80,16 @@ export default function BasketPageClient({ props, onToggle, onPlaceOrder, type }
     const [basketReady, setBasketReady] = useState(false);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
 
+    const [hideCta, setHideCta] = useState(false);
+    const [currentEdited, setCurrentEdited] = useState<string| null>(null);
+    const [finishEdit, setFinishEdit] = useState(false);
+
     const generateBasketHash = (basketItems: BasketItem[]) => {
         return JSON.stringify(basketItems);
     };
 
     const placePickupOrder = async (basketItems: BasketItem[]) => {
+        setBasketReady(false);
         if (basketItems.length === 0) {
             setIsLoading(false);
             return;
@@ -158,35 +164,43 @@ export default function BasketPageClient({ props, onToggle, onPlaceOrder, type }
 
         const loadBasketAndPlaceOrder = async () => {
             setIsLoading(true);
+            setFinishEdit(false);
             const stored = localStorage.getItem(basketName);
-
+            
             if (stored) {
                 const parsedBasket = JSON.parse(stored);
                 setBasket(parsedBasket);
-
+                
                 if (parsedBasket.length > 0) {
-                    setItemsCount(parsedBasket.length)
+                    setItemsCount(parsedBasket.length);
+                    
                     if (isLoggedIn) {
-                        await placePickupOrder(parsedBasket);
+                        try {
+                            await placePickupOrder(parsedBasket);
+                            setBasketReady(true);
+                        } catch (error) {
+                            console.error("Error placing pickup order:", error);
+                            setBasketReady(true);
+                        } finally {
+                            setIsLoading(false);
+                        }
+                    } else {
+                        setIsLoading(false);
                     }
-                    setBasketReady(true);
-
                 } else {
                     setIsLoading(false);
                     setBasketReady(true);
-
                 }
             } else {
                 setIsLoading(false);
                 setBasketReady(true);
-
             }
         };
 
 
         checkLogin();
         loadBasketAndPlaceOrder();
-    }, [isLoggedIn]);
+    }, [isLoggedIn, finishEdit]);
 
     // Update localStorage when basket changes
     const updateBasket = async (updated: BasketItem[]) => {
@@ -195,7 +209,7 @@ export default function BasketPageClient({ props, onToggle, onPlaceOrder, type }
         localStorage.setItem(basketName, JSON.stringify(updated));
 
         // Place order with updated basket
-        if (updated.length > 0) {
+        if (updated.length > 0 && isLoggedIn) {
             await placePickupOrder(updated);
         } else {
             // If basket is empty, clear the stored hash
@@ -205,7 +219,7 @@ export default function BasketPageClient({ props, onToggle, onPlaceOrder, type }
     };
 
     const handleDeleteItem = (itemId: string) => {
-        const filtered = basket.filter((item) => item.id !== itemId);
+        const filtered = basket.filter((item) => item.basket_id !== itemId);
         updateBasket(filtered);
     };
 
@@ -265,6 +279,13 @@ export default function BasketPageClient({ props, onToggle, onPlaceOrder, type }
         setIsLoggedIn((prev) => !prev)
     }
 
+    const toggleHide = () => {
+        if(hideCta){
+            setFinishEdit(true)
+        }
+        setHideCta((hide) => (!hide))
+    }
+
     return (
         <>
             <MobileWrapper>
@@ -286,12 +307,14 @@ export default function BasketPageClient({ props, onToggle, onPlaceOrder, type }
                             </div>
                         ) : (
                             <>
-                                <ProductOverlayProvider lang={lang} type={type}>
+                                <ProductOverlayProvider lang={lang} type={type} onToggle={toggleHide} onEdit={true} basketId={currentEdited}>
                                     <BasketItemsList
                                         lang={lang}
                                         items={basket}
                                         onDeleteItem={handleDeleteItem}
                                         mode={`BA`}
+                                        toggle={toggleHide}
+                                        chooseEdit={setCurrentEdited}
                                     />
                                 </ProductOverlayProvider>
                                 {isLoggedIn && (
@@ -349,7 +372,7 @@ export default function BasketPageClient({ props, onToggle, onPlaceOrder, type }
                                     />
                                 )}
 
-                                {!isLoggedIn && (
+                                {!isLoggedIn && !hideCta && (
                                     <BasketCTA lang={lang} itemsCount={itemsCount} total={summaryTotal} onLoginEnd={onLoggedEnd} />
                                 )}
                             </>

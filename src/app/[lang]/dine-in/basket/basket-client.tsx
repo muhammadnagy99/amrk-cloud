@@ -8,6 +8,7 @@ import { useState, useEffect, createContext, useContext } from "react";
 import toast from "react-hot-toast";
 import MobileWrapper from "../../mobile-wrapper";
 import PLaceCTA from "@/src/components/user-overlay/place-order";
+import { BasketItem } from "@/src/interfaces/interfaces";
 
 // Create a context for the basket updates
 export const BasketContext = createContext({
@@ -34,14 +35,6 @@ const TEXTS: Record<Locale, any> = {
     },
 };
 
-export interface BasketItem {
-    id: string;
-    quantity: number;
-    required: { name: string; value: string; extraPrice?: number }[];
-    optional: { name: string; value: string; extraPrice?: number }[];
-    totalPrice: number;
-}
-
 const LoadingOverlay = () => (
     <div className="fixed inset-0 z-[1000] flex items-center justify-center bg-white backdrop-blur-sm">
         <div className="w-16 h-16 border-4 border-[#b0438a] border-t-transparent rounded-full animate-spin" />
@@ -57,6 +50,10 @@ export default function BasketPageClient({ props, onToggle, type }: { props: str
     const lang = props || "ar";
     const t = TEXTS[lang];
 
+    const [hideCta, setHideCta] = useState(false);
+    const [currentEdited, setCurrentEdited] = useState<string| null>(null);
+    const [finishEdit, setFinishEdit] = useState(false);
+
     const updateBasketVersion = () => {
         setBasketVersion(prev => prev + 1);
     };
@@ -64,22 +61,20 @@ export default function BasketPageClient({ props, onToggle, type }: { props: str
     useEffect(() => {
         const loadBasketAndPlaceOrder = async () => {
             setIsLoading(true);
+            setFinishEdit(false);
             const stored = localStorage.getItem(basketName);
-
+            
             if (stored) {
                 const parsedBasket = JSON.parse(stored);
                 setBasket(parsedBasket);
-
-                if (parsedBasket.length > 0) {
-                    setIsLoading(false);
-                }
+                setIsLoading(false);
             } else {
                 setIsLoading(false);
             }
         };
 
         loadBasketAndPlaceOrder();
-    }, []);
+    }, [finishEdit]);
 
     const updateBasket = async (updated: BasketItem[]) => {
         setBasket(updated);
@@ -89,9 +84,16 @@ export default function BasketPageClient({ props, onToggle, type }: { props: str
     };
 
     const handleDeleteItem = (itemId: string) => {
-        const filtered = basket.filter((item) => item.id !== itemId);
+        const filtered = basket.filter((item) => item.basket_id !== itemId);
         updateBasket(filtered);
     };
+
+    const toggleHide = () => {
+        if(hideCta){
+            setFinishEdit(true)
+        }
+        setHideCta((hide) => (!hide))
+    }
 
     return (
         <BasketContext.Provider value={{ basketVersion, updateBasketVersion }}>
@@ -114,14 +116,16 @@ export default function BasketPageClient({ props, onToggle, type }: { props: str
                             </div>
                         ) : (
                             <>
-                                <ProductOverlayProvider lang={lang} type={type}>
+                                <ProductOverlayProvider lang={lang} type={type} onToggle={toggleHide} onEdit={true} basketId={currentEdited}>
                                     <BasketItemsList
                                         lang={lang}
                                         items={basket}
                                         onDeleteItem={handleDeleteItem}
                                         mode={`BA`}
+                                        toggle={toggleHide}
+                                        chooseEdit={setCurrentEdited}
                                     />
-                                </ProductOverlayProvider>                 
+                                </ProductOverlayProvider>              
                             </>
                         )}
                         <PLaceCTA lang={lang} />

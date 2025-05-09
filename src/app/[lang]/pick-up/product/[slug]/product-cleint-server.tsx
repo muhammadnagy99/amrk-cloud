@@ -116,13 +116,17 @@ interface ProductPageProps {
     lang: string;
     isOverlay: boolean;
     onClose: () => void;
+    onEdit: boolean;
+    basketId: string | null;
 }
 
 export default function ProductPage({
     productId,
     lang,
     isOverlay,
-    onClose
+    onClose,
+    onEdit,
+    basketId = null
 }: ProductPageProps) {
    
 
@@ -164,6 +168,8 @@ export default function ProductPage({
             optionalOptions={processedData.optionalOptions}
             onClose={onClose}
             type={2}
+            onEdit={onEdit}
+            basketId={basketId}
         />
     );
 }

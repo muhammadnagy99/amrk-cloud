@@ -68,12 +68,12 @@ export default function CheckoutPageCleint({ props }: { props: string }) {
                     </div>
                 ) : (
                     <>
-                        <BasketItemsList
+                        {/* <BasketItemsList
                             lang={lang}
                             items={basket}
                             onDeleteItem={handleDeleteItem}
                             mode={`CH`}
-                        />
+                        /> */}
 
                         <UserDiscount
                             lang={lang}

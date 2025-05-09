@@ -111,6 +111,7 @@ export default function BillClient({ props, onToggle, type }: { props: string, o
                 <div className="flex flex-col">
                     {testItems.map((item, index) => (
                         <CartItem
+                            key={index}
                             user={item.user}
                             quantity={item.quantity}
                             name={item.name}

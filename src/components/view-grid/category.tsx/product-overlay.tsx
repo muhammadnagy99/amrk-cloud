@@ -19,12 +19,12 @@ const DIR: Record<number, string> = {
 };
 
 // Provider component to wrap around your app
-export function ProductOverlayProvider({ children, lang , type}: { children: React.ReactNode, lang: string, type: number }) {
+export function ProductOverlayProvider({ children, lang, type, onToggle, onEdit, basketId }: { children: React.ReactNode, lang: string, type: number, onToggle: () => void, onEdit: boolean, basketId: string | null }) {
   const [showProductOverlay, setShowProductOverlay] = useState(false);
   const [productId, setProductId] = useState<string | null>(null);
   const [closingAnimation, setClosingAnimation] = useState(false);
   const [showClosingAnimation, setShowClosingAnimation] = useState(false);
-
+  
   const openProductOverlay = (id: string) => {
     setProductId(id);
     setShowProductOverlay(true);
@@ -35,8 +35,11 @@ export function ProductOverlayProvider({ children, lang , type}: { children: Rea
       setClosingAnimation(true);
       setShowClosingAnimation(true);
       setTimeout(() => {
-        setShowProductOverlay(false); 
+        setShowProductOverlay(false);
       }, 300);
+    }
+    if (typeof onToggle === 'function') {
+      onToggle();
     }
   };
 
@@ -64,7 +67,7 @@ export function ProductOverlayProvider({ children, lang , type}: { children: Rea
   return (
     <ProductOverlayContext.Provider value={{ showProductOverlay, productId, openProductOverlay, closeProductOverlay }}>
       {children}
-      
+
       {/* Product Overlay */}
       {(showProductOverlay || showClosingAnimation) && productId && ProductPageClient && (
         <div className="fixed inset-0 bg-transparent z-50 flex flex-col justify-end">
@@ -73,10 +76,10 @@ export function ProductOverlayProvider({ children, lang , type}: { children: Rea
             style={{
               transform: closingAnimation ? 'translateY(100%)' : 'translateY(0)',
               height: '100vh',
-              animation: showProductOverlay && !closingAnimation 
-                ? 'slide-up 0.3s ease-out' 
-                : closingAnimation 
-                  ? 'slide-down 0.3s ease-out' 
+              animation: showProductOverlay && !closingAnimation
+                ? 'slide-up 0.3s ease-out'
+                : closingAnimation
+                  ? 'slide-down 0.3s ease-out'
                   : 'none'
             }}
             onAnimationEnd={() => {
@@ -88,17 +91,19 @@ export function ProductOverlayProvider({ children, lang , type}: { children: Rea
           >
             {/* Product Page Component */}
             <div className="h-full overflow-auto">
-              <ProductPageClient 
-                productId={productId} 
-                lang={lang} 
-                isOverlay={true} 
-                onClose={closeProductOverlay} 
+              <ProductPageClient
+                productId={productId}
+                lang={lang}
+                isOverlay={true}
+                onClose={closeProductOverlay}
+                onEdit={onEdit}
+                basketId={basketId}
               />
             </div>
           </div>
         </div>
       )}
-      
+
       {/* Animation styles */}
       <style jsx global>{`
         @keyframes slide-up {
@@ -125,7 +130,7 @@ export function ProductOverlayProvider({ children, lang , type}: { children: Rea
 // Hook to use the context
 export function useProductOverlay() {
   const context = useContext(ProductOverlayContext);
-  
+
   // Instead of throwing an error, return a dummy implementation
   if (context === undefined) {
     // Return dummy functions when used outside provider
@@ -141,7 +146,7 @@ export function useProductOverlay() {
       }
     };
   }
-  
+
   return context;
 }
 

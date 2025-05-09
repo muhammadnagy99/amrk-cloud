@@ -20,6 +20,8 @@ interface Props {
   items: BasketItem[];
   onDeleteItem: (itemId: string) => void;
   mode: string;
+  toggle: () => void;
+  chooseEdit: (id: string) => void;
 }
 
 export type ProductData = {
@@ -55,51 +57,51 @@ interface ProcessedProductData {
   optionalOptions?: ProductOptionGroup[];
 }
 
-const CACHE_TTL = 10 * 60 * 1000; 
+const CACHE_TTL = 10 * 60 * 1000;
 
 
 async function fetchProductData(slug: string): Promise<ProductData> {
   const cachedData = cacheManager.get<ProductData>(`product-${slug}`, CACHE_TTL);
   if (cachedData) {
-      console.log("Using cached product data for:", slug);
-      return cachedData;
+    console.log("Using cached product data for:", slug);
+    return cachedData;
   }
 
   try {
-      const res = await fetch(`/api/products/${slug}`);
+    const res = await fetch(`/api/products/${slug}`);
 
-      if (!res.ok) {
-          throw new Error("Failed to fetch product info");
-      }
+    if (!res.ok) {
+      throw new Error("Failed to fetch product info");
+    }
 
-      const data: ProductData = await res.json();
-      cacheManager.set(`product-${slug}`, data);
-      return data;
+    const data: ProductData = await res.json();
+    cacheManager.set(`product-${slug}`, data);
+    return data;
   } catch (error) {
-      console.error(error);
-      throw error;
+    console.error(error);
+    throw error;
   }
 }
 
-export default function BasketItemsList({ lang, items, onDeleteItem, mode }: Props) {
+export default function BasketItemsList({ lang, items, onDeleteItem, mode, toggle, chooseEdit }: Props) {
   const [products, setProducts] = useState<Record<string, ProductInfo>>({});
   const [loading, setLoading] = useState(true);
   const { openProductOverlay } = useProductOverlay();
 
-  
+
   useEffect(() => {
     const fetchBasketProducts = async () => {
       try {
         setLoading(true);
         const productIds = [...new Set(items.map((item) => item.id))];
-        
+
         const productPromises = productIds.map(id => fetchProductData(id));
         const products = await Promise.all(productPromises);
-  
+
         const productsMap = Object.fromEntries(
           products.map(p => [p.product_id, p])
         );
-        
+
         setProducts(productsMap);
       } catch (error) {
         console.error("Error fetching basket products:", error);
@@ -107,7 +109,7 @@ export default function BasketItemsList({ lang, items, onDeleteItem, mode }: Pro
         setLoading(false);
       }
     };
-  
+
     fetchBasketProducts();
   }, [items]);
 
@@ -116,35 +118,39 @@ export default function BasketItemsList({ lang, items, onDeleteItem, mode }: Pro
     <div className="flex flex-col gap-3">
       {loading
         ? Array.from({ length: items.length || 2 }).map((_, idx) => (
-            <CartItemSkeleton key={idx} />
-          ))
+          <CartItemSkeleton key={idx} />
+        ))
         : items.map((item, index) => {
-            const product = products[item.id];
-            if (!product) return null;
-            return (
-              <CartItem
-                key={index}
-                lang={lang}
-                quantity={item.quantity}
-                name={lang === "ar" ? product.item_name_ar : product.item_name}
-                basePrice={product.item_price}
-                options={[
-                  ...item.required.map((opt) => ({
-                    name: opt.value,
-                    price: opt.extraPrice || 0,
-                  })),
-                  ...item.optional.map((opt) => ({
-                    name: opt.value,
-                    price: opt.extraPrice || 0,
-                  })),
-                ]}                
-                totalPrice={item.totalPrice}
-                onDelete={() => onDeleteItem(item.id)}
-                onClick={() => openProductOverlay(product.product_id)}
-                mode={mode}
-              />
-            );
-          })}
+          const product = products[item.id];
+          if (!product) return null;
+          return (
+            <CartItem
+              key={index}
+              lang={lang}
+              quantity={item.quantity}
+              name={lang === "ar" ? product.item_name_ar : product.item_name}
+              basePrice={product.item_price}
+              options={[
+                ...item.required.map((opt) => ({
+                  name: opt.value,
+                  price: opt.extraPrice || 0,
+                })),
+                ...item.optional.map((opt) => ({
+                  name: opt.value,
+                  price: opt.extraPrice || 0,
+                })),
+              ]}
+              totalPrice={item.totalPrice}
+              onDelete={() => onDeleteItem(item.basket_id)}
+              onClick={() => { 
+                chooseEdit(item.basket_id)
+                toggle()
+                openProductOverlay(product.product_id)
+               }}
+              mode={mode}
+            />
+          );
+        })}
     </div>
   );
 }

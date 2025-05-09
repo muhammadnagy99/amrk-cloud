@@ -96,6 +96,7 @@ export interface OptionalChoicesProps {
 }
 
 export interface BasketItem {
+  basket_id: string;
   id: string;
   quantity: number;
   required: {

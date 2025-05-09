@@ -19,7 +19,8 @@ interface Props {
   selectedOptional: { name: string; value: string }[];
   type: number;
   onClose: () => void;
-
+  edited: boolean;
+  basketId: string | null;
 }
 
 export default function AddCart({
@@ -31,7 +32,9 @@ export default function AddCart({
   selectedRequired,
   selectedOptional,
   type,
-  onClose
+  onClose,
+  edited,
+  basketId
 }: Props) {
   const TYPE = "add_cart";
   const TEXTS = ContentProvider({ type: TYPE, lang });
@@ -59,8 +62,8 @@ export default function AddCart({
       }
       return sum;
     }, 0);
-    console.log("this is required => " +requiredExtras)
-    
+    console.log("this is required => " + requiredExtras)
+
     const optionalExtras = selectedOptional.reduce((sum, opt) => {
       const matchingOption = optionalOptions.find(option => option.value === opt.value);
       if (matchingOption?.extraPrice) {
@@ -69,7 +72,7 @@ export default function AddCart({
       return sum;
     }, 0);
     console.log("this is optional => " + optionalExtras)
-    
+
     return (price + requiredExtras + optionalExtras) * quantity;
   };
 
@@ -109,15 +112,35 @@ export default function AddCart({
 
     const total = (price + totalExtras) * quantity;
 
+    function generateRandomId(length: number = 12): string {
+      const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+      let result = '';
+      for (let i = 0; i < length; i++) {
+        result += characters.charAt(Math.floor(Math.random() * characters.length));
+      }
+      return result;
+    }
+
     const item: BasketItem = {
+      basket_id: edited && basketId ? basketId : generateRandomId(),
       id: productId,
       quantity,
-      required: requiredWithPrices, // now an array
+      required: requiredWithPrices,
       optional: optionalWithPrices,
       totalPrice: total,
     };
 
-    addToBasket(item);
+    if (edited && basketId) {
+      const PRE = type === 1 ? 'dine_' : '';
+
+      const basketItems = JSON.parse(localStorage.getItem(`${PRE}basket_items`) || '[]');
+      const updatedBasketItems = basketItems.filter((item: BasketItem) => item.basket_id !== basketId);
+      updatedBasketItems.push(item);
+      localStorage.setItem(`${PRE}basket_items`, JSON.stringify(updatedBasketItems));
+    } else {
+      addToBasket(item);
+    }
+
     setTimeout(() => {
       setAdded(true);
       setLoading(false);
@@ -149,7 +172,7 @@ export default function AddCart({
   };
 
   return (
-    <div className="fixed bottom-0 left-1/2 transform -translate-x-1/2 w-full bg-white shadow-[0_0_10px_0_rgba(0,0,0,0.2)] p-4 flex justify-between items-center z-50 rounded-lg gap-3 h-24">
+    <div className="fixed bottom-0 left-1/2 transform -translate-x-1/2 max-w-[434px] w-full bg-white shadow-[0_0_10px_0_rgba(0,0,0,0.2)] p-4 flex justify-between items-center z-[1000] rounded-lg gap-3 h-24">
       {!added && !loading && (
         <div className="flex items-center bg-[#f9f9f9] px-4 py-2 rounded-lg gap-3 w-34">
           <button

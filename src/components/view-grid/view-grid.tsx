@@ -37,7 +37,7 @@ export default function ViewGrid({
   }, []);
 
   return (
-    <ProductOverlayProvider lang={lang} type={type}>
+    <ProductOverlayProvider lang={lang} type={type} onToggle={() => {}} onEdit={false}>
       <div className="flex flex-col gap-5 w-full">
         {orderAgainData && <OrderAgain lang={lang} products={orderAgainData.products} />}
         {offersData && <Offers lang={lang} products={offersData.products} view={view} />}
