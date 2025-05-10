@@ -187,9 +187,9 @@ export interface ApplePayConfig {
         }
         return response.json();
       })
-      .then(merchantSessionIdentifier => {
+      .then(response => {
         console.log('Merchant session received');
-        session.completeMerchantValidation(merchantSessionIdentifier);
+        session.completeMerchantValidation(response.merchantSessionIdentifier);
       })
       .catch(error => {
         console.error('Error validating merchant:', error);

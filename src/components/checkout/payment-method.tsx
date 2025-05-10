@@ -63,7 +63,7 @@ export default function PaymentMethod({
   onPlaceOrder,
   onCloseBasket
 }: PaymentMethodProps) {
-  const [selectedPayment, setSelectedPayment] = useState<string>('cardPay');
+  const [selectedPayment, setSelectedPayment] = useState<string>('applePay');
   const [isApplePayAvailable, setIsApplePayAvailable] = useState<boolean>(false);
   const [paymentState, setPaymentState] = useState({
     isLoading: true,
