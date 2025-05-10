@@ -199,9 +199,6 @@ export default function FullGrid({ categories, categoriesData, lang, type }: Pro
       )}
       
       {!isSearching && showResults && !hasSearchNoResults && (
-        <div className={`transition-all duration-300 ease-in-out ${
-          showResults ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
-        }`}>
           <ViewGrid
             lang={lang}
             view={viewMode}
@@ -209,7 +206,6 @@ export default function FullGrid({ categories, categoriesData, lang, type }: Pro
             remainingCategories={remainingCategories}
             type={type}
           />
-        </div>
       )}
     </>
   );
